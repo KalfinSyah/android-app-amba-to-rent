@@ -16,3 +16,12 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+// --- Tambahkan Rute Resource Mobil Di Sini ---
+$router->group(['prefix' => 'cars'], function () use ($router) {
+    $router->get('/', 'CarController@index');         // GET /cars
+    $router->post('/', 'CarController@store');        // POST /cars
+    $router->get('/{id}', 'CarController@show');      // GET /cars/1
+    $router->put('/{id}', 'CarController@update');    // PUT /cars/1
+    $router->delete('/{id}', 'CarController@destroy'); // DELETE /cars/1
+});
