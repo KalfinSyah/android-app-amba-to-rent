@@ -17,7 +17,7 @@ class UsersSeeder extends Seeder
             [
                 'nama_user' => 'Admin Rental',
                 'email_user' => 'admin@rental.com',
-                'password' => Hash::make('password123'), // Hash password!
+                'password' => Hash::make('password123'),
                 'no_telp_user' => '081234567890',
                 'is_admin' => 1
             ],
