@@ -2,77 +2,47 @@
 
 namespace App\Models;
 
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Laravel\Lumen\Auth\Authorizable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class User extends Authenticatable
 {
-    use Authenticatable, Authorizable, HasFactory;
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable;
 
     /**
-     * Nama tabel yang terkait dengan model.
+     * The attributes that are mass assignable.
      *
-     * @var string
-     */
-    protected $table = 'users';
-
-    /**
-     * Primary key yang terkait dengan tabel.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'user_id';
-
-    /**
-     * Menunjukkan apakah model harus memiliki timestamp.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * Atribut yang dapat diisi secara massal.
-     *
-     * @var array
+     * @var list<string>
      */
     protected $fillable = [
-        'nama_user',
-        'email_user',
+        'name',
+        'email',
         'password',
-        'no_telp_user',
-        'is_admin'
     ];
 
     /**
-     * Atribut yang harus disembunyikan saat serialisasi.
+     * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var list<string>
      */
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
     /**
-     * Tipe data asli untuk atribut.
+     * Get the attributes that should be cast.
      *
-     * @var array
+     * @return array<string, string>
      */
-    protected $casts = [
-        'is_admin' => 'boolean',
-        'no_telp_user' => 'string' // Sebaiknya simpan no telp sebagai string
-    ];
-
-    /**
-     * Relasi one-to-many ke tabel Order.
-     */
-    public function orders()
+    protected function casts(): array
     {
-        // Parameter kedua: foreign key di tabel 'orders'
-        // Parameter ketiga: primary key di tabel 'users'
-        return $this->hasMany(Order::class, 'user_id', 'user_id');
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
     }
 }
