@@ -9,11 +9,16 @@ class DatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        // $this->call('UsersTableSeeder');
+        // Panggil seeder dalam urutan yang benar
+        $this->call([
+            UsersSeeder::class,
+            CarsSeeder::class,
+            TransactionMethodsSeeder::class,
+            OrdersSeeder::class,
+            PenaltiesSeeder::class, // Terakhir, karena butuh order_id
+        ]);
     }
 }
