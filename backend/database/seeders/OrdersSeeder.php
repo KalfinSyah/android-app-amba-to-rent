@@ -20,12 +20,11 @@ class OrdersSeeder extends Seeder
                 'method_id' => 1, // Transfer Bank
                 'user_id' => 2, // Budi Setiawan
                 'tanggal_order' => Carbon::now()->subDays(2),
-                'jenis_sewa' => 0, // Misal 0 = Harian
                 'durasi_sewa' => 3,
                 'tanggal_sewa' => Carbon::now()->addDay(),
                 'tanggal_kembali_sewa' => Carbon::now()->addDays(4),
                 'tanggal_transaksi' => Carbon::now()->subDays(2),
-                'status_order' => 'Lunas',
+                'status_order' => 'Ongoing',
                 'total_harga' => 1050000 // 3 x 350000
             ],
             [
@@ -33,12 +32,11 @@ class OrdersSeeder extends Seeder
                 'method_id' => 3, // GoPay
                 'user_id' => 2, // Budi Setiawan
                 'tanggal_order' => Carbon::now(),
-                'jenis_sewa' => 0,
                 'durasi_sewa' => 2,
                 'tanggal_sewa' => Carbon::now()->addDays(5),
                 'tanggal_kembali_sewa' => Carbon::now()->addDays(7),
-                'tanggal_transaksi' => null,
-                'status_order' => 'Menunggu Pembayaran',
+                'tanggal_transaksi' => Carbon::now()->subDays(2),
+                'status_order' => 'Declined',
                 'total_harga' => 560000 // 2 x 280000
             ]
         ]);

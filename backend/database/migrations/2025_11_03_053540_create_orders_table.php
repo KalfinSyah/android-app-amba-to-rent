@@ -18,13 +18,12 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
 
             $table->dateTime('tanggal_order');
-            $table->integer('jenis_sewa')->default(0);
             $table->integer('durasi_sewa');
             $table->date('tanggal_sewa');
             $table->date('tanggal_kembali_sewa');
             $table->dateTime('tanggal_transaksi')->nullable();
             $table->string('status_order', 50)->nullable();
-            $table->float('total_harga');
+            $table->decimal('total_harga', 15, 2);
 
             // Foreign Keys
             $table->foreign('car_id')->references('car_id')->on('cars')
