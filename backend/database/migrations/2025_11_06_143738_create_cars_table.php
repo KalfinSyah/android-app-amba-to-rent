@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('jenis_mobil', 30);
             $table->string('tipe_mesin', 20);
             $table->string('tipe_transmisi', 10);
-            $table->float('harga_sewa');
+            $table->decimal('harga_sewa', 15, 2);
             $table->string('foto_mobil', 100);
             $table->boolean('status_mobil');
             $table->timestamps();
