@@ -4,33 +4,56 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * Nama tabel yang terkait dengan model.
      *
-     * @var list<string>
+     * @var string
+     */
+    protected $table = 'users';
+
+    /**
+     * Primary key yang terkait dengan tabel.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'user_id';
+
+    /**
+     * Menunjukkan apakah model harus memiliki timestamp.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
+     * Atribut yang dapat diisi secara massal.
+     *
+     * @var array
      */
     protected $fillable = [
-        'name',
-        'email',
+        'nama_user',
+        'email_user',
         'password',
+        'no_telp_user',
+        'is_admin'
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Atribut yang harus disembunyikan saat serialisasi.
      *
-     * @var list<string>
+     * @var array
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     /**
@@ -41,8 +64,19 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'is_admin' => 'boolean',
+            'no_telp_user' => 'string',
+            'password' => 'hashed'
         ];
+    }
+
+    /**
+     * Relasi one-to-many ke tabel Order.
+     */
+    public function orders()
+    {
+        // Parameter kedua: foreign key di tabel 'orders'
+        // Parameter ketiga: primary key di tabel ini ('users')
+        return $this->hasMany(Order::class, 'user_id', 'id');
     }
 }

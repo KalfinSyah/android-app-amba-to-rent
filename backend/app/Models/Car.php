@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Car extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * Nama tabel yang terkait dengan model.
@@ -48,14 +49,17 @@ class Car extends Model
     ];
 
     /**
-     * Tipe data asli untuk atribut.
+     * Get the attributes that should be cast.
      *
-     * @var array
+     * @return array<string, string>
      */
-    protected $casts = [
-        'harga_sewa' => 'float',
-        'status_mobil' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'harga_sewa' => 'float',
+            'status_mobil' => 'boolean'
+        ];
+    }
 
     /**
      * Relasi one-to-many ke tabel Order.

@@ -23,6 +23,7 @@ class UsersSeeder extends Seeder
                 'is_admin' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
+                'deleted_at' => null,
             ],
             [
                 'nama_user' => 'Budi Setiawan',
@@ -32,6 +33,7 @@ class UsersSeeder extends Seeder
                 'is_admin' => 0,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
+                'deleted_at' => null,
             ]
         ]);
     }

@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * Nama tabel yang terkait dengan model.
@@ -50,22 +51,25 @@ class Order extends Model
     ];
 
     /**
-     * Tipe data asli untuk atribut.
+     * Get the attributes that should be cast.
      *
-     * @var array
+     * @return array<string, string>
      */
-    protected $casts = [
-        'tanggal_order' => 'datetime',
-        'tanggal_sewa' => 'date',
-        'tanggal_kembali_sewa' => 'date',
-        'tanggal_transaksi' => 'datetime',
-        'total_harga' => 'float',
-        'jenis_sewa' => 'integer',
-        'durasi_sewa' => 'integer',
-        'car_id' => 'integer',
-        'method_id' => 'integer',
-        'user_id' => 'integer',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'tanggal_order' => 'datetime',
+            'tanggal_sewa' => 'date',
+            'tanggal_kembali_sewa' => 'date',
+            'tanggal_transaksi' => 'datetime',
+            'total_harga' => 'float',
+            'jenis_sewa' => 'integer',
+            'durasi_sewa' => 'integer',
+            'car_id' => 'integer',
+            'method_id' => 'integer',
+            'user_id' => 'integer'
+        ];
+    }
 
     // ----- RELASI "BELONGS TO" (MILIK) -----
 
