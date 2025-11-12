@@ -32,7 +32,7 @@ class User extends Authenticatable
      *
      * @var bool
      */
-    public $timestamps = false;
+    public $timestamps = true;
 
     /**
      * Atribut yang dapat diisi secara massal.
@@ -78,5 +78,10 @@ class User extends Authenticatable
         // Parameter kedua: foreign key di tabel 'orders'
         // Parameter ketiga: primary key di tabel ini ('users')
         return $this->hasMany(Order::class, 'user_id', 'id');
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return 'email_user';
     }
 }
