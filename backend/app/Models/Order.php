@@ -18,13 +18,6 @@ class Order extends Model
     protected $table = 'orders';
 
     /**
-     * Primary key yang terkait dengan tabel.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'order_id';
-
-    /**
      * Menunjukkan apakah model harus memiliki timestamp.
      *
      * @var bool
