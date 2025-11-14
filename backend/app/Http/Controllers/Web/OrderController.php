@@ -61,18 +61,24 @@ class OrderController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'status_order' => 'required|in:Pending,Ongoing,Completed,Cancelled',
+        ]);
+
+        $order = Order::findOrFail($id);
+
+        if ($request->status_order === 'cancelled' || $request->status_order === 'completed') {
+            $order->mobil->status_mobil = 1;
+            $order->mobil->save();
+        }
+
+        $order->status_order = $request->status_order;
+        $order->save();
+
+        return redirect()->route('orders.show', $id)->with('success', 'Status order berhasil diperbarui.');
     }
 }
