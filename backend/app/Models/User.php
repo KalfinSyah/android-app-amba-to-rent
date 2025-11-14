@@ -21,13 +21,6 @@ class User extends Authenticatable
     protected $table = 'users';
 
     /**
-     * Primary key yang terkait dengan tabel.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'user_id';
-
-    /**
      * Menunjukkan apakah model harus memiliki timestamp.
      *
      * @var bool

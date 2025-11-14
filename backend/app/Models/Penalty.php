@@ -18,13 +18,6 @@ class Penalty extends Model
     protected $table = 'penalties';
 
     /**
-     * Primary key yang terkait dengan tabel.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'penalty_id';
-
-    /**
      * Menunjukkan apakah model harus memiliki timestamp.
      *
      * @var bool

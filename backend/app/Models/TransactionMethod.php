@@ -18,13 +18,6 @@ class TransactionMethod extends Model
     protected $table = 'transaction_methods';
 
     /**
-     * Primary key yang terkait dengan tabel.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'method_id';
-
-    /**
      * Menunjukkan apakah model harus memiliki timestamp.
      *
      * @var bool

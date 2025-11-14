@@ -18,13 +18,6 @@ class Car extends Model
     protected $table = 'cars';
 
     /**
-     * Primary key yang terkait dengan tabel.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'car_id';
-
-    /**
      * Menunjukkan apakah model harus memiliki timestamp (created_at & updated_at).
      *
      * @var bool
