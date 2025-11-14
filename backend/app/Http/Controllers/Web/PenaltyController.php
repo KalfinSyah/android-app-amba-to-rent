@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
-use App\Models\Penalty;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class PenaltyController extends Controller
@@ -34,7 +34,7 @@ class PenaltyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Penalty $penalty)
+    public function show(string $id)
     {
         //
     }
@@ -42,7 +42,7 @@ class PenaltyController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Penalty $penalty)
+    public function edit(string $id)
     {
         //
     }
@@ -50,7 +50,7 @@ class PenaltyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Penalty $penalty)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -58,7 +58,7 @@ class PenaltyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Penalty $penalty)
+    public function destroy(string $id)
     {
         //
     }

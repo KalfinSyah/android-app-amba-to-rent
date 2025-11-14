@@ -45,7 +45,16 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'email_user' => trans('auth.failed'),
+            ]);
+        }
+
+        if (! auth()->user()->is_admin) {
+            Auth::logout(); // keluarin lagi
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email_user' => 'Anda tidak memiliki akses sebagai admin.',
             ]);
         }
 
@@ -68,7 +77,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
+            'email_user' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -80,6 +89,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('email_user')).'|'.$this->ip());
     }
 }

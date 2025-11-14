@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
-use App\Models\TransactionMethod;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class TransactionMethodController extends Controller
+class CarController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class TransactionMethodController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(TransactionMethod $transactionMethod)
+    public function show(string $id)
     {
         //
     }
@@ -42,7 +42,7 @@ class TransactionMethodController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(TransactionMethod $transactionMethod)
+    public function edit(string $id)
     {
         //
     }
@@ -50,7 +50,7 @@ class TransactionMethodController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TransactionMethod $transactionMethod)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -58,7 +58,7 @@ class TransactionMethodController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TransactionMethod $transactionMethod)
+    public function destroy(string $id)
     {
         //
     }
