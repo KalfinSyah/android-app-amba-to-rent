@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CarController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,4 +26,5 @@ Route::middleware('auth:sanctum')->get('/cars/id/{car}', [CarController::class, 
 Route::middleware('auth:sanctum')->get('/cars/name/{nama_mobil}', [CarController::class, 'showByName']);
 Route::middleware('auth:sanctum')->get('/cars/brand/{merk_mobil}', [CarController::class, 'showByBrand']);
 
-
+// user
+Route::middleware('auth:sanctum')->get('/user/id/{user}', [UserController::class, 'show']);
