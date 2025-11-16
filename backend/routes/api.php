@@ -20,4 +20,4 @@ Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logo
 
 
 // cars
-Route::get('/cars', [CarController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/cars', [CarController::class, 'index']);
