@@ -42,6 +42,12 @@ class CarController extends Controller
      */
     public function showById(Car $car)
     {
+        if (!$car->status_mobil) {
+            return response()->json([
+                'message' => 'Mobil tidak tersedia'
+            ], 404);
+        }
+
         return response()->json([
             'message' => 'Data mobil ' . $car->nama_mobil . ' berhasil diambil',
             'car' => $car
@@ -49,33 +55,37 @@ class CarController extends Controller
     }
     public function showByName($nama_mobil)
     {
-        $car = Car::where('nama_mobil', $nama_mobil)->first();
+        $car = Car::where('nama_mobil', $nama_mobil)
+                ->where('status_mobil', 1)
+                ->first();
 
         if ($car) {
             return response()->json([
                 'message' => 'Data mobil ' . $car->nama_mobil . ' berhasil diambil',
                 'car' => $car
             ]);
-        } else {
-            return response()->json([
-                'message' => 'Mobil dengan nama ' . $nama_mobil . ' tidak ditemukan'
-            ], 404);
         }
+
+        return response()->json([
+            'message' => 'Mobil dengan nama ' . $nama_mobil . ' tidak ditemukan atau tidak tersedia'
+        ], 404);
     }
     public function showByBrand($merk_mobil)
     {
-        $cars = Car::where('merk_mobil', $merk_mobil)->get();
+        $cars = Car::where('merk_mobil', $merk_mobil)
+                ->where('status_mobil', 1)
+                ->get();
 
         if ($cars->isNotEmpty()) {
             return response()->json([
                 'message' => 'Data mobil dengan merk ' . $merk_mobil . ' berhasil diambil',
                 'cars' => $cars
             ]);
-        } else {
-            return response()->json([
-                'message' => 'Mobil dengan merk ' . $merk_mobil . ' tidak ditemukan'
-            ], 404);
         }
+
+        return response()->json([
+            'message' => 'Mobil dengan merk ' . $merk_mobil . ' tidak ditemukan atau tidak tersedia'
+        ], 404);
     }
 
     /**
