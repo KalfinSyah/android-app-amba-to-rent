@@ -13,7 +13,12 @@ class CarController extends Controller
      */
     public function index()
     {
-        //
+        $cars = Car::all();
+
+        return response()->json([
+            'message' => 'Daftar mobil berhasil diambil',
+            'cars'    => $cars
+        ], 200);
     }
 
     /**
