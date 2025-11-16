@@ -21,3 +21,8 @@ Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logo
 
 // cars
 Route::middleware('auth:sanctum')->get('/cars', [CarController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/cars/id/{car}', [CarController::class, 'showById']);
+Route::middleware('auth:sanctum')->get('/cars/name/{nama_mobil}', [CarController::class, 'showByName']);
+Route::middleware('auth:sanctum')->get('/cars/brand/{merk_mobil}', [CarController::class, 'showByBrand']);
+
+
