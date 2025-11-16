@@ -18,7 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('orders', OrderController::class)->only('index', 'show', 'update');
     Route::resource('penalties', PenaltyController::class);
     Route::resource('cars', CarController::class);
-    Route::resource('users', UserController::class)->except('create', 'store');
+    Route::resource('users', UserController::class)->only('index', 'show', 'destroy');
 });
 
 require __DIR__.'/auth.php';
