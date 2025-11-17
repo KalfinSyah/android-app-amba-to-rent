@@ -17,32 +17,32 @@
             </div>
 
             {{-- FILTER BAR --}}
-            <div class="mb-8 rounded-full bg-primary-container px-6 py-4 shadow flex flex-wrap items-center gap-4">
-                <span class="font-semibold text-gray-800 mr-2">Filter:</span>
-
-                <select
-                    name="status"
-                    class="w-40 rounded-full border-none bg-white px-4 py-2 text-sm text-black shadow-inner focus:ring-0"
-                >
-                    <option value="">Semua</option>
-                    <option value="new">Pelanggan Baru</option>
-                    <option value="active">Sering Sewa</option>
-                </select>
-
+            <div class="mb-8 rounded-full bg-primary-container px-6 py-4 shadow flex items-center gap-4">
+                <span class="font-semibold text-gray-800 mr-2">Urutkan:</span>
                 <select
                     name="sort"
                     class="w-40 rounded-full border-none bg-rose-50 px-4 py-2 text-sm text-black shadow-inner focus:ring-0"
                 >
-                    <option value="name">Urutkan Nama</option>
+                    <option value="name">Nama</option>
                     <option value="recent">Terbaru</option>
                 </select>
 
-                <div class="flex-1 min-w-[200px] flex items-center gap-2">
+{{--                <span class="font-semibold text-gray-800 mr-2">Filter:</span>--}}
+{{--                <select--}}
+{{--                    name="status"--}}
+{{--                    class="w-40 rounded-full border-none bg-white px-4 py-2 text-sm text-black shadow-inner focus:ring-0"--}}
+{{--                >--}}
+{{--                    <option value="">Semua</option>--}}
+{{--                    <option value="new">Pelanggan Baru</option>--}}
+{{--                    <option value="active">Sering Sewa</option>--}}
+{{--                </select>--}}
+
+                <div class="flex items-center gap-2 ml-auto">
                     <input
                         type="text"
                         name="q"
                         placeholder="Cari nama atau email"
-                        class="w-full rounded-full border-none bg-rose-50 px-4 py-2 text-sm text-gray-700 shadow-inner focus:ring-0"
+                        class="w-[300px] rounded-full border-none bg-rose-50 px-4 py-2 text-sm text-gray-700 shadow-inner focus:ring-0"
                     >
                     <button
                         type="submit"
@@ -65,7 +65,7 @@
                             <div class="px-6 py-4">
                                 <div class="items-start justify-between gap-4">
                                     <div>
-                                        <h2 class="text-xl font-extrabold text-gray-900">
+                                        <h2 class="text-2xl font-extrabold text-gray-900">
                                             {{ $user->nama_user }}
                                         </h2>
                                         <p class="text-xs text-gray-700">
@@ -84,13 +84,12 @@
                                     <span class="text-[12px] text-white">
                                         Terdaftar {{ $user->created_at?->format('d M Y') }}
                                     </span>
-                                    <a
-                                        href="{{ route('users.destroy', $user->id) }}"
-                                        class="inline-flex items-center rounded-full bg-red-700 px-5 py-1.5 text-sm font-semibold text-white shadow hover:bg-olive-800"
-                                    >
-                                        Hapus
-                                    </a>
-
+{{--                                    <a--}}
+{{--                                        href="{{ route('users.destroy', $user->id) }}"--}}
+{{--                                        class="inline-flex items-center rounded-full bg-red-700 px-5 py-1.5 text-sm font-semibold text-white shadow hover:bg-olive-800"--}}
+{{--                                    >--}}
+{{--                                        Hapus--}}
+{{--                                    </a>--}}
                                 </div>
                             </div>
                         </div>

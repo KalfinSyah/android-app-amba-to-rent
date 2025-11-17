@@ -1,63 +1,94 @@
 <x-app-layout>
-    <h2 class="text-2xl font-semibold mb-6">Daftar Mobil</h2>
+    <div class="py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <div class="mb-4">
-        <a href="{{ route('cars.create') }}"
-           class="bg-blue-600 text-white px-4 py-2 rounded">
-            Tambah Mobil
-        </a>
-    </div>
+            {{-- HEADER --}}
+            <div class="flex items-center justify-between mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">
+                    Daftar Mobil
+                </h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach ($cars as $car)
-            <div class="bg-white shadow rounded p-4">
+                {{-- Tombol Tambah Mobil --}}
+                <a
+                    href="{{ route('cars.create') }}"
+                    class="inline-flex items-center rounded-full bg-amber-900 px-6 py-2 text-sm font-semibold text-white shadow hover:bg-amber-800"
+                >
+                    + Tambah Mobil
+                </a>
+            </div>
 
-                {{-- Foto Mobil --}}
-                <img src="{{ asset('storage/mobil/' . $car->foto_mobil) }}"
-                     class="w-full h-40 object-cover rounded mb-3">
+            {{-- FILTER BAR --}}
+            <div class="mb-8 rounded-full bg-primary-container px-6 py-4 shadow flex items-center gap-4">
+                <span class="font-semibold text-gray-800 mr-2">Urutkan:</span>
 
-                <h3 class="text-lg font-semibold">{{ $car->nama_mobil }}</h3>
-                <p class="text-gray-600">{{ $car->merk_mobil }} - {{ $car->tahun_mobil }}</p>
+                <select
+                    name="sort"
+                    class="w-40 rounded-full border-none bg-rose-50 px-4 py-2 text-sm text-black shadow-inner focus:ring-0"
+                >
+                    <option value="name">Nama</option>
+                    <option value="recent">Terbaru</option>
+                    <option value="price">Harga</option>
+                </select>
 
-                {{-- Harga --}}
-                <p class="mt-2 font-semibold">
-                    Rp {{ number_format($car->harga_sewa, 0, ',', '.') }} / hari
-                </p>
-
-                {{-- Status --}}
-                <p class="mt-1">
-                    @if($car->status_mobil)
-                        <span class="text-green-600 font-semibold">Tersedia</span>
-                    @else
-                        <span class="text-red-600 font-semibold">Tidak Tersedia</span>
-                    @endif
-                </p>
-
-                {{-- Tombol Aksi --}}
-                <div class="mt-4 flex gap-2">
-
-                    {{-- Detail --}}
-                    <a href="{{ route('cars.show', $car->id) }}"
-                       class="bg-gray-700 text-white px-3 py-1 rounded text-sm">
-                        Detail
-                    </a>
-
-                    {{-- Edit --}}
-                    <a href="{{ route('cars.edit', $car->id) }}"
-                       class="bg-yellow-500 text-white px-3 py-1 rounded text-sm">
-                        Edit
-                    </a>
-
-                    {{-- Hapus --}}
-                    <form action="{{ route('cars.destroy', $car->id) }}" method="POST" onsubmit="return confirm('Yakin hapus mobil ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button class="bg-red-600 text-white px-3 py-1 rounded text-sm">
-                            Hapus
-                        </button>
-                    </form>
+                {{-- SEARCH --}}
+                <div class="flex items-center gap-2 ml-auto">
+                    <input
+                        type="text"
+                        name="q"
+                        placeholder="Cari nama mobil"
+                        class="w-[300px] rounded-full border-none bg-rose-50 px-4 py-2 text-sm text-gray-700 shadow-inner focus:ring-0"
+                    >
+                    <button
+                        type="submit"
+                        class="flex items-center justify-center rounded-full bg-amber-900 p-2 text-white shadow hover:bg-amber-800"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                             viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" />
+                        </svg>
+                    </button>
                 </div>
             </div>
-        @endforeach
+
+            {{-- LIST MOBIL --}}
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
+                @forelse ($cars as $car)
+                    <div class="rounded-[24px] overflow-hidden bg-white shadow flex">
+
+                        {{-- BAGIAN KIRI --}}
+                        <div class="w-1/2 bg-primary-container flex flex-col">
+
+                            {{-- AREA INFO --}}
+                            <div class="px-6 py-4 flex-1">
+                                <h2 class="text-2xl font-extrabold text-gray-900">{{ $car->nama_mobil }}</h2>
+                                <p class="text-sm text-gray-800 mt-1">{{ $car->tahun_mobil }}</p>
+
+                                <p class="text-sm text-gray-700 mt-4">
+                                    <span class="font-semibold">Tipe:</span> {{ $car->jenis_mobil }}<br>
+                                    <span class="font-semibold">Transmisi:</span> {{ $car->tipe_transmisi }}
+                                </p>
+                            </div>
+
+                            {{-- STRIP COKLAT FULL WIDTH --}}
+                            <div class="mt-auto bg-primary px-6 py-3">
+                                <a href="#"
+                                   class="px-6 py-1.5 rounded-full bg-white text-gray-900 text-sm font-semibold shadow">
+                                    Detail
+                                </a>
+                            </div>
+                        </div>
+
+                        {{-- BAGIAN GAMBAR --}}
+                        <div class="w-1/2">
+                            <img src="/img/mobil.jpg" class="w-full h-full object-cover" />
+                        </div>
+                    </div>
+                @empty
+                    <p class="text-sm text-gray-600">Tidak ada mobil.</p>
+                @endforelse
+            </div>
+
+        </div>
     </div>
 </x-app-layout>
