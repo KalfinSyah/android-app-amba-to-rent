@@ -29,7 +29,18 @@ class Order extends Model
      *
      * @var array
      */
-    protected $fillable = ['status_order',];
+    protected $fillable = [
+        'car_id',
+        'user_id',
+        'method_id',
+        'tanggal_order',
+        'durasi_sewa',
+        'tanggal_sewa',
+        'tanggal_kembali_sewa',
+        'tanggal_transaksi',
+        'status_order',
+        'total_harga',
+    ];
 
     /**
      * Get the attributes that should be cast.

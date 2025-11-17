@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CarController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,3 +28,6 @@ Route::middleware('auth:sanctum')->get('/cars/brand/{merk_mobil}', [CarControlle
 
 // user
 Route::middleware('auth:sanctum')->get('/user/id/{user}', [UserController::class, 'show']);
+
+// order
+Route::middleware('auth:sanctum')->post('/order', [OrderController::class, 'store']);
