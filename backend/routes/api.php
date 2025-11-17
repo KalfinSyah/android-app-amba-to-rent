@@ -19,7 +19,6 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
-
 // cars
 Route::middleware('auth:sanctum')->get('/cars', [CarController::class, 'index']);
 Route::middleware('auth:sanctum')->get('/cars/id/{car}', [CarController::class, 'showById']);
