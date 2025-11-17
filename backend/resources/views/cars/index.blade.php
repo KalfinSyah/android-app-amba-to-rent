@@ -72,7 +72,7 @@
 
                             {{-- STRIP COKLAT FULL WIDTH --}}
                             <div class="mt-auto bg-primary px-6 py-3">
-                                <a href="#"
+                                <a href="{{ route('cars.show', $car) }}"
                                    class="px-6 py-1.5 rounded-full bg-white text-gray-900 text-sm font-semibold shadow">
                                     Detail
                                 </a>

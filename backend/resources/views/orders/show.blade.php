@@ -1,35 +1,203 @@
 <x-app-layout>
-    <div>
-        <h2>Detail Order</h2>
-        <p>ID Order: {{ $order->id }}</p>
-        <p>Tanggal: {{ $order->tanggal_order }}</p>
+    <div class="py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
-        <h3>Data Mobil</h3>
-        <p>Nama Mobil: {{ $order->car->nama_mobil }}</p>
-        <p>Merk Mobil: {{ $order->car->merk_mobil }}</p>
-        <p>Harga Sewa: Rp {{ number_format($order->car->harga_sewa, 0, ',', '.') }}</p>
+            <h1 class="text-3xl font-bold text-gray-900 mb-8">
+                Daftar Pesanan
+            </h1>
 
-        <h3>Data Pelanggan</h3>
-        <p>Nama: {{ $order->user->nama_user }}</p>
-        <p>Email: {{ $order->user->email_user }}</p>
-        <p>No Telp: {{ $order->user->no_telp_user }}</p>
-    </div>
-    <div>
-        <form action="{{ route('orders.update', $order->id) }}" method="POST" class="mt-4">
-            @csrf
-            @method('PUT')
 
-            <label class="font-semibold">Ubah Status Pesanan</label>
-            <select name="status_order" class="border rounded px-3 py-2 w-full mt-1">
-                <option value="Pending"   {{ $order->status_order == 'Pending' ? 'selected' : '' }}>Pending</option>
-                <option value="Ongoing"   {{ $order->status_order == 'Ongoing' ? 'selected' : '' }}>Ongoing</option>
-                <option value="Cancelled"  {{ $order->status_order == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
-                <option value="Completed" {{ $order->status_order == 'Completed' ? 'selected' : '' }}>Completed</option>
-            </select>
+            {{-- GRID ATAS: INFORMASI PESANAN & INFORMASI MOBIL --}}
+            <div class="grid grid-cols-12 lg:grid-cols-12 gap-6">
 
-            <button class="bg-blue-600 text-white px-4 py-2 rounded mt-3 hover:bg-blue-700">
-                Simpan Perubahan
-            </button>
-        </form>
+                {{-- KARTU INFORMASI PESANAN --}}
+                <div class="bg-primary-container rounded-[24px] overflow-hidden shadow col-span-7">
+
+                    {{-- HEADER --}}
+                    <div class="bg-primary text-white px-6 py-3 flex items-center justify-between">
+                        <h2 class="text-lg font-semibold">Informasi Pesanan</h2>
+
+                        {{-- Status --}}
+                        <span class="
+                                top-4 right-4 px-4 py-1 rounded-full text-xs font-semibold text-white
+                                @switch($order->status_order)
+                                    @case('Completed') bg-green-600 @break
+                                    @case('Pending') bg-yellow-600 @break
+                                    @case('Ongoing') bg-blue-600 @break
+                                    @case('Cancelled') bg-red-600 @break
+                                    @default bg-gray-600
+                                @endswitch
+                            ">
+                                {{ ucfirst($order->status_order) }}
+                            </span>
+                    </div>
+
+                    {{-- BODY --}}
+                    <div class="px-6 py-5 text-[#4B1F14] space-y-6">
+
+                        {{-- Bagian Pesanan --}}
+                        <div>
+                            <p class="text-xs font-semibold mb-1">Pesanan:</p>
+                            <p class="text-2xl font-extrabold">
+                                Pesanan #{{ $order->id }}
+                            </p>
+                        </div>
+
+                        {{-- Tanggal / Durasi --}}
+                        <div class="grid grid-cols-[auto,1fr] gap-y-2 gap-x-8 text-sm">
+                            <p class="font-semibold">Tanggal Pemesanan:</p>
+                            <p>{{ $order->tanggal_order?->format('d/m/Y') ?? '-' }}</p>
+
+                            <p class="font-semibold">Tanggal Sewa:</p>
+                            <p>
+                                {{ $order->tanggal_sewa?->format('d/m/Y') ?? '-' }}
+                                s/d
+                                {{ $order->tanggal_kembali_sewa?->format('d/m/Y') ?? '-' }}
+                            </p>
+
+                            <p class="font-semibold">Durasi Sewa:</p>
+                            <p>{{ $order->durasi_sewa }} Hari</p>
+                        </div>
+
+                        {{-- Pembayaran --}}
+                        <div class="space-y-2 text-sm">
+                            <p class="text-xs font-semibold">Pembayaran:</p>
+
+                            <div class="grid grid-cols-[auto,1fr] gap-y-2 gap-x-8">
+                                <p class="font-semibold">Tanggal Transaksi:</p>
+                                <p>{{ $order->tanggal_transaksi?->format('d/m/Y') ?? '-' }}</p>
+
+                                <p class="font-semibold">Metode Pembayaran:</p>
+                                <p>{{ $order->metode_pembayaran ?? '-' }}</p>
+                            </div>
+                        </div>
+
+                        {{-- Harga (kiri label, kanan nilai) --}}
+                        <div class="border-t border-[#E0A894] pt-4 flex items-center justify-between">
+                            <p class="text-xl font-bold">Harga:</p>
+                            <p class="text-2xl font-extrabold">
+                                Rp{{ number_format($order->total_harga, 0, ',', '.') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- FOOTER BUTTONS --}}
+                    <div class="bg-white px-6 py-4 mx-6 rounded-[25px]">
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            @if($order->status_order === 'Pending')
+                                <div class="mt-auto">
+                                    <a href="{{ route('cars.show', $order->car) }}"
+                                       class="inline-flex justify-center px-6 py-2 rounded-full
+                                      bg-primary-button text-white text-sm font-semibold">
+                                        Terima Pesanan
+                                    </a>
+                                </div>
+                                <div class="mt-auto">
+                                    <a href="{{ route('cars.show', $order->car) }}"
+                                       class="inline-flex justify-center px-6 py-2 rounded-full
+                                      bg-primary-button text-white text-sm font-semibold">
+                                        Tolak Pesanan
+                                    </a>
+                                </div>
+                            @endif
+                            @if($order->status_order === 'Ongoing')
+                                <div class="mt-auto">
+                                    <a href="{{ route('cars.show', $order->car) }}"
+                                       class="inline-flex justify-center px-6 py-2 rounded-full
+                                      bg-primary-button text-white text-sm font-semibold">
+                                        Konfirmasi Pembayaran
+                                    </a>
+                                </div>
+                            @endif
+                            <div class="mt-auto ml-auto">
+                                <a href="{{ route('cars.show', $order->car) }}"
+                                   class="inline-flex justify-center px-6 py-2 rounded-full
+                                      bg-red-600 text-white text-sm font-semibold">
+                                    Penalti
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- KARTU INFORMASI MOBIL --}}
+                <div class="bg-primary-container rounded-[24px] overflow-hidden shadow flex flex-col col-span-5">
+
+                    {{-- HEADER --}}
+                    <div class="bg-primary text-white px-6 py-3">
+                        <h2 class="text-lg font-semibold">Informasi Mobil</h2>
+                    </div>
+
+                    {{-- FOTO MOBIL --}}
+                    <div class="px-6 pt-4">
+                        <img
+                            src="{{ asset('storage/mobil/' . $order->car->foto_mobil) }}"
+                            alt="Foto {{ $order->car->nama_mobil }}"
+                            class="w-full h-56 object-cover rounded-[20px]"
+                        >
+                    </div>
+
+                    {{-- DETAIL MOBIL --}}
+                    <div class="px-6 py-4 flex-1 flex flex-col">
+                        <div>
+                            <p class="text-2xl font-extrabold text-[#4B1F14]">
+                                {{ $order->car->nama_mobil }}
+                            </p>
+                            <p class="text-sm text-[#7A4A3A] font-semibold">
+                                {{ $order->car->tahun_mobil }}
+                            </p>
+
+                            <p class="mt-2 text-xs text-[#7A4A3A] leading-relaxed">
+                                Tipe: {{ $order->car->jenis_mobil }}
+                                | Transmisi: {{ $order->car->tipe_transmisi }}
+                                | Mesin: {{ $order->car->tipe_mesin }}
+                            </p>
+                        </div>
+
+                        <div class="mt-4">
+                            <p class="text-sm font-semibold text-[#4B1F14]">
+                                Harga Sewa / Hari:
+                                <span class="font-bold">
+                                    Rp{{ number_format($order->car->harga_sewa, 0, ',', '.') }}
+                                </span>
+                            </p>
+                        </div>
+
+                        <div class="mt-auto pt-4 text-right">
+                            <a href="{{ route('cars.show', $order->car) }}"
+                               class="inline-flex justify-center px-6 py-2 rounded-full
+                                      bg-primary-button text-white text-sm font-semibold">
+                                Detail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- AREA BAWAH: INFORMASI PELANGGAN --}}
+            <div class="bg-primary-container rounded-[24px] overflow-hidden shadow">
+                <div class="bg-primary text-white px-6 py-3">
+                    <h2 class="text-lg font-semibold">Informasi Pelanggan</h2>
+                </div>
+
+                <div class="px-6 py-5 text-[#4B1F14] grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-10 text-sm">
+                    <p>
+                        <span class="font-semibold block">Nama Pelanggan:</span>
+                        {{ $order->user->nama_user ?? '-' }}
+                    </p>
+
+                    <p>
+                        <span class="font-semibold block">Email:</span>
+                        {{ $order->user->email_user ?? '-' }}
+                    </p>
+
+                    <p>
+                        <span class="font-semibold block">No. Telepon:</span>
+                        {{ $order->user->no_telp_user ?? '-' }}
+                    </p>
+                </div>
+            </div>
+
+        </div>
     </div>
 </x-app-layout>

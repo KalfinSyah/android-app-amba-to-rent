@@ -15,6 +15,7 @@ export default {
                 primary: {
                     DEFAULT: '#8F4C34',
                     container: '#FFDBCF',
+                    button: '#5D4036',
                 },
                 secondary: {
                     DEFAULT: '#77574C',
