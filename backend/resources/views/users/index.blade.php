@@ -68,10 +68,10 @@
                                         <h2 class="text-2xl font-extrabold text-gray-900">
                                             {{ $user->nama_user }}
                                         </h2>
-                                        <p class="text-xs text-gray-700">
+                                        <p class="text-sm text-gray-700">
                                             {{ $user->email_user }}
                                         </p>
-                                        <p class="text-lg font-medium text-gray-900 text-right">
+                                        <p class="text-xl font-bold text-gray-900 text-right">
                                             {{ $user->no_telp_user }}
                                         </p>
                                     </div>

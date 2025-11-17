@@ -1,84 +1,136 @@
 <x-app-layout>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            {{-- FORM FILTER --}}
-            <form method="GET" action="{{ route('orders.index') }}" class="mb-4 flex flex-wrap gap-2 items-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-8">
+                Daftar Pesanan
+            </h1>
 
-                <select name="status" class="border rounded px-2 py-1">
-                    <option value="">Semua status</option>
-                    @foreach ($availableStatuses as $value => $label)
-                        <option value="{{ $value }}" @selected(($status ?? null) === $value)>{{ $label }}</option>
-                    @endforeach
+            {{-- FILTER BAR --}}
+            <div class="mb-8 rounded-full bg-primary-container px-6 py-4 shadow flex items-center gap-4">
+                <span class="font-semibold text-gray-800 mr-2">Urutkan:</span>
+                <select
+                    name="sort"
+                    class="w-40 rounded-full border-none bg-rose-50 px-4 py-2 text-sm text-black shadow-inner focus:ring-0"
+                >
+                    <option value="name">Nama</option>
+                    <option value="recent">Terbaru</option>
                 </select>
 
-                <select name="sort_by" class="border rounded px-2 py-1">
-                    <option value="order_date" @selected(($sortBy ?? '') === 'order_date')>Tanggal Pesanan</option>
-                    <option value="rental_duration" @selected(($sortBy ?? '') === 'rental_duration')>Durasi Sewa</option>
-                </select>
+                {{--                <span class="font-semibold text-gray-800 mr-2">Filter:</span>--}}
+                {{--                <select--}}
+                {{--                    name="status"--}}
+                {{--                    class="w-40 rounded-full border-none bg-white px-4 py-2 text-sm text-black shadow-inner focus:ring-0"--}}
+                {{--                >--}}
+                {{--                    <option value="">Semua</option>--}}
+                {{--                    <option value="new">Pelanggan Baru</option>--}}
+                {{--                    <option value="active">Sering Sewa</option>--}}
+                {{--                </select>--}}
 
-                <select name="sort_dir" class="border rounded px-2 py-1">
-                    <option value="desc" @selected(($sortDir ?? '') === 'desc')>Terbaru dulu</option>
-                    <option value="asc" @selected(($sortDir ?? '') === 'asc')>Terlama dulu</option>
-                </select>
+                <div class="flex items-center gap-2 ml-auto">
+                    <input
+                        type="text"
+                        name="q"
+                        placeholder="Cari nama atau email"
+                        class="w-[300px] rounded-full border-none bg-rose-50 px-4 py-2 text-sm text-gray-700 shadow-inner focus:ring-0"
+                    >
+                    <button
+                        type="submit"
+                        class="flex items-center justify-center rounded-full bg-amber-900 p-2 text-white shadow hover:bg-amber-800"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                             viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
 
-                <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded">
-                    Filter
-                </button>
-            </form>
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3">
+                @forelse ($orders as $order)
 
-            {{-- TABEL DATA ORDERS --}}
-            <div class="bg-white shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    @forelse ($orders as $order)
-                        <div class="border-b last:border-b-0 py-3 flex justify-between items-center">
-                            <div>
-                                <div class="font-semibold">
-                                    ID: {{ $order->id }} —
-                                    {{ $order->tanggal_order?->format('d/m/Y') ?? $order->created_at->format('d/m/Y') }}
-                                </div>
-                                <div class="text-sm text-gray-600">
-                                    Mobil: {{ $order->car->nama_mobil ?? '-' }}
-                                    ({{ $order->car->merk_mobil ?? '-' }})
-                                </div>
-                                <div class="text-sm text-gray-600">
-                                    Pelanggan: {{ $order->user->nama_user ?? '-' }}
-                                </div>
-                                <div class="text-sm text-gray-600">
-                                    Durasi sewa: {{ $order->durasi_sewa ?? $order->rental_duration ?? '-' }}
-                                </div>
-                                <div class="text-sm">
-                                    Status:
-                                    <span class="px-2 py-0.5 rounded text-xs
-                                        @if($order->status === 'pending') bg-yellow-100 text-yellow-800
-                                        @elseif($order->status === 'on_rent') bg-blue-100 text-blue-800
-                                        @elseif($order->status === 'completed') bg-green-100 text-green-800
-                                        @elseif($order->status === 'cancelled') bg-red-100 text-red-800
-                                        @else bg-gray-100 text-gray-800 @endif
-                                    ">
-                                        {{ ucfirst($order->status) }}
-                                    </span>
-                                </div>
-                            </div>
+                    <div class="rounded-[24px] overflow-hidden shadow bg-white flex flex-col">
 
-                            <div>
-                                <a
-                                    href="{{ route('orders.show', $order) }}"
-                                    class="text-sm text-indigo-600 hover:underline"
-                                >
-                                    Detail
-                                </a>
+                        {{-- BAGIAN ATAS PEACH --}}
+                        <div class="bg-primary-container px-6 py-4 relative">
+
+                            {{-- Status Badge --}}
+                            <span class="
+                                absolute top-4 right-4 px-4 py-1 rounded-full text-xs font-semibold text-white
+                                @switch($order->status_order)
+                                    @case('Completed') bg-green-600 @break
+                                    @case('Pending') bg-yellow-600 @break
+                                    @case('Ongoing') bg-blue-600 @break
+                                    @case('Cancelled') bg-red-600 @break
+                                    @default bg-gray-600
+                                @endswitch
+                            ">
+                                {{ ucfirst($order->status_order) }}
+                            </span>
+
+                            {{-- Judul + tanggal --}}
+                            <h2 class="text-2xl font-extrabold text-gray-900">
+                                Pesanan #{{ $order->id }}
+                            </h2>
+                            <p class="text-sm text-gray-700">
+                                {{ $order->tanggal_order?->format('d F Y') ?? '-' }}
+                            </p>
+
+                            {{-- MASA SEWA --}}
+                            <div class="mt-6">
+                                <p class="text-sm font-semibold text-gray-800 mb-1">Masa Sewa:</p>
+                                <div class="flex items-center justify-between w-full">
+                                    <div class="flex items-center gap-2">
+                                        <input type="text"
+                                               value="{{ $order->tanggal_mulai ?? '08/11/2025' }}"
+                                               class="rounded-full bg-white px-2 py-1.5 text-xs text-gray-900 shadow-inner border-none w-24 text-center"
+                                               disabled>
+
+                                        <span class="text-lg font-bold">-</span>
+
+                                        <input type="text"
+                                               value="{{ $order->tanggal_selesai ?? '11/11/2025' }}"
+                                               class="rounded-full bg-white px-2 py-1.5 text-xs text-gray-900 shadow-inner border-none w-24 text-center"
+                                               disabled>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        {{-- HARGA --}}
+                                        <span class="text-lg font-bold text-gray-900 text-right">
+                                        Rp{{ number_format($order->total_harga, 0, ',', '.') }}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    @empty
-                        <p>Tidak ada pesanan.</p>
-                    @endforelse
 
-                    {{-- PAGINATION --}}
-                    <div class="mt-4">
-                        {{ $orders->links() }}
+                        {{-- BAGIAN BAWAH COKLAT (FULL WIDTH) --}}
+                        <div class="bg-[#905840] p-4 flex items-center justify-between">
+
+                            {{-- TOMBOL DETAIL --}}
+                            <a href="{{ route('orders.show', $order) }}"
+                               class="px-6 py-1.5 rounded-full bg-white text-gray-900 text-sm font-semibold shadow">
+                                Detail
+                            </a>
+
+                            {{-- TOMBOL PENALTI --}}
+                            <a href="{{ route('penalties.index', ['order' => $order->id]) }}"
+                               class="px-6 py-1.5 rounded-full bg-red-700 text-white text-sm font-semibold shadow hover:bg-red-800">
+                                Penalti
+                            </a>
+
+                        </div>
+
                     </div>
-                </div>
+
+                @empty
+                    <p class="text-gray-600">Tidak ada pesanan.</p>
+                @endforelse
+            </div>
+
+            {{-- PAGINATION --}}
+            <div class="mt-6">
+                {{ $orders->links() }}
             </div>
 
         </div>
