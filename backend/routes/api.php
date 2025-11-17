@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CarController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\PenaltyController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,3 +32,6 @@ Route::middleware('auth:sanctum')->get('/user/id/{user}', [UserController::class
 
 // order
 Route::middleware('auth:sanctum')->post('/order', [OrderController::class, 'store']);
+
+// pinalty
+Route::middleware('auth:sanctum')->post('/penalty', [PenaltyController::class, 'store']);
