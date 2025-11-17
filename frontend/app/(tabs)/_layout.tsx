@@ -19,12 +19,13 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <Tabs
+    <Tabs 
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
+        tabBarStyle: { display: "none" },
       }}>
       <Tabs.Screen
         name="index"
@@ -45,6 +46,7 @@ export default function TabLayout() {
               </Pressable>
             </Link>
           ),
+        headerShown: false,
         }}
       />
       <Tabs.Screen
