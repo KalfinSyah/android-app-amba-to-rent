@@ -29,7 +29,26 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the request
+        $validated = $request->validate([
+            'car_id' => 'required|integer|exists:cars,id',
+            'user_id' => 'required|integer|exists:users,id',
+            'method_id' => 'required|integer|exists:transaction_methods,id',
+            'tanggal_order' => 'required|date',
+            'durasi_sewa' => 'required|integer|min:1',
+            'tanggal_sewa' => 'required|date',
+            'tanggal_kembali_sewa' => 'required|date',
+            'tanggal_transaksi' => 'required|date',
+            'status_order' => 'required|string',
+            'total_harga' => 'required|numeric|min:0',
+        ]);
+
+        $order = Order::create($validated);
+
+        return response()->json([
+            'message' => 'Order berhasil dibuat',
+            'order' => $order
+        ], 201);
     }
 
     /**
