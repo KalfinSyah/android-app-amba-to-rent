@@ -16,9 +16,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('orders', OrderController::class)->only('index', 'show', 'update');
-    Route::resource('penalties', PenaltyController::class);
     Route::resource('cars', CarController::class);
     Route::resource('users', UserController::class)->only('index', 'show', 'destroy');
+    Route::resource('orders.penalties', PenaltyController::class);
 });
 
 require __DIR__.'/auth.php';

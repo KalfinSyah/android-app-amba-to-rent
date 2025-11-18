@@ -114,7 +114,7 @@
                             </a>
 
                             {{-- TOMBOL PENALTI --}}
-                            <a href="{{ route('penalties.index', ['order' => $order->id]) }}"
+                            <a href="{{ route('orders.penalties.index', $order->id) }}"
                                class="px-6 py-1.5 rounded-full bg-red-700 text-white text-sm font-semibold shadow hover:bg-red-800">
                                 Penalti
                             </a>

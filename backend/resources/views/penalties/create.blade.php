@@ -1,17 +1,8 @@
 <x-app-layout>
     <h2 class="text-xl font-semibold mb-4">Tambah Penalti</h2>
 
-    <form action="{{ route('penalties.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+    <form action="{{ route('orders.penalties.store', $order->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
-
-        <div>
-            <label>Order</label>
-            <select name="order_id" class="border rounded w-full p-2">
-                @foreach ($orders as $o)
-                    <option value="{{ $o->id }}">Order #{{ $o->id }} - {{ $o->user->nama_user }}</option>
-                @endforeach
-            </select>
-        </div>
 
         <div>
             <label>Jenis Penalti</label>

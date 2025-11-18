@@ -110,7 +110,7 @@
                                 </div>
                             @endif
                             <div class="mt-auto ml-auto">
-                                <a href="{{ route('penalties.index', $order->car) }}"
+                                <a href="{{ route('orders.penalties.index', $order->id) }}"
                                    class="inline-flex justify-center px-6 py-2 rounded-full
                                       bg-red-600 text-white text-sm font-semibold">
                                     Penalti
