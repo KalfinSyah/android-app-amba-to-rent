@@ -20,6 +20,7 @@ export default {
                 secondary: {
                     DEFAULT: '#77574C',
                     container: '#FFDBCF',
+                    button: '#A16207',
                 },
             },
             fontFamily: {
