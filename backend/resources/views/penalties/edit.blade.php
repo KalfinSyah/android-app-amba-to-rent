@@ -54,10 +54,12 @@
                             class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary"
                             required
                         >
-                            <option value="Belum Dibayar" {{ old('status_penalty', $penalty->status_penalty) === 'Belum Dibayar' ? 'selected' : '' }}>
+                            <option
+                                value="Belum Dibayar" {{ old('status_penalty', $penalty->status_penalty) === 'Belum Dibayar' ? 'selected' : '' }}>
                                 Belum Dibayar
                             </option>
-                            <option value="Terbayar" {{ old('status_penalty', $penalty->status_penalty) === 'Terbayar' ? 'selected' : '' }}>
+                            <option
+                                value="Terbayar" {{ old('status_penalty', $penalty->status_penalty) === 'Terbayar' ? 'selected' : '' }}>
                                 Terbayar
                             </option>
                         </select>
@@ -136,7 +138,7 @@
 
     <script>
         const inputFileEdit = document.getElementById('foto_penalty');
-        const textBoxEdit   = document.getElementById('foto_penalty_text');
+        const textBoxEdit = document.getElementById('foto_penalty_text');
 
         if (inputFileEdit) {
             inputFileEdit.addEventListener('change', () => {

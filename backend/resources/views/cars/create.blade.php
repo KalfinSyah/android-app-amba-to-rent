@@ -146,7 +146,8 @@
                                    focus:ring-primary focus:border-primary"
                         >
                             <option value="0" {{ old('status_mobil') === '0' ? 'selected' : '' }}>Tersedia</option>
-                            <option value="1" {{ old('status_mobil') === '1' ? 'selected' : '' }}>Tidak Tersedia</option>
+                            <option value="1" {{ old('status_mobil') === '1' ? 'selected' : '' }}>Tidak Tersedia
+                            </option>
                         </select>
                     </div>
                     <div></div>
@@ -175,7 +176,7 @@
 
     <script>
         const inputFotoMobil = document.getElementById('foto_mobil');
-        const textFotoMobil  = document.getElementById('foto_mobil_text');
+        const textFotoMobil = document.getElementById('foto_mobil_text');
 
         if (inputFotoMobil) {
             inputFotoMobil.addEventListener('change', () => {

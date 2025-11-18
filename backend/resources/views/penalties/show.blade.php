@@ -85,7 +85,8 @@
                                bg-secondary-button text-white text-sm font-semibold ml-auto">
                                 Edit
                             </a>
-                            <form action="{{ route('orders.penalties.destroy', [$order->id, $penalty->id]) }}" method="POST"
+                            <form action="{{ route('orders.penalties.destroy', [$order->id, $penalty->id]) }}"
+                                  method="POST"
                                   onsubmit="return confirm('Yakin ingin menghapus penalti ini?')">
                                 @csrf
                                 @method('DELETE')
@@ -120,7 +121,8 @@
 
                     {{-- DELETE BUTTON --}}
                     <div class="px-6 py-4 mt-auto">
-                        <form action="{{ route('orders.penalties.destroy', [$order->id, $penalty->id]) }}" method="POST">
+                        <form action="{{ route('orders.penalties.destroy', [$order->id, $penalty->id]) }}"
+                              method="POST">
                             @csrf
                             @method('DELETE')
                             <button
