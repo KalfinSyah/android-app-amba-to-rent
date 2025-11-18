@@ -31,14 +31,6 @@
             <input type="file" name="foto_penalty" class="border rounded w-full p-2">
         </div>
 
-        <div>
-            <label>Status Penalti</label>
-            <select name="status_penalty" class="border rounded w-full p-2">
-                <option value="pending">Pending</option>
-                <option value="dibayar">Dibayar</option>
-            </select>
-        </div>
-
         <button class="bg-blue-600 text-white px-4 py-2 rounded">Simpan</button>
     </form>
 </x-app-layout>

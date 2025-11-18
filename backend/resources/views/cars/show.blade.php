@@ -1,44 +1,131 @@
 <x-app-layout>
-    <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+    <div class="py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <h2 class="text-2xl font-semibold mb-4">Detail Mobil</h2>
+            <h1 class="text-3xl font-bold text-gray-900 mb-8">Detail Mobil</h1>
 
-        {{-- Foto Mobil --}}
-        <div class="mb-4">
-            <img src="{{ asset('storage/mobil/' . $car->foto_mobil) }}"
-                 class="w-full max-h-64 object-cover rounded">
+            <div class="grid grid-cols-12 gap-6">
+
+                {{-- KARTU INFORMASI MOBIL --}}
+                <div class="bg-primary-container rounded-[24px] overflow-hidden shadow col-span-7">
+
+                    {{-- HEADER --}}
+                    <div class="bg-primary text-white px-6 py-3 flex items-center justify-between">
+                        <h2 class="text-lg font-semibold">Informasi Mobil</h2>
+
+                        {{-- STATUS --}}
+                        <span class="
+                            px-4 py-1 rounded-full text-xs font-semibold text-white
+                            @if(!$car->status_mobil)
+                                bg-red-600
+                            @else
+                                bg-green-600
+                            @endif
+                        ">
+                            {{ $car->status_mobil ? 'Tersedia' : 'Tidak Tersedia' }}
+                        </span>
+                    </div>
+
+                    {{-- BODY --}}
+                    <div class="px-6 py-5 text-[#4B1F14] space-y-6">
+
+                        {{-- Nama Mobil --}}
+                        <div>
+                            <p class="text-xs font-semibold mb-1">Nama Mobil:</p>
+                            <p class="text-2xl font-extrabold">
+                                {{ $car->nama_mobil }}
+                            </p>
+                        </div>
+
+                        {{-- Info Mobil --}}
+                        <div class="grid grid-cols-[auto,1fr] gap-y-3 gap-x-8 text-sm">
+
+                            <p class="font-semibold">Merk Mobil:</p>
+                            <p>{{ $car->merk_mobil }}</p>
+
+                            <p class="font-semibold">Tahun Mobil:</p>
+                            <p>{{ $car->tahun_mobil }}</p>
+
+                            <p class="font-semibold">Jenis Mobil:</p>
+                            <p>{{ $car->jenis_mobil }}</p>
+
+                            <p class="font-semibold">Tipe Mesin:</p>
+                            <p>{{ $car->tipe_mesin }}</p>
+
+                            <p class="font-semibold">Tipe Transmisi:</p>
+                            <p>{{ $car->tipe_transmisi }}</p>
+                        </div>
+
+                        {{-- Harga --}}
+                        <div class="border-t border-[#E0A894] pt-4 flex items-center justify-between">
+                            <p class="text-xl font-bold">Harga Sewa / Hari:</p>
+                            <p class="text-2xl font-extrabold">
+                                Rp{{ number_format($car->harga_sewa, 0, ',', '.') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- FOOTER --}}
+                    <div class="bg-white px-6 py-4 mx-6 mb-6 rounded-[25px]">
+                        <div class="flex items-center justify-between">
+                            <a href="#"
+                                class="inline-flex justify-center px-6 py-2 rounded-full
+                                bg-primary-button text-white text-sm font-semibold">
+                                Ubah Status
+                            </a>
+                            {{-- EDIT --}}
+                            <div class="flex gap-3">
+                                <a href="{{ route('cars.edit', $car->id) }}"
+                                    class="inline-flex justify-center px-6 py-2 rounded-full
+                                        bg-secondary-button text-white text-sm font-semibold">
+                                    Edit
+                                </a>
+
+                                <form action="{{ route('cars.destroy', $car->id) }}" method="POST"
+                                      onsubmit="return confirm('Yakin ingin menghapus mobil ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button
+                                        class="inline-flex justify-center px-6 py-2 rounded-full
+                                             bg-red-600 text-white text-sm font-semibold">
+                                        Hapus
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- KARTU GAMBAR MOBIL --}}
+                <div class="bg-primary-container rounded-[24px] overflow-hidden shadow col-span-5 flex flex-col">
+
+                    {{-- HEADER --}}
+                    <div class="bg-primary text-white px-6 py-3">
+                        <h2 class="text-lg font-semibold">Gambar Mobil</h2>
+                    </div>
+
+                    {{-- GAMBAR --}}
+                    <div class="px-6 pt-4">
+                        <img
+                            src="{{ asset('storage/mobil/' . $car->foto_mobil) }}"
+                            class="w-full h-56 object-cover rounded-[20px]"
+                        >
+                    </div>
+
+                    {{-- DELETE BUTTON (Opsional) --}}
+                    <div class="px-6 py-4 mt-auto">
+                        <form action="{{ route('cars.destroy', $car->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button class="inline-flex justify-center px-6 py-2 rounded-full bg-red-600 text-white text-sm font-semibold">
+                                Hapus Gambar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
-
-        <div class="space-y-2">
-            <p><strong>Nama Mobil:</strong> {{ $car->nama_mobil }}</p>
-            <p><strong>Merk Mobil:</strong> {{ $car->merk_mobil }}</p>
-            <p><strong>Tahun Mobil:</strong> {{ $car->tahun_mobil }}</p>
-            <p><strong>Jenis Mobil:</strong> {{ $car->jenis_mobil }}</p>
-            <p><strong>Tipe Mesin:</strong> {{ $car->tipe_mesin }}</p>
-            <p><strong>Tipe Transmisi:</strong> {{ $car->tipe_transmisi }}</p>
-            <p><strong>Harga Sewa:</strong> Rp {{ number_format($car->harga_sewa, 0, ',', '.') }}</p>
-
-            <p><strong>Status:</strong>
-                @if ($car->status_mobil)
-                    <span class="text-red-600 font-semibold">Tidak Tersedia</span>
-                @else
-                    <span class="text-green-600 font-semibold">Tersedia</span>
-                @endif
-            </p>
-        </div>
-
-        {{-- Tombol --}}
-        <div class="mt-6 flex gap-3">
-            <a href="{{ route('cars.edit', $car->id) }}"
-               class="bg-yellow-500 text-white px-4 py-2 rounded">
-                Edit
-            </a>
-
-            <a href="{{ route('cars.index') }}"
-               class="bg-gray-600 text-white px-4 py-2 rounded">
-                Kembali
-            </a>
-        </div>
-
     </div>
 </x-app-layout>

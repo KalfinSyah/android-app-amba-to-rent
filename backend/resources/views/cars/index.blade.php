@@ -71,7 +71,7 @@
                             </div>
 
                             {{-- STRIP COKLAT FULL WIDTH --}}
-                            <div class="mt-auto bg-primary px-6 py-3">
+                            <div class="bg-primary p-4 flex items-center justify-between">
                                 <a href="{{ route('cars.show', $car) }}"
                                    class="px-6 py-1.5 rounded-full bg-white text-gray-900 text-sm font-semibold shadow">
                                     Detail
@@ -80,7 +80,19 @@
                         </div>
 
                         {{-- BAGIAN GAMBAR --}}
-                        <div class="w-1/2">
+                        <div class="w-1/2 relative">
+                            {{-- Status Badge di kanan atas --}}
+                            <span
+                                class="absolute top-3 right-3 px-4 py-1 rounded-full text-xs font-semibold text-white
+                                @if(!$car->status_mobil)
+                                    bg-red-600
+                                @else
+                                    bg-green-600
+                                @endif"
+                            >
+                                {{ $car->status_mobil ? 'Tersedia' : 'Tidak Tersedia' }}
+                            </span>
+
                             <img src="/img/mobil.jpg" class="w-full h-full object-cover" />
                         </div>
                     </div>

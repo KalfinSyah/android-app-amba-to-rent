@@ -105,7 +105,7 @@
                         </div>
 
                         {{-- BAGIAN BAWAH COKLAT (FULL WIDTH) --}}
-                        <div class="bg-[#905840] p-4 flex items-center justify-between">
+                        <div class="bg-primary p-4 flex items-center justify-between">
 
                             {{-- TOMBOL DETAIL --}}
                             <a href="{{ route('orders.show', $order) }}"
@@ -118,11 +118,8 @@
                                class="px-6 py-1.5 rounded-full bg-red-700 text-white text-sm font-semibold shadow hover:bg-red-800">
                                 Penalti
                             </a>
-
                         </div>
-
                     </div>
-
                 @empty
                     <p class="text-gray-600">Tidak ada pesanan.</p>
                 @endforelse

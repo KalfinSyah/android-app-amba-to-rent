@@ -85,6 +85,16 @@
                                bg-secondary-button text-white text-sm font-semibold ml-auto">
                                 Edit
                             </a>
+                            <form action="{{ route('penalties.destroy', $penalty->id) }}" method="POST"
+                                  onsubmit="return confirm('Yakin ingin menghapus penalti ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button
+                                    class="inline-flex justify-center px-6 py-2 rounded-full
+                                             bg-red-600 text-white text-sm font-semibold">
+                                    Hapus
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
