@@ -108,12 +108,12 @@
 
                         {{-- STRIP COKLAT DENGAN TOMBOL --}}
                         <div class="bg-primary px-4 py-3 flex items-center gap-3">
-                            <a href="{{ route('orders.penalties.show', $penalty->id) }}"
+                            <a href="{{ route('orders.penalties.show', [$order->id, $penalty->id]) }}"
                                class="px-5 py-1.5 rounded-full bg-white text-gray-900 text-sm font-semibold shadow">
                                 Detail
                             </a>
 
-                            <a href="{{ route('orders.penalties.edit', $penalty->id) }}"
+                            <a href="{{ route('orders.penalties.edit', [$order->id, $penalty->id]) }}"
                                class="px-5 py-1.5 rounded-full bg-secondary-button text-white text-sm font-semibold shadow">
                                 Edit
                             </a>

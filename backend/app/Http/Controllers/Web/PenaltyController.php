@@ -45,10 +45,13 @@ class PenaltyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Order $order, string $id)
+    public function show(Order $order, Penalty $penalty)
     {
-        $penalty = Penalty::with('order')->findOrFail($id);
-        return view('penalties.show', compact('penalty'));
+        if ($penalty->order_id !== $order->id) {
+            abort(404);
+        }
+
+        return view('penalties.show', compact('order', 'penalty'));
     }
 
     /**
@@ -58,26 +61,22 @@ class PenaltyController extends Controller
     {
         $penalty = Penalty::findOrFail($id);
         $orders = Order::all();
-        return view('penalties.edit', compact('penalty', 'orders'));
+        return view('penalties.edit', compact('penalty', 'order'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Order $order, string $id)
+    public function update(Request $request, Order $order, Penalty $penalty)
     {
         $request->validate([
-            'order_id' => 'required|exists:orders,id',
             'jenis_penalty' => 'required|string',
             'biaya_penalty' => 'required|numeric',
-            'foto_penalty' => 'image|max:2048',
+            'foto_penalty' => 'nullable|image|max:2048',
             'status_penalty' => 'required|string'
         ]);
 
-        $penalty = Penalty::findOrFail($id);
-
         $data = $request->only([
-            'order_id',
             'jenis_penalty',
             'biaya_penalty',
             'status_penalty',
@@ -89,7 +88,9 @@ class PenaltyController extends Controller
 
         $penalty->update($data);
 
-        return redirect()->route('penalties.show', $id)->with('success', 'Penalti berhasil diperbarui');
+        return redirect()
+            ->route('orders.penalties.show', [$order->id, $penalty->id])
+            ->with('success', 'Penalti berhasil diperbarui');
     }
 
     /**
@@ -100,6 +101,8 @@ class PenaltyController extends Controller
         $penalty = Penalty::findOrFail($id);
         $penalty->delete();
 
-        return redirect()->route('penalties.index')->with('success', 'Penalti berhasil dihapus');
+        return redirect()
+            ->route('orders.penalties.index', $order->id)
+            ->with('success', 'Penalti berhasil dihapus');
     }
 }

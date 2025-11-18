@@ -1,7 +1,7 @@
 <x-app-layout>
     <h2 class="text-xl font-semibold mb-4">Edit Penalti</h2>
 
-    <form action="{{ route('orders.penalties.update', $penalty->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+    <form action="{{ route('orders.penalties.update', [$order->id, $penalty->id]) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
         @method('PUT')
 
