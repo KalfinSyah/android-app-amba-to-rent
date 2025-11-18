@@ -11,10 +11,43 @@ class CarController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cars = Car::latest()->paginate(10);
-        return view('cars.index', compact('cars'));
+        $status = $request->input('status');
+        $sort = $request->input('sort', 'recent');
+        $q = $request->input('q');
+
+        $query = Car::query();
+
+        if ($status !== null && $status !== '') {
+            $query->where('status_mobil', $status);
+        }
+        if ($sort === 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        if (!empty($q)) {
+            $query->where('nama_mobil', 'like', '%' . $q . '%');
+        }
+
+        $cars = $query
+            ->paginate(10)
+            ->withQueryString();
+
+        $availableStatuses = [
+            '1' => 'Tersedia',
+            '0' => 'Tidak Tersedia',
+        ];
+
+        return view('cars.index', [
+            'cars' => $cars,
+            'status' => $status,
+            'sort' => $sort,
+            'q' => $q,
+            'availableStatuses' => $availableStatuses,
+        ]);
     }
 
     /**

@@ -11,10 +11,30 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::where('is_admin', 0)->get();
-        return view('users.index', compact('users'));
+        $sort = $request->input('sort', 'recent');
+        $q = $request->input('q');
+
+        $query = User::where('is_admin', 0);
+
+        if ($sort === 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        if (!empty($q)) {
+            $query->where('nama_user', 'like', '%' . $q . '%');
+        }
+
+        $users = $query->paginate(6)->withQueryString();
+
+        return view('users.index', [
+            'users' => $users,
+            'sort' => $sort,
+            'q' => $q
+        ]);
     }
 
     /**

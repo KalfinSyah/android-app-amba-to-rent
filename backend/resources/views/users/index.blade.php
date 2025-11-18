@@ -7,55 +7,43 @@
                 <h1 class="text-3xl font-bold text-gray-900">
                     Daftar Pelanggan
                 </h1>
-
-{{--                <a--}}
-{{--                    href="#"--}}
-{{--                    class="inline-flex items-center rounded-full bg-amber-900 px-6 py-2 text-sm font-semibold text-white shadow hover:bg-amber-800"--}}
-{{--                >--}}
-{{--                    + Tambah Pelanggan--}}
-{{--                </a>--}}
             </div>
 
             {{-- FILTER BAR --}}
-            <div class="mb-8 rounded-full bg-primary-container px-6 py-4 shadow flex items-center gap-4">
-                <span class="font-semibold text-gray-800 mr-2">Urutkan:</span>
-                <select
-                    name="sort"
-                    class="w-40 rounded-full border-none bg-rose-50 px-4 py-2 text-sm text-black shadow-inner focus:ring-0"
-                >
-                    <option value="name">Nama</option>
-                    <option value="recent">Terbaru</option>
-                </select>
-
-{{--                <span class="font-semibold text-gray-800 mr-2">Filter:</span>--}}
-{{--                <select--}}
-{{--                    name="status"--}}
-{{--                    class="w-40 rounded-full border-none bg-white px-4 py-2 text-sm text-black shadow-inner focus:ring-0"--}}
-{{--                >--}}
-{{--                    <option value="">Semua</option>--}}
-{{--                    <option value="new">Pelanggan Baru</option>--}}
-{{--                    <option value="active">Sering Sewa</option>--}}
-{{--                </select>--}}
-
-                <div class="flex items-center gap-2 ml-auto">
-                    <input
-                        type="text"
-                        name="q"
-                        placeholder="Cari nama atau email"
-                        class="w-[300px] rounded-full border-none bg-rose-50 px-4 py-2 text-sm text-gray-700 shadow-inner focus:ring-0"
+            <form method="GET" action="{{ route('users.index') }}">
+                <div class="mb-8 rounded-full bg-primary-container px-6 py-4 shadow flex items-center gap-4">
+                    <span class="font-semibold text-gray-800 mr-2">Urutkan:</span>
+                    <select
+                        name="sort"
+                        class="w-40 rounded-full border-none bg-rose-50 px-4 py-2 text-sm text-black shadow-inner focus:ring-0"
+                        onchange="this.form.submit()"
                     >
-                    <button
-                        type="submit"
-                        class="flex items-center justify-center rounded-full bg-amber-900 p-2 text-white shadow hover:bg-amber-800"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                             viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" />
-                        </svg>
-                    </button>
+                        <option value="recent" {{ $sort === 'recent' ? 'selected' : '' }}>Terbaru</option>
+                        <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Terlama</option>
+                    </select>
+
+                    {{-- SEARCH --}}
+                    <div class="flex items-center gap-2 ml-auto">
+                        <input
+                            type="text"
+                            name="q"
+                            value="{{ request('q') }}"
+                            placeholder="Cari nama mobil"
+                            class="w-[300px] rounded-full border-none bg-rose-50 px-4 py-2 text-sm text-gray-700 shadow-inner focus:ring-0"
+                        >
+                        <button
+                            type="submit"
+                            class="flex items-center justify-center rounded-full bg-amber-900 p-2 text-white shadow hover:bg-amber-800"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                 viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </form>
 
                 {{-- LIST PELANGGAN DALAM CARD --}}
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

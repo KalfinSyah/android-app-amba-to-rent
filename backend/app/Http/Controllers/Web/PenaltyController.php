@@ -12,11 +12,45 @@ class PenaltyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Order $order)
+    public function index(Order $order, Request $request)
     {
-        $penalties = $order->penalties()->get();
+        $status = $request->input('status');
+        $sort = $request->input('sort', 'recent');
+        $q = $request->input('q');
 
-        return view('penalties.index', compact('order', 'penalties'));
+        $query = Penalty::query();
+
+        if (!empty($status)) {
+            $query->where('status_penalty', $status);
+        }
+
+        if ($sort === 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        if (!empty($q)) {
+            $query->where('jenis_penalty', 'like', '%' . $q . '%');
+        }
+
+        $penalties = $query
+            ->paginate(6)
+            ->withQueryString();
+
+        $availableStatuses = [
+            'Terbayar' => 'Terbayar',
+            'Belum Dibayar' => 'Belum Dibayar',
+        ];
+
+        return view('penalties.index', [
+            'penalties' => $penalties,
+            'order' => $order,
+            'status' => $status,
+            'sort' => $sort,
+            'q' => $q,
+            'availableStatuses' => $availableStatuses,
+        ]);
     }
 
     /**

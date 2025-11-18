@@ -13,40 +13,42 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $status   = $request->input('status');
-        $sortBy   = $request->input('sort_by', 'tanggal_order');
-        $sortDir  = $request->input('sort_dir', 'desc');
+        $status = $request->input('status');
+        $sort = $request->input('sort', 'recent');
+        $q = $request->input('q');
 
         $query = Order::query();
 
-        if ($status) {
+        if (!empty($status)) {
             $query->where('status_order', $status);
         }
 
-        $allowedSorts = ['tanggal_order', 'durasi_sewa'];
-        if (! in_array($sortBy, $allowedSorts, true)) {
-            $sortBy = 'tanggal_order';
+        if ($sort === 'oldest') {
+            $query->orderBy('tanggal_order', 'asc');
+        } else {
+            $query->orderBy('tanggal_order', 'desc');
         }
 
-        $sortDir = $sortDir === 'asc' ? 'asc' : 'desc';
+        if (!empty($q)) {
+            $query->where('id', 'like', '%' . $q . '%');
+        }
 
         $orders = $query
-            ->orderBy($sortBy, $sortDir)
-            ->paginate(10)
+            ->paginate(6)
             ->withQueryString();
 
         $availableStatuses = [
-            'pending'   => 'Pending',
-            'on_rent'   => 'Sedang Disewa',
-            'completed' => 'Selesai',
-            'cancelled' => 'Dibatalkan',
+            'Pending' => 'Pending',
+            'Ongoing' => 'Ongoing',
+            'Completed' => 'Completed',
+            'Cancelled' => 'Cancelled',
         ];
 
         return view('orders.index', [
-            'orders'            => $orders,
-            'status'            => $status,
-            'sortBy'            => $sortBy,
-            'sortDir'           => $sortDir,
+            'orders' => $orders,
+            'status' => $status,
+            'sort' => $sort,
+            'q' => $q,
             'availableStatuses' => $availableStatuses,
         ]);
     }
