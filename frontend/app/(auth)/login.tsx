@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { router } from "expo-router";
 import { TextField } from "@/components/TextField";
@@ -6,6 +7,41 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { colors } from "@/theme/colors";
 import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
+
+const handleLogin = async (email: String, pass: String) => {
+    if (!email || !pass) return;
+
+    try {
+        const response = await fetch("http://localhost:8000/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                email_user: email,
+                password: pass
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || "Login gagal");
+            return;
+        }
+
+        // Simpan token ke storage
+        await AsyncStorage.setItem("token", data.token);
+
+        // Berhasil login → navigate
+        router.push("/beranda");
+
+    } catch (err) {
+        console.log(err);
+        alert("Terjadi kesalahan server");
+    }
+};
 
 export default function LoginScreen() {
     const [email, setEmail] = useState("");
@@ -41,7 +77,7 @@ export default function LoginScreen() {
                 {/* Big brown pill button at bottom */}
                 <PrimaryButton
                     label="Login"
-                    onPress={() => router.replace("/beranda")}
+                    onPress={() => handleLogin(email, pass)}
                     style={{ width: "100%" }}
                     disabled={!email || !pass}
                 />
