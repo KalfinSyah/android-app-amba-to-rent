@@ -44,7 +44,7 @@ export default function OrderDetailScreen() {
 
                 <PrimaryButton
                     label="Penalti"
-                    onPress={() => router.push("/orders/penalties")}
+                    onPress={() => router.push("/penalty")}
                     iconLeft={<Text style={{ color: colors.primaryText }}>⚠️</Text>}
                     style={{ marginBottom: spacing.xl }}
                 />

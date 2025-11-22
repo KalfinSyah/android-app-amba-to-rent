@@ -29,7 +29,7 @@ export default function RentCarScreen() {
                     <Text style={styles.panelTitle}>Pilih Mobil</Text>
                     <PrimaryButton
                         label="Lihat Mobil"
-                        onPress={() => router.push("/daftar-mobil/car-list")}
+                        onPress={() => router.push("/car-list")}
                         iconLeft={<Text style={{ color: colors.primaryText }}>📅</Text>}
                     />
                 </GreigePanel>

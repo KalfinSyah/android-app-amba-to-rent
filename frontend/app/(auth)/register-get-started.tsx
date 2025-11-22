@@ -9,7 +9,7 @@ import { spacing } from "@/theme/spacing";
 export default function RegisterGetStartedScreen() {
     return (
         <ImageBackground
-        source={{ uri: "https://picsum.photos/1000/2001" }}
+        source={require("../../assets/images/mazda-cx70-page.jpg")}
         style={styles.bg}
         resizeMode="cover"
         >
