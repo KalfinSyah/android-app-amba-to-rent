@@ -6,6 +6,45 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { colors } from "@/theme/colors";
 import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const handleRegister = async (name: string, email: string, phone: string, pass: string) => {
+    try {
+        const response = await fetch("http://localhost:8000/api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                nama_user: name,
+                email_user: email,
+                no_telp_user: phone,
+                password: pass,
+            }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || "Register gagal");
+            return;
+        }
+
+        // Save token to device
+        await AsyncStorage.setItem("token", data.token);
+
+        // Optional: Save user data if needed later
+        await AsyncStorage.setItem("user", JSON.stringify(data.user));
+
+        alert("Register berhasil!");
+
+        // Redirect to beranda
+        router.replace("/beranda");
+
+    } catch (error) {
+        console.error("Register error:", error);
+        alert("Terjadi kesalahan jaringan");
+    }
+};
+
 
 export default function RegisterFormScreen() {
     const [name, setName] = useState("");
@@ -64,7 +103,7 @@ export default function RegisterFormScreen() {
 
                 <PrimaryButton
                     label="Register"
-                    onPress={() => router.replace("/beranda")}
+                    onPress={() => handleRegister(name, email, phone, pass)}
                     style={{ width: "100%" }}
                     disabled={!name || !email || !phone || !pass || passMismatch}
                 />
