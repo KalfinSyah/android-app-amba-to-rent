@@ -38,7 +38,7 @@ const handleLogin = async (email: String, pass: String) => {
         router.push("/beranda");
 
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         alert("Terjadi kesalahan server");
     }
 };
