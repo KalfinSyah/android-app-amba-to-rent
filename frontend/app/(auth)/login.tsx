@@ -33,6 +33,9 @@ const handleLogin = async (email: String, pass: String) => {
 
         // Simpan token ke storage
         await AsyncStorage.setItem("token", data.token);
+        await AsyncStorage.setItem("user_id", String(data.user.id));
+
+        console.log("id ", data.user.id)
 
         // Berhasil login → navigate
         router.push("/beranda");

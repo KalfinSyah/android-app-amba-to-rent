@@ -32,7 +32,7 @@ const handleRegister = async (name: string, email: string, phone: string, pass: 
         await AsyncStorage.setItem("token", data.token);
 
         // Optional: Save user data if needed later
-        await AsyncStorage.setItem("user", JSON.stringify(data.user));
+        await AsyncStorage.setItem("user_id", String(data.user.id));
 
         alert("Register berhasil!");
 
