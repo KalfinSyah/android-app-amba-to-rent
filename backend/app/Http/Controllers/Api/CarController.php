@@ -56,8 +56,8 @@ class CarController extends Controller
     public function showByName($nama_mobil)
     {
         $car = Car::where('nama_mobil', $nama_mobil)
-                ->where('status_mobil', 1)
-                ->first();
+            ->where('status_mobil', 1)
+            ->first();
 
         if ($car) {
             return response()->json([
@@ -73,8 +73,8 @@ class CarController extends Controller
     public function showByBrand($merk_mobil)
     {
         $cars = Car::where('merk_mobil', $merk_mobil)
-                ->where('status_mobil', 1)
-                ->get();
+            ->where('status_mobil', 1)
+            ->get();
 
         if ($cars->isNotEmpty()) {
             return response()->json([
@@ -110,5 +110,35 @@ class CarController extends Controller
     public function destroy(Car $car)
     {
         //
+    }
+
+    /**
+     * Only showing cars that are available at that period of time.
+     */
+    public function available(Request $request)
+    {
+        $request->validate([
+            'tanggal_sewa'          => 'required|date',
+            'tanggal_kembali_sewa'  => 'required|date|after_or_equal:tanggal_sewa',
+        ]);
+
+        $start = $request->tanggal_sewa;
+        $end   = $request->tanggal_kembali_sewa;
+
+        $cars = Car::query()
+            ->where('status_mobil', true)
+            ->whereDoesntHave('orders', function ($q) use ($start, $end) {
+                $q->whereIn('status', ['pending', 'accepted', 'ongoing'])
+                    ->where(function ($query) use ($start, $end) {
+                        $query->where('tanggal_sewa', '<=', $end)
+                            ->where('tanggal_kembali_sewa', '>=', $start);
+                    });
+            })
+            ->get();
+
+        return response()->json([
+            'message' => 'Daftar mobil tersedia berhasil diambil',
+            'cars'    => $cars,
+        ], 200);
     }
 }
