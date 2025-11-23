@@ -18,7 +18,7 @@ class PenaltiesSeeder extends Seeder
             'order_id' => 1,
             'jenis_penalty' => 'Body Damage',
             'biaya_penalty' => 1000000,
-            'foto_penalty' => 'https://images-ext-1.discordapp.net/external/iuDcx4jsBbuVY3oDRkMiyOky1zl2ejbPcHxxDUxH4xM/https/www.gardaoto.com/wp-content/uploads/2024/05/car-file-insurance-claim-after-bumper-damage-featured.png?format=webp&quality=lossless&width=1526&height=859',
+            'foto_penalty' => 'https://lirp.cdn-website.com/5db48381c8ae431eb5324cc0c2e7772a/dms3rep/multi/opt/1531822-blog103-640w.jpg',
             'status_penalty' => 'Unpaid'
         ]);
     }

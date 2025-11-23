@@ -21,7 +21,7 @@ class CarsSeeder extends Seeder
             'tipe_mesin' => '1.5L Petrol',
             'tipe_transmisi' => 'Matic',
             'harga_sewa' => 350000,
-            'foto_mobil' => 'https://images-ext-1.discordapp.net/external/rpX_9nHiNzMyogva9l72bMdtJkEPkec5Eq_asdtvGPI/https/upload.wikimedia.org/wikipedia/commons/1/1a/2019_Toyota_Calya_1.2_G_B401RA_%252820200222%2529.jpg?format=webp&width=1410&height=859',
+            'foto_mobil' => 'https://upload.wikimedia.org/wikipedia/commons/9/99/2018_Daihatsu_Sigra_1.0_D_wagon_%28B400RS%3B_01-12-2019%29%2C_South_Tangerang.jpg',
             'status_mobil' => true
         ]);
 
@@ -33,7 +33,7 @@ class CarsSeeder extends Seeder
             'tipe_mesin' => '1.2L Petrol',
             'tipe_transmisi' => 'Manual',
             'harga_sewa' => 280000,
-            'foto_mobil' => 'https://images-ext-1.discordapp.net/external/rpX_9nHiNzMyogva9l72bMdtJkEPkec5Eq_asdtvGPI/https/upload.wikimedia.org/wikipedia/commons/1/1a/2019_Toyota_Calya_1.2_G_B401RA_%252820200222%2529.jpg?format=webp&width=1410&height=859',
+            'foto_mobil' => 'https://upload.wikimedia.org/wikipedia/commons/9/99/2018_Daihatsu_Sigra_1.0_D_wagon_%28B400RS%3B_01-12-2019%29%2C_South_Tangerang.jpg',
             'status_mobil' => true
         ]);
     }
