@@ -16,10 +16,10 @@ class PenaltiesSeeder extends Seeder
         // Data ini hanya akan berhasil jika ada order_id = 1
         Penalty::create([
             'order_id' => 1,
-            'jenis_penalty' => 'Keterlambatan Pengembalian 1 Hari',
-            'biaya_penalty' => 100000,
-            'foto_penalty' => 'images/penalty/telat.jpg',
-            'status_penalty' => 'Lunas'
+            'jenis_penalty' => 'Body Damage',
+            'biaya_penalty' => 1000000,
+            'foto_penalty' => 'https://images-ext-1.discordapp.net/external/iuDcx4jsBbuVY3oDRkMiyOky1zl2ejbPcHxxDUxH4xM/https/www.gardaoto.com/wp-content/uploads/2024/05/car-file-insurance-claim-after-bumper-damage-featured.png?format=webp&quality=lossless&width=1526&height=859',
+            'status_penalty' => 'Unpaid'
         ]);
     }
 }
