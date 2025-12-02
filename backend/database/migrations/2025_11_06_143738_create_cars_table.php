@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('tipe_mesin', 20);
             $table->string('tipe_transmisi', 10);
             $table->decimal('harga_sewa', 15, 2);
-            $table->string('foto_mobil', 100);
+            $table->longText('foto_mobil');
             $table->boolean('status_mobil');
             $table->timestamps();
         });

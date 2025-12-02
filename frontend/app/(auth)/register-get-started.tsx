@@ -8,78 +8,90 @@ import { spacing } from "@/theme/spacing";
 
 export default function RegisterGetStartedScreen() {
     return (
-        <ImageBackground
-        source={require("../../assets/images/mazda-cx70-page.jpg")}
-        style={styles.bg}
-        resizeMode="cover"
-        >
-        {/* subtle dark overlay so white text pops */}
-            <View style={styles.overlay}>
-                {/* Brand near top-middle like screenshot */}
-                <View style={styles.logoBlock}>
-                    <Image style={styles.logoIcon} source={require("../../assets/images/ambatorent-short-light.png")} resizeMode="contain"/>
-                </View>
+        <View style={styles.root}>
+            <ImageBackground
+                source={require("../../assets/images/mazda-cx70-page.jpg")}
+                style={styles.bg}
+                resizeMode="cover"
+            >
+            {/* subtle dark overlay so white text pops */}
+                <View style={styles.overlay}>
+                    {/* Brand near top-middle like screenshot */}
+                    <View style={styles.logoBlock}>
+                        <Image
+                        style={styles.logoIcon}
+                        source={require("../../assets/images/ambatorent-short-light.png")}
+                        resizeMode="contain"
+                        />
+                    </View>
 
-                {/* Big multiline headline */}
-                <Text style={styles.headline}>
-                    Selamat Datang di{"\n"}
-                    Platform untuk Rental{"\n"}
-                    Mobil Online{"\n"}
-                    terpercaya.
-                </Text>
+                    {/* Big multiline headline */}
+                    <Text style={styles.headline}>
+                        Selamat Datang di{"\n"}
+                        Platform untuk Rental{"\n"}
+                        Mobil Online{"\n"}
+                        terpercaya.
+                    </Text>
 
-                {/* Bottom CTA */}
-                <View style={styles.ctaWrap}>
-                <PrimaryButton
-                    label="Get Started"
-                    onPress={() => router.push("/register-form")}
-                    style={{ width: "100%" }}
-                />
+                    {/* Bottom CTA */}
+                    <View style={styles.ctaWrap}>
+                        <PrimaryButton
+                        label="Get Started"
+                        onPress={() => router.push("/register-form")}
+                        // biarkan button stretch mengikuti parent, tanpa width: "100%"
+                        />
+                    </View>
                 </View>
-            </View>
-        </ImageBackground>
+            </ImageBackground>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    bg: { flex: 1 },
+    root: {
+        flex: 1,
+    },
+
+    bg: {
+        flex: 1,
+        width: "100%",
+        height: "100%",
+    },
+
     overlay: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.20)",
-        paddingHorizontal: spacing.xl,
-        paddingTop: spacing.xxl,
-        paddingBottom: spacing.xxl,
-        justifyContent: "space-between",
+        paddingHorizontal: spacing.lg,
+        paddingTop: spacing.xl,
+        paddingBottom: spacing.lg,
+        justifyContent: "flex-start",   // ⬅️ bukan lagi space-between
     },
 
     logoBlock: {
         alignItems: "center",
-        marginTop: spacing.lg,
+        marginTop: spacing.sm,
     },
-    logoIcon: { width: 460, height: 240, tintColor: "#FFFFFF" },
-    brand: {
-        color: "#FFFFFF",
-        fontWeight: "800",
-        letterSpacing: 4,
-        fontSize: 22,
-    },
-    tagline: {
-        color: "#FFFFFF",
-        fontSize: 12,
-        marginTop: 4,
-        letterSpacing: 1,
+
+    logoIcon: {
+        width: "60%",
+        maxWidth: 260,
+        aspectRatio: 460 / 240,
+        tintColor: "#FFFFFF",
     },
 
     headline: {
         ...typography.h1,
         color: "#FFFFFF",
-        alignSelf: "flex-start",
         lineHeight: 34,
-        marginTop: spacing.xl,
+        marginTop: spacing.lg,  // jarak normal di bawah logo
+        alignSelf: "flex-start",
+        flexShrink: 1,
     },
 
     ctaWrap: {
         width: "100%",
-        paddingBottom: spacing.lg,
+        marginTop: "auto",      // ⬅️ dorong tombol ke bawah layar
+        paddingBottom: spacing.sm,
     },
 });
+

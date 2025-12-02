@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained()->onDelete('restrict');
             $table->string('jenis_penalty', 100);
             $table->float('biaya_penalty');
-            $table->string('foto_penalty', 100);
+            $table->longText('foto_penalty');
             $table->string('status_penalty', 50)->default('Pending');
             $table->timestamps();
         });

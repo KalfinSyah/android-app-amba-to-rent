@@ -21,7 +21,7 @@ class CarsSeeder extends Seeder
             'tipe_mesin' => '1.5L Petrol',
             'tipe_transmisi' => 'Matic',
             'harga_sewa' => 350000,
-            'foto_mobil' => 'https://upload.wikimedia.org/wikipedia/commons/9/99/2018_Daihatsu_Sigra_1.0_D_wagon_%28B400RS%3B_01-12-2019%29%2C_South_Tangerang.jpg',
+            'foto_mobil' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/2022_Toyota_Avanza_1.5_G_Toyota_Safety_Sense_W101RE_%2820220403%29.jpg/1200px-2022_Toyota_Avanza_1.5_G_Toyota_Safety_Sense_W101RE_%2820220403%29.jpg',
             'status_mobil' => true
         ]);
 
@@ -33,7 +33,7 @@ class CarsSeeder extends Seeder
             'tipe_mesin' => '1.2L Petrol',
             'tipe_transmisi' => 'Manual',
             'harga_sewa' => 280000,
-            'foto_mobil' => 'https://upload.wikimedia.org/wikipedia/commons/9/99/2018_Daihatsu_Sigra_1.0_D_wagon_%28B400RS%3B_01-12-2019%29%2C_South_Tangerang.jpg',
+            'foto_mobil' => 'https://upload.wikimedia.org/wikipedia/commons/2/2e/2020_Honda_Brio_Satya_S_1.2_DD1_%2820211001%29_01.jpg',
             'status_mobil' => true
         ]);
     }

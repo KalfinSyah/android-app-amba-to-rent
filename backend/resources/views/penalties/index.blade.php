@@ -77,7 +77,7 @@
                         <div class="h-40 w-full">
                             @if (!empty($penalty->foto_penalty))
                                 <img
-                                    src="{{ asset('storage/penalties/' . $penalty->foto_penalty) }}"
+                                    src={{ $penalty->foto_penalty }}
                                     alt="Foto penalti {{ $penalty->jenis_penalty }}"
                                     class="w-full h-full object-cover"
                                 >
