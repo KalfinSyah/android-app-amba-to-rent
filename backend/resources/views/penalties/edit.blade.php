@@ -17,57 +17,40 @@
                 @csrf
                 @method('PUT')
 
-                {{-- INPUT – JENIS PENALTI --}}
-                <div class="space-y-2">
-                    <label class="text-lg font-semibold text-[#4B1F14]">Jenis Penalti:</label>
-                    <input
-                        type="text"
-                        name="jenis_penalty"
-                        value="{{ old('jenis_penalty', $penalty->jenis_penalty) }}"
-                        placeholder="Contoh: Penyok, Lecet, dll"
-                        class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary"
-                        required
-                    >
-                </div>
-
                 {{-- GRID: BIAYA + FOTO --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+                    <h2 class="text-2xl font-bold text-white col-span-3 py-1 text-center bg-primary rounded-[24px]">
+                        Informasi Penalti
+                    </h2>
 
-                    {{-- BIAYA PENALTI --}}
-                    <div class="space-y-2">
-                        <label class="text-lg font-semibold text-[#4B1F14]">Biaya Penalti:</label>
+                    {{-- INPUT – JENIS PENALTI --}}
+                    <div class="space-y-2 col-span-3">
+                        <label class="text-lg font-semibold text-[#4B1F14]">Jenis Penalti:</label>
                         <input
-                            type="number"
-                            name="biaya_penalty"
-                            value="{{ old('biaya_penalty', $penalty->biaya_penalty) }}"
+                            type="text"
+                            name="jenis_penalty"
+                            value="{{ old('jenis_penalty', $penalty->jenis_penalty) }}"
+                            placeholder="Contoh: Penyok, Lecet, dll"
                             class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary"
-                            placeholder="Masukkan biaya..."
                             required
                         >
                     </div>
 
-                    {{-- STATUS PENALTI --}}
-                    <div class="space-y-2">
-                        <label class="text-lg font-semibold text-[#4B1F14]">Status Penalti:</label>
-                        <select
-                            name="status_penalty"
-                            class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary"
-                            required
-                        >
-                            <option
-                                value="Belum Dibayar" {{ old('status_penalty', $penalty->status_penalty) === 'Belum Dibayar' ? 'selected' : '' }}>
-                                Belum Dibayar
-                            </option>
-                            <option
-                                value="Terbayar" {{ old('status_penalty', $penalty->status_penalty) === 'Terbayar' ? 'selected' : '' }}>
-                                Terbayar
-                            </option>
-                        </select>
-                    </div>
+                    {{-- PREVIEW GAMBAR SAAT INI --}}
+                    @if ($penalty->foto_penalty)
+                        <div class="space-y-2">
+                            <p class="text-lg font-bold text-[#4B1F14] mb-1">Gambar Penalty saat ini:</p>
+                            <img
+                                src="{{ asset($penalty->foto_penalty) }}"
+                                alt="Foto penalti"
+                                class="w-auto h-auto object-cover rounded-[16px] border border-[#E0A894]"
+                            >
+                        </div>
+                    @endif
 
                     {{-- FOTO PENALTI (INPUT + BUTTON TERGABUNG) --}}
-                    <div class="space-y-2">
-                        <label class="text-lg font-semibold text-[#4B1F14]">Gambar Penalti:</label>
+                    <div class="space-y-2 col-span-2">
+                        <label class="text-lg font-semibold text-[#4B1F14]">Ubah Gambar Penalti:</label>
 
                         <div class="flex items-center gap-3">
                             {{-- INPUT FILE (disembunyikan) --}}
@@ -98,18 +81,42 @@
                                 Ganti
                             </button>
                         </div>
+                    </div>
 
-                        {{-- PREVIEW GAMBAR SAAT INI --}}
-                        @if ($penalty->foto_penalty)
-                            <div class="mt-3">
-                                <p class="text-xs text-[#7A4A3A] mb-1">Gambar saat ini:</p>
-                                <img
-                                    src="{{ asset($penalty->foto_penalty) }}"
-                                    alt="Foto penalti"
-                                    class="w-32 h-32 object-cover rounded-[16px] border border-[#E0A894]"
-                                >
-                            </div>
-                        @endif
+                    <h2 class="text-2xl font-bold text-white col-span-3 py-1 text-center bg-primary rounded-[24px]">
+                        Biaya dan Status Penalti
+                    </h2>
+
+                    {{-- BIAYA PENALTI --}}
+                    <div class="space-y-2 col-span-2">
+                        <label class="text-lg font-semibold text-[#4B1F14]">Biaya Penalti:</label>
+                        <input
+                            type="number"
+                            name="biaya_penalty"
+                            value="{{ old('biaya_penalty', $penalty->biaya_penalty) }}"
+                            class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary"
+                            placeholder="Masukkan biaya..."
+                            required
+                        >
+                    </div>
+
+                    {{-- STATUS PENALTI --}}
+                    <div class="space-y-2">
+                        <label class="text-lg font-semibold text-[#4B1F14]">Status Penalti:</label>
+                        <select
+                            name="status_penalty"
+                            class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary"
+                            required
+                        >
+                            <option
+                                value="Belum Dibayar" {{ old('status_penalty', $penalty->status_penalty) === 'Belum Dibayar' ? 'selected' : '' }}>
+                                Belum Dibayar
+                            </option>
+                            <option
+                                value="Terbayar" {{ old('status_penalty', $penalty->status_penalty) === 'Terbayar' ? 'selected' : '' }}>
+                                Terbayar
+                            </option>
+                        </select>
                     </div>
                 </div>
 

@@ -1,10 +1,11 @@
 # Things to Fix:
 ~~- gambar mobil tidak terlihat di view index dan show~~
-- perbaiki kondisi input foto mobil di car controller
-- update view di orders, cars, penalties, dan users
+~~- perbaiki kondisi input foto mobil di car controller~~
+~~- update view di orders, cars, penalties, dan users~~
 ~~- perbaiki gambar di view index cars~~
 ~~- tambah kode filter, urutan, pagination, dan search di index~~
 - tambah informasi metode pembayaran di show orders
 - modal untuk semua views
 - index penalti salah
 - tambah status penalti di index cars
+- tambah error message di semua input

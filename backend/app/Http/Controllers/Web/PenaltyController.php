@@ -66,14 +66,27 @@ class PenaltyController extends Controller
      */
     public function store(Request $request, Order $order)
     {
-        $order->penalties()->create([
-            'jenis_penalty' => $request->jenis_penalty,
-            'biaya_penalty' => $request->biaya_penalty,
-            'foto_penalty' => $request->foto_penalty,
-            'status_penalty' => 'Belum Dibayar',
+        $request->validate([
+            'jenis_penalty' => 'required|string',
+            'biaya_penalty' => 'required|numeric|min:0',
+            'foto_penalty' => 'required|image|mimes:jpg,jpeg,png|max:4096', // 4MB
         ]);
 
-        return redirect()->route('orders.penalties.index', $order->id);
+        $data = [
+            'jenis_penalty' => $request->jenis_penalty,
+            'biaya_penalty' => $request->biaya_penalty,
+            'status_penalty' => 'Belum Dibayar',
+        ];
+
+        if ($request->hasFile('foto_penalty')) {
+            $path = $request->file('foto_penalty')->store('penalties', 'public');
+            $data['foto_penalty'] = url('storage/' . $path);
+        }
+
+        $order->penalties()->create($data);
+
+        return redirect()->route('orders.penalties.index', $order->id)
+            ->with('success', 'Penalty berhasil ditambahkan.');
     }
 
     /**

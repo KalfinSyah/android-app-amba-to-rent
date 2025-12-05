@@ -75,19 +75,23 @@ class CarController extends Controller
             'status_mobil' => 'required|boolean',
         ]);
 
-        Car::create(
-            $request->only([
-                'tahun_mobil',
-                'merk_mobil',
-                'nama_mobil',
-                'jenis_mobil',
-                'tipe_mesin',
-                'tipe_transmisi',
-                'harga_sewa',
-                'foto_mobil',
-                'status_mobil',
-            ])
-        );
+        $data = $request->only([
+            'tahun_mobil',
+            'merk_mobil',
+            'nama_mobil',
+            'jenis_mobil',
+            'tipe_mesin',
+            'tipe_transmisi',
+            'harga_sewa',
+            'status_mobil',
+        ]);
+
+        if ($request->hasFile('foto_mobil')) {
+            $path = $request->file('foto_mobil')->store('cars', 'public');
+            $data['foto_mobil'] = url('storage/' . $path);
+        }
+
+        Car::create($data);
 
         return redirect()->route('cars.index')->with('success', 'Mobil berhasil ditambahkan.');
     }
