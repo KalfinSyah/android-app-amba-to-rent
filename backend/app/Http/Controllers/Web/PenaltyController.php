@@ -81,10 +81,6 @@ class PenaltyController extends Controller
      */
     public function show(Order $order, Penalty $penalty)
     {
-        if ($penalty->order_id !== $order->id) {
-            abort(404);
-        }
-
         return view('penalties.show', compact('order', 'penalty'));
     }
 

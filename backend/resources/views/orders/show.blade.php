@@ -11,7 +11,7 @@
             <div class="grid grid-cols-12 lg:grid-cols-12 gap-6">
 
                 {{-- KARTU INFORMASI PESANAN --}}
-                <div class="bg-primary-container rounded-[24px] overflow-hidden shadow col-span-7">
+                <div class="flex flex-col bg-primary-container rounded-[24px] overflow-hidden shadow col-span-7">
 
                     {{-- HEADER --}}
                     <div class="bg-primary text-white px-6 py-3 flex items-center justify-between">
@@ -72,15 +72,16 @@
                             </div>
                         </div>
 
-                        {{-- Harga (kiri label, kanan nilai) --}}
-                        <div class="border-t border-[#E0A894] pt-4 flex items-center justify-between">
-                            <p class="text-xl font-bold">Harga:</p>
-                            <p class="text-2xl font-extrabold">
-                                Rp{{ number_format($order->total_harga, 0, ',', '.') }}
-                            </p>
-                        </div>
                     </div>
 
+                    <dif class="mt-auto mb-6">
+                    {{-- Harga (kiri label, kanan nilai) --}}
+                    <div class="border-t border-[#E0A894] pt-4 m-6 flex items-center justify-between">
+                        <p class="text-xl font-bold">Harga:</p>
+                        <p class="text-2xl font-extrabold">
+                            Rp{{ number_format($order->total_harga, 0, ',', '.') }}
+                        </p>
+                    </div>
                     {{-- FOOTER BUTTONS --}}
                     <div class="bg-white px-6 py-4 mx-6 rounded-[25px]">
                         <div class="flex flex-col sm:flex-row gap-3">
@@ -118,6 +119,7 @@
                             </div>
                         </div>
                     </div>
+                    </dif>
                 </div>
 
                 {{-- KARTU INFORMASI MOBIL --}}
@@ -129,11 +131,11 @@
                     </div>
 
                     {{-- FOTO MOBIL --}}
-                    <div class="px-6 pt-4">
+                    <div>
                         <img
-                            src="{{ asset('storage/mobil/' . $order->car->foto_mobil) }}"
+                            src="{{ $order->car->foto_mobil }}"
                             alt="Foto {{ $order->car->nama_mobil }}"
-                            class="w-full h-56 object-cover rounded-[20px]"
+                            class="w-full object-contain rounded-b-[20px]"
                         >
                     </div>
 

@@ -28,7 +28,7 @@
                             type="text"
                             name="q"
                             value="{{ request('q') }}"
-                            placeholder="Cari nama mobil"
+                            placeholder="Cari nama pelanggan"
                             class="w-[300px] rounded-full border-none bg-rose-50 px-4 py-2 text-sm text-gray-700 shadow-inner focus:ring-0"
                         >
                         <button
@@ -72,12 +72,6 @@
                                     <span class="text-[12px] text-white">
                                         Terdaftar {{ $user->created_at?->format('d M Y') }}
                                     </span>
-{{--                                    <a--}}
-{{--                                        href="{{ route('users.destroy', $user->id) }}"--}}
-{{--                                        class="inline-flex items-center rounded-full bg-red-700 px-5 py-1.5 text-sm font-semibold text-white shadow hover:bg-olive-800"--}}
-{{--                                    >--}}
-{{--                                        Hapus--}}
-{{--                                    </a>--}}
                                 </div>
                             </div>
                         </div>

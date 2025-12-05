@@ -110,7 +110,7 @@
                                 {{ $car->status_mobil ? 'Tersedia' : 'Tidak Tersedia' }}
                             </span>
 
-                            <img src={{ $car->foto_mobil }} class="w-full h-full object-cover"/>
+                            <img src="{{ $car->foto_mobil }}" class="w-full h-full object-cover"/>
                         </div>
                     </div>
                 @empty

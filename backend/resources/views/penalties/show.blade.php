@@ -8,7 +8,7 @@
             <div class="grid grid-cols-12 gap-6">
 
                 {{-- KARTU INFORMASI PENALTI --}}
-                <div class="bg-primary-container rounded-[24px] overflow-hidden shadow col-span-7">
+                <div class="flex flex-col bg-primary-container rounded-[24px] overflow-hidden shadow col-span-7">
 
                     {{-- HEADER --}}
                     <div class="bg-primary text-white px-6 py-3 flex items-center justify-between">
@@ -57,45 +57,46 @@
                             </div>
                         </div>
 
+                    </div>
+                    <div class="mt-auto mb-6">
                         {{-- Harga --}}
-                        <div class="border-t border-[#E0A894] pt-4 flex items-center justify-between">
+                        <div class="border-t border-[#E0A894] pt-4 m-6 flex items-center justify-between">
                             <p class="text-xl font-bold">Harga:</p>
                             <p class="text-2xl font-extrabold">
                                 Rp{{ number_format($penalty->biaya_penalty, 0, ',', '.') }}
                             </p>
                         </div>
-                    </div>
+                        {{-- FOOTER BUTTONS --}}
+                        <div class="bg-white px-6 py-4 mx-6 rounded-[25px]">
+                            <div class="flex flex-col sm:flex-row gap-3">
 
-                    {{-- FOOTER BUTTONS --}}
-                    <div class="bg-white px-6 py-4 mx-6 mb-6 rounded-[25px]">
-                        <div class="flex flex-col sm:flex-row gap-3">
-
-                            {{-- SELESAIKAN PENALTI --}}
-                            @if($penalty->status_penalty !== 'Terbayar')
-                                <a href="#"
-                                   class="inline-flex justify-center px-6 py-2 rounded-full
+                                {{-- SELESAIKAN PENALTI --}}
+                                @if($penalty->status_penalty !== 'Terbayar')
+                                    <a href="#"
+                                       class="inline-flex justify-center px-6 py-2 rounded-full
                                    bg-primary text-white text-sm font-semibold">
-                                    Ubah Status menjadi Terbayar
-                                </a>
-                            @endif
+                                        Ubah Status menjadi Terbayar
+                                    </a>
+                                @endif
 
-                            {{-- EDIT --}}
-                            <a href="{{ route('orders.penalties.edit', [$order->id, $penalty->id]) }}"
-                               class="inline-flex justify-center px-6 py-2 rounded-full
+                                {{-- EDIT --}}
+                                <a href="{{ route('orders.penalties.edit', [$order->id, $penalty->id]) }}"
+                                   class="inline-flex justify-center px-6 py-2 rounded-full
                                bg-secondary-button text-white text-sm font-semibold ml-auto">
-                                Edit
-                            </a>
-                            <form action="{{ route('orders.penalties.destroy', [$order->id, $penalty->id]) }}"
-                                  method="POST"
-                                  onsubmit="return confirm('Yakin ingin menghapus penalti ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button
-                                    class="inline-flex justify-center px-6 py-2 rounded-full
+                                    Edit
+                                </a>
+                                <form action="{{ route('orders.penalties.destroy', [$order->id, $penalty->id]) }}"
+                                      method="POST"
+                                      onsubmit="return confirm('Yakin ingin menghapus penalti ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button
+                                        class="inline-flex justify-center px-6 py-2 rounded-full
                                              bg-red-600 text-white text-sm font-semibold">
-                                    Hapus
-                                </button>
-                            </form>
+                                        Hapus
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -109,11 +110,12 @@
                     </div>
 
                     {{-- GAMBAR --}}
-                    <div class="px-6 pt-4">
+                    <div>
                         @if ($penalty->foto_penalty)
-                            <img src="{{ asset('storage/' . $penalty->foto_penalty) }}"
+                            <img src="{{ $penalty->foto_penalty }}"
                                  alt="Foto Penalti"
-                                 class="w-full h-56 object-cover rounded-[20px]">
+                                 class="w-full object-contain rounded-b-[20px]"
+                            >
                         @else
                             <p class="text-sm text-gray-600 italic">Tidak ada gambar.</p>
                         @endif

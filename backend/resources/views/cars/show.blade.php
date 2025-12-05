@@ -7,7 +7,7 @@
             <div class="grid grid-cols-12 gap-6">
 
                 {{-- KARTU INFORMASI MOBIL --}}
-                <div class="bg-primary-container rounded-[24px] overflow-hidden shadow col-span-7">
+                <div class="flex flex-col bg-primary-container rounded-[24px] overflow-hidden shadow col-span-7">
 
                     {{-- HEADER --}}
                     <div class="bg-primary text-white px-6 py-3 flex items-center justify-between">
@@ -56,41 +56,42 @@
                             <p>{{ $car->tipe_transmisi }}</p>
                         </div>
 
+                    </div>
+                        {{-- FOOTER --}}
+                    <div class="mt-auto mb-6">
                         {{-- Harga --}}
-                        <div class="border-t border-[#E0A894] pt-4 flex items-center justify-between">
+                        <div class="border-t border-[#E0A894] pt-4 m-6 flex items-center justify-between">
                             <p class="text-xl font-bold">Harga Sewa / Hari:</p>
                             <p class="text-2xl font-extrabold">
                                 Rp{{ number_format($car->harga_sewa, 0, ',', '.') }}
                             </p>
                         </div>
-                    </div>
-
-                    {{-- FOOTER --}}
-                    <div class="bg-white px-6 py-4 mx-6 mb-6 rounded-[25px]">
-                        <div class="flex items-center justify-between">
-                            <a href="#"
-                                class="inline-flex justify-center px-6 py-2 rounded-full
+                        <div class="bg-white px-6 py-4 mx-6 rounded-[25px]">
+                            <div class="flex items-center justify-between">
+                                <a href="#"
+                                   class="inline-flex justify-center px-6 py-2 rounded-full
                                 bg-primary-button text-white text-sm font-semibold">
-                                Ubah Status
-                            </a>
-                            {{-- EDIT --}}
-                            <div class="flex gap-3">
-                                <a href="{{ route('cars.edit', $car->id) }}"
-                                    class="inline-flex justify-center px-6 py-2 rounded-full
-                                        bg-secondary-button text-white text-sm font-semibold">
-                                    Edit
+                                    Ubah Status
                                 </a>
+                                {{-- EDIT --}}
+                                <div class="flex gap-3">
+                                    <a href="{{ route('cars.edit', $car->id) }}"
+                                       class="inline-flex justify-center px-6 py-2 rounded-full
+                                        bg-secondary-button text-white text-sm font-semibold">
+                                        Edit
+                                    </a>
 
-                                <form action="{{ route('cars.destroy', $car->id) }}" method="POST"
-                                      onsubmit="return confirm('Yakin ingin menghapus mobil ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button
-                                        class="inline-flex justify-center px-6 py-2 rounded-full
+                                    <form action="{{ route('cars.destroy', $car->id) }}" method="POST"
+                                          onsubmit="return confirm('Yakin ingin menghapus mobil ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button
+                                            class="inline-flex justify-center px-6 py-2 rounded-full
                                              bg-red-600 text-white text-sm font-semibold">
-                                        Hapus
-                                    </button>
-                                </form>
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -105,10 +106,10 @@
                     </div>
 
                     {{-- GAMBAR --}}
-                    <div class="px-6 pt-4">
+                    <div>
                         <img
-                            src="{{ asset('storage/mobil/' . $car->foto_mobil) }}"
-                            class="w-full h-56 object-cover rounded-[20px]"
+                            src="{{ $car->foto_mobil }}"
+                            class="w-full object-contain rounded-b-[20px]"
                         >
                     </div>
 
@@ -117,7 +118,8 @@
                         <form action="{{ route('cars.destroy', $car->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button class="inline-flex justify-center px-6 py-2 rounded-full bg-red-600 text-white text-sm font-semibold">
+                            <button
+                                class="inline-flex justify-center px-6 py-2 rounded-full bg-red-600 text-white text-sm font-semibold">
                                 Hapus Gambar
                             </button>
                         </form>
