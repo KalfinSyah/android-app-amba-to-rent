@@ -25,7 +25,7 @@ export default function HomeScreen() {
             <Text style={styles.ctaTitle}>Sewa Mobil Sekarang!</Text>
             <PrimaryButton
                 label="Pesan"
-                onPress={() => router.push("/daftar-mobil/index")}
+                onPress={() => router.push("/daftar-mobil")}
                 iconLeft={<Text style={{ color: colors.primaryText }}>📅</Text>}
             />
             </GreigePanel>
