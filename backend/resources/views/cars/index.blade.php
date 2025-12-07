@@ -107,7 +107,7 @@
                                     bg-green-600
                                 @endif"
                             >
-                                {{ $car->status_mobil ? 'Tersedia' : 'Tidak Tersedia' }}
+                                {{ $car->status_mobil ? 'Available' : 'Unavailable' }}
                             </span>
 
                             <img src="{{ $car->foto_mobil }}" class="w-full h-full object-cover"/>

@@ -41,7 +41,7 @@ class OrderController extends Controller
             'Pending' => 'Pending',
             'Ongoing' => 'Ongoing',
             'Completed' => 'Completed',
-            'Cancelled' => 'Cancelled',
+            'Declined' => 'Declined',
         ];
 
         return view('orders.index', [
@@ -68,12 +68,12 @@ class OrderController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'status_order' => 'required|in:Pending,Ongoing,Completed,Cancelled',
+            'status_order' => 'required|in:Pending,Ongoing,Completed,Declined',
         ]);
 
         $order = Order::findOrFail($id);
 
-        if ($request->status_order === 'cancelled' || $request->status_order === 'completed') {
+        if ($request->status_order === 'declined' || $request->status_order === 'completed') {
             $order->mobil->status_mobil = 1;
             $order->mobil->save();
         }

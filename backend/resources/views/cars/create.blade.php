@@ -174,8 +174,8 @@
                                     class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
                                        focus:ring-primary focus:border-primary @error('status_mobil') border-red-500 @enderror"
                                 >
-                                    <option value="0" {{ old('status_mobil') === '0' ? 'selected' : '' }}>Tersedia</option>
-                                    <option value="1" {{ old('status_mobil') === '1' ? 'selected' : '' }}>Tidak Tersedia
+                                    <option value="0" {{ old('status_mobil') === '0' ? 'selected' : '' }}>Available</option>
+                                    <option value="1" {{ old('status_mobil') === '1' ? 'selected' : '' }}>Unavailable
                                     </option>
                                 </select>
                                 @error('status_mobil')

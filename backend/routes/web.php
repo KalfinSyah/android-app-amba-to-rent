@@ -19,6 +19,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('cars', CarController::class);
     Route::resource('users', UserController::class)->only('index', 'show', 'destroy');
     Route::resource('orders.penalties', PenaltyController::class);
+
+    Route::patch('cars/{car}/toggle-status', [CarController::class, 'toggleStatus'])->name('cars.toggleStatus');
+    Route::patch('orders/{order}/penalties/{penalty}/toggle-status', [PenaltyController::class, 'toggleStatus'])->name('orders.penalties.toggleStatus');
 });
 
 require __DIR__.'/auth.php';

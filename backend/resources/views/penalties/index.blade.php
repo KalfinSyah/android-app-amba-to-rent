@@ -39,7 +39,7 @@
                     >
                         <option value="">Semua Status</option>
                         @foreach ($availableStatuses as $value => $label)
-                            <option value="{{ $value }}" {{ $status === $value ? 'selected' : '' }}>
+                            <option value="{{ $value }}" {{ (string)$status === (string)$value ? 'selected' : '' }}>
                                 {{ $label }}
                             </option>
                         @endforeach
@@ -78,8 +78,8 @@
                             @if (!empty($penalty->foto_penalty))
                                 <img
                                     src={{ $penalty->foto_penalty }}
-                                    alt="Foto penalti {{ $penalty->jenis_penalty }}"
-                                    class="w-full h-full object-cover"
+                                    alt="Foto {{ $penalty->jenis_penalty }}"
+                                class="w-full h-full object-cover"
                                 >
                             @else
                                 {{-- fallback gambar kalau belum ada foto --}}
@@ -105,13 +105,13 @@
                                 {{-- Status badge --}}
                                 <span
                                     class="px-4 py-1 rounded-full text-xs font-semibold text-white
-                                    @if($penalty->status_penalty === 'Terbayar')
+                                    @if($penalty->status_penalty === '1')
                                         bg-green-600
                                     @else
                                         bg-red-700
                                     @endif"
                                 >
-                                    {{ $penalty->status_penalty }}
+                                {{ $penalty->status_penalty ? 'Paid' : 'Unpaid' }}
                                 </span>
                             </div>
 

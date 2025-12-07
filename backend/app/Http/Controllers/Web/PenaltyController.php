@@ -20,7 +20,7 @@ class PenaltyController extends Controller
 
         $query = $order->penalties()->getQuery();
 
-        if (!empty($status)) {
+        if ($status !== null && $status !== '') {
             $query->where('status_penalty', $status);
         }
 
@@ -39,8 +39,8 @@ class PenaltyController extends Controller
             ->withQueryString();
 
         $availableStatuses = [
-            'Terbayar' => 'Terbayar',
-            'Belum Dibayar' => 'Belum Dibayar',
+            '1' => 'Paid',
+            '0' => 'Unpaid',
         ];
 
         return view('penalties.index', [
@@ -75,7 +75,7 @@ class PenaltyController extends Controller
         $data = [
             'jenis_penalty' => $request->jenis_penalty,
             'biaya_penalty' => $request->biaya_penalty,
-            'status_penalty' => 'Belum Dibayar',
+            'status_penalty' => 0,
         ];
 
         if ($request->hasFile('foto_penalty')) {
@@ -147,5 +147,14 @@ class PenaltyController extends Controller
         return redirect()
             ->route('orders.penalties.index', $order->id)
             ->with('success', 'Penalti berhasil dihapus');
+    }
+
+    public function toggleStatus(Order $order, Penalty $penalty)
+    {
+        $penalty->update([
+            'status_penalty' => !$penalty->status_penalty,
+        ]);
+
+        return back()->with('success', 'Status penalti berhasil diubah.');
     }
 }

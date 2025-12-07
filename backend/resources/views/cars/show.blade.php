@@ -22,7 +22,7 @@
                                 bg-green-600
                             @endif
                         ">
-                            {{ $car->status_mobil ? 'Tersedia' : 'Tidak Tersedia' }}
+                            {{ $car->status_mobil ? 'Available' : 'Unavailable' }}
                         </span>
                     </div>
 
@@ -68,11 +68,15 @@
                         </div>
                         <div class="bg-white px-6 py-4 mx-6 rounded-[25px]">
                             <div class="flex items-center justify-between">
-                                <a href="#"
-                                   class="inline-flex justify-center px-6 py-2 rounded-full
-                                bg-primary-button text-white text-sm font-semibold">
-                                    Ubah Status
-                                </a>
+                                <form action="{{ route('cars.toggleStatus', $car->id) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit"
+                                            class="inline-flex justify-center px-6 py-2 rounded-full
+                                          bg-primary-button text-white text-sm font-semibold hover:bg-opacity-90 transition">
+                                        {{ $car->status_mobil ? 'Ubah Status menjadi Unavailable' : 'Ubah Status menjadi Available' }}
+                                    </button>
+                                </form>
                                 {{-- EDIT --}}
                                 <div class="flex gap-3">
                                     <a href="{{ route('cars.edit', $car->id) }}"
@@ -98,7 +102,7 @@
                 </div>
 
                 {{-- KARTU GAMBAR MOBIL --}}
-                <div class="bg-primary-container rounded-[24px] overflow-hidden shadow col-span-5 flex flex-col">
+                <div class="bg-none rounded-[24px] overflow-hidden col-span-5 flex flex-col">
 
                     {{-- HEADER --}}
                     <div class="bg-primary text-white px-6 py-3">
@@ -113,17 +117,17 @@
                         >
                     </div>
 
-                    {{-- DELETE BUTTON (Opsional) --}}
-                    <div class="px-6 py-4 mt-auto">
-                        <form action="{{ route('cars.destroy', $car->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button
-                                class="inline-flex justify-center px-6 py-2 rounded-full bg-red-600 text-white text-sm font-semibold">
-                                Hapus Gambar
-                            </button>
-                        </form>
-                    </div>
+{{--                    --}}{{-- DELETE BUTTON (Opsional) --}}
+{{--                    <div class="px-6 py-4 mt-auto">--}}
+{{--                        <form action="{{ route('cars.destroy', $car->id) }}" method="POST">--}}
+{{--                            @csrf--}}
+{{--                            @method('DELETE')--}}
+{{--                            <button--}}
+{{--                                class="inline-flex justify-center px-6 py-2 rounded-full bg-red-600 text-white text-sm font-semibold">--}}
+{{--                                Hapus Gambar--}}
+{{--                            </button>--}}
+{{--                        </form>--}}
+{{--                    </div>--}}
                 </div>
 
             </div>

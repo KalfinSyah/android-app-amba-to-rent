@@ -22,6 +22,7 @@ class CarController extends Controller
         if ($status !== null && $status !== '') {
             $query->where('status_mobil', $status);
         }
+
         if ($sort === 'oldest') {
             $query->orderBy('created_at', 'asc');
         } else {
@@ -37,8 +38,8 @@ class CarController extends Controller
             ->withQueryString();
 
         $availableStatuses = [
-            '1' => 'Tersedia',
-            '0' => 'Tidak Tersedia',
+            '1' => 'Available',
+            '0' => 'Unavailable',
         ];
 
         return view('cars.index', [
@@ -158,5 +159,14 @@ class CarController extends Controller
         $car->delete();
 
         return redirect()->route('cars.index')->with('success', 'Mobil berhasil dihapus.');
+    }
+
+    public function toggleStatus(Car $car)
+    {
+        $car->update([
+            'status_mobil' => !$car->status_mobil
+        ]);
+
+        return back()->with('success', 'Status mobil berhasil diubah.');
     }
 }

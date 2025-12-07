@@ -192,10 +192,10 @@
                                        text-sm focus:ring-primary focus:border-primary @error('status_mobil') border-red-500 @enderror"
                             >
                                 <option value="0" {{ old('status_mobil', $car->status_mobil) == 0 ? 'selected' : '' }}>
-                                    Tersedia
+                                    Available
                                 </option>
                                 <option value="1" {{ old('status_mobil', $car->status_mobil) == 1 ? 'selected' : '' }}>
-                                    Tidak Tersedia
+                                    Unavailable
                                 </option>
                             </select>
                             @error('status_mobil')

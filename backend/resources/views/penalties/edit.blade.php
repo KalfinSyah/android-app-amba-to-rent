@@ -115,12 +115,12 @@
                                 required
                             >
                                 <option
-                                    value="Belum Dibayar" {{ old('status_penalty', $penalty->status_penalty) === 'Belum Dibayar' ? 'selected' : '' }}>
-                                    Belum Dibayar
+                                    value="0" {{ old('status_penalty', $penalty->status_penalty) === '0' ? 'selected' : '' }}>
+                                    Unpaid
                                 </option>
                                 <option
-                                    value="Terbayar" {{ old('status_penalty', $penalty->status_penalty) === 'Terbayar' ? 'selected' : '' }}>
-                                    Terbayar
+                                    value="1" {{ old('status_penalty', $penalty->status_penalty) === '1' ? 'selected' : '' }}>
+                                    Paid
                                 </option>
                             </select>
                             @error('status_penalty')

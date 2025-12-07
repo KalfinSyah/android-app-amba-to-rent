@@ -17,13 +17,13 @@
                         {{-- STATUS --}}
                         <span class="
                             px-4 py-1 rounded-full text-xs font-semibold text-white
-                            @if($penalty->status_penalty === 'Terbayar')
+                            @if($penalty->status_penalty === '1')
                                 bg-green-600
                             @else
                                 bg-red-700
                             @endif
                         ">
-                            {{ ucfirst($penalty->status_penalty) }}
+                            {{ $penalty->status_penalty ? 'Paid' : 'Unpaid' }}
                         </span>
                     </div>
 
@@ -71,13 +71,15 @@
                             <div class="flex flex-col sm:flex-row gap-3">
 
                                 {{-- SELESAIKAN PENALTI --}}
-                                @if($penalty->status_penalty !== 'Terbayar')
-                                    <a href="#"
-                                       class="inline-flex justify-center px-6 py-2 rounded-full
-                                   bg-primary text-white text-sm font-semibold">
-                                        Ubah Status menjadi Terbayar
-                                    </a>
-                                @endif
+                                <form action="{{ route('orders.penalties.toggleStatus', [$order->id, $penalty->id]) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit"
+                                            class="inline-flex justify-center px-6 py-2 rounded-full
+                                          bg-primary-button text-white text-sm font-semibold hover:bg-opacity-90 transition">
+                                        {{ $penalty->status_penalty ? 'Ubah Status menjadi Unpaid' : 'Ubah Status menjadi Paid' }}
+                                    </button>
+                                </form>
 
                                 {{-- EDIT --}}
                                 <a href="{{ route('orders.penalties.edit', [$order->id, $penalty->id]) }}"
