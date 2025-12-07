@@ -13,7 +13,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        // 
     }
 
     /**
@@ -57,6 +57,15 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         //
+    }
+    public function showByUserId($userId)
+    {
+        $orders = Order::where('user_id', $userId)->get();
+
+        return response()->json([
+            'message' => 'Data order untuk user ID ' . $userId . ' berhasil diambil',
+            'orders' => $orders
+        ], 200);
     }
 
     /**

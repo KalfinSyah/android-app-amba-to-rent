@@ -29,10 +29,11 @@ Route::middleware('auth:sanctum')->get('/cars/brand/{merk_mobil}', [CarControlle
 Route::middleware('auth:sanctum')->get('/cars/available', [CarController::class, 'available']);
 
 // user
-Route::middleware('auth:sanctum')->get('/user/id/{user}', [UserController::class, 'show']);
+Route::middleware('auth:sanctum')->get('/user/id/{id}', [UserController::class, 'show']);
 
 // order
 Route::middleware('auth:sanctum')->post('/order', [OrderController::class, 'store']);
+Route::middleware('auth:sanctum')->get('/order/user/id/{id}', [OrderController::class, 'showByUserId']);
 
 // penalty
 Route::middleware('auth:sanctum')->post('/penalty', [PenaltyController::class, 'store']);
