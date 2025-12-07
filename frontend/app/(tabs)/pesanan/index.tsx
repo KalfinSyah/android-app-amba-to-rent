@@ -126,13 +126,6 @@ export default function OrdersScreen() {
                                         {new Date(item.tanggal_kembali_sewa).toLocaleDateString()}
                                     </Text>
                                 </View>
-
-                                {car && (
-                                    <Image
-                                        source={{ uri: `${BASE_URL}/${car.foto_mobil}` }}
-                                        style={styles.thumb}
-                                    />
-                                )}
                             </View>
                         </TouchableOpacity>
                     );
