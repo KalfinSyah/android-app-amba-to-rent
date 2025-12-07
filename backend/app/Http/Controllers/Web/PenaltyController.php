@@ -18,7 +18,7 @@ class PenaltyController extends Controller
         $sort = $request->input('sort', 'recent');
         $q = $request->input('q');
 
-        $query = Penalty::query();
+        $query = $order->penalties()->getQuery();
 
         if (!empty($status)) {
             $query->where('status_penalty', $status);

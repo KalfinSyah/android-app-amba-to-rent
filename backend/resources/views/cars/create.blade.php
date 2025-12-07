@@ -28,69 +28,93 @@
                             name="tahun_mobil"
                             value="{{ old('tahun_mobil') }}"
                             class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
-                                       focus:ring-primary focus:border-primary"
-                        >
-                    </div>
+                                       focus:ring-primary focus:border-primary @error('tahun_mobil') border-red-500 @enderror"
+                            required
+                            >
+                            @error('tahun_mobil')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <div class="space-y-2">
-                        <label class="text-lg font-semibold text-[#4B1F14]">Merk Mobil</label>
-                        <input
-                            type="text"
-                            name="merk_mobil"
-                            value="{{ old('merk_mobil') }}"
-                            class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
-                                       focus:ring-primary focus:border-primary"
-                        >
-                    </div>
+                        <div class="space-y-2">
+                            <label class="text-lg font-semibold text-[#4B1F14]">Merk Mobil</label>
+                            <input
+                                type="text"
+                                name="merk_mobil"
+                                value="{{ old('merk_mobil') }}"
+                                class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
+                                       focus:ring-primary focus:border-primary @error('merk_mobil') border-red-500 @enderror"
+                                required
+                            >
+                            @error('merk_mobil')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <div class="space-y-2">
-                        <label class="text-lg font-semibold text-[#4B1F14]">Nama Mobil</label>
-                        <input
-                            type="text"
-                            name="nama_mobil"
-                            value="{{ old('nama_mobil') }}"
-                            class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
-                                       focus:ring-primary focus:border-primary"
-                        >
-                    </div>
+                        <div class="space-y-2">
+                            <label class="text-lg font-semibold text-[#4B1F14]">Nama Mobil</label>
+                            <input
+                                type="text"
+                                name="nama_mobil"
+                                value="{{ old('nama_mobil') }}"
+                                class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
+                                       focus:ring-primary focus:border-primary @error('nama_mobil') border-red-500 @enderror"
+                                required
+                            >
+                            @error('nama_mobil')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <div class="space-y-2">
-                        <label class="text-lg font-semibold text-[#4B1F14]">Jenis Mobil</label>
-                        <input
-                            type="text"
-                            name="jenis_mobil"
-                            value="{{ old('jenis_mobil') }}"
-                            class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
-                                       focus:ring-primary focus:border-primary"
-                        >
-                    </div>
+                        <div class="space-y-2">
+                            <label class="text-lg font-semibold text-[#4B1F14]">Jenis Mobil</label>
+                            <input
+                                type="text"
+                                name="jenis_mobil"
+                                value="{{ old('jenis_mobil') }}"
+                                class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
+                                       focus:ring-primary focus:border-primary @error('jenis_mobil') border-red-500 @enderror"
+                                required
+                            >
+                            @error('jenis_mobil')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <div class="space-y-2">
-                        <label class="text-lg font-semibold text-[#4B1F14]">Tipe Mesin</label>
-                        <input
-                            type="text"
-                            name="tipe_mesin"
-                            value="{{ old('tipe_mesin') }}"
-                            class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
-                                       focus:ring-primary focus:border-primary"
-                        >
-                    </div>
+                        <div class="space-y-2">
+                            <label class="text-lg font-semibold text-[#4B1F14]">Tipe Mesin</label>
+                            <input
+                                type="text"
+                                name="tipe_mesin"
+                                value="{{ old('tipe_mesin') }}"
+                                class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
+                                       focus:ring-primary focus:border-primary @error('tipe_mesin') border-red-500 @enderror"
+                                required
+                            >
+                            @error('tipe_mesin')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <div class="space-y-2">
-                        <label class="text-lg font-semibold text-[#4B1F14]">Tipe Transmisi</label>
-                        <input
-                            type="text"
-                            name="tipe_transmisi"
-                            value="{{ old('tipe_transmisi') }}"
-                            class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
-                                       focus:ring-primary focus:border-primary"
-                        >
-                    </div>
+                        <div class="space-y-2">
+                            <label class="text-lg font-semibold text-[#4B1F14]">Tipe Transmisi</label>
+                            <input
+                                type="text"
+                                name="tipe_transmisi"
+                                value="{{ old('tipe_transmisi') }}"
+                                class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
+                                       focus:ring-primary focus:border-primary @error('tipe_transmisi') border-red-500 @enderror"
+                                required
+                            >
+                            @error('tipe_transmisi')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <div class="space-y-2 col-span-3">
-                        <label class="text-lg font-semibold text-[#4B1F14]">Gambar Mobil</label>
+                        <div class="space-y-2 col-span-3">
+                            <label class="text-lg font-semibold text-[#4B1F14]">Gambar Mobil</label>
 
-                        <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-3">
                             {{-- INPUT FILE (hidden) --}}
                             <input
                                 id="foto_mobil"
@@ -106,7 +130,7 @@
                                 type="text"
                                 readonly
                                 placeholder="Pilih gambar..."
-                                class="flex-1 px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm text-black"
+                                class="flex-1 px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm text-black @error('foto_mobil') border-red-500 @enderror"
                             >
 
                             {{-- TOMBOL PILIH FILE --}}
@@ -118,39 +142,49 @@
                                 Upload
                             </button>
                         </div>
-                    </div>
-
-                    <h2 class="text-2xl font-bold text-white col-span-3 py-1 text-center bg-primary rounded-[24px]">
-                        Harga Sewa dan Status Mobil
-                    </h2>
-
-                    <div class="space-y-2 col-span-2">
-                        <label class="text-lg font-semibold text-[#4B1F14]">Harga Sewa (Rp)</label>
-                        <input
-                            type="number"
-                            name="harga_sewa"
-                            value="{{ old('harga_sewa') }}"
-                            class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
-                                       focus:ring-primary focus:border-primary"
-                        >
-                    </div>
-
-                    <div class="space-y-2">
-                        <div class="space-y-2">
-                            <label class="text-lg font-semibold text-[#4B1F14]">Status Mobil</label>
-                            <select
-                                name="status_mobil"
-                                class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
-                                   focus:ring-primary focus:border-primary"
-                            >
-                                <option value="0" {{ old('status_mobil') === '0' ? 'selected' : '' }}>Tersedia</option>
-                                <option value="1" {{ old('status_mobil') === '1' ? 'selected' : '' }}>Tidak Tersedia
-                                </option>
-                            </select>
+                            @error('foto_mobil')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
-                        <div></div>
+
+                        <h2 class="text-2xl font-bold text-white col-span-3 py-1 text-center bg-primary rounded-[24px]">
+                            Harga Sewa dan Status Mobil
+                        </h2>
+
+                        <div class="space-y-2 col-span-2">
+                            <label class="text-lg font-semibold text-[#4B1F14]">Harga Sewa (Rp)</label>
+                            <input
+                                type="number"
+                                name="harga_sewa"
+                                value="{{ old('harga_sewa') }}"
+                                class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
+                                       focus:ring-primary focus:border-primary @error('harga_sewa') border-red-500 @enderror"
+                                required
+                            >
+                            @error('harga_sewa')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="space-y-2">
+                            <div class="space-y-2">
+                                <label class="text-lg font-semibold text-[#4B1F14]">Status Mobil</label>
+                                <select
+                                    name="status_mobil"
+                                    class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm
+                                       focus:ring-primary focus:border-primary @error('status_mobil') border-red-500 @enderror"
+                                >
+                                    <option value="0" {{ old('status_mobil') === '0' ? 'selected' : '' }}>Tersedia</option>
+                                    <option value="1" {{ old('status_mobil') === '1' ? 'selected' : '' }}>Tidak Tersedia
+                                    </option>
+                                </select>
+                                @error('status_mobil')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div></div>
+                        </div>
                     </div>
-                </div>
 
             </form>
 

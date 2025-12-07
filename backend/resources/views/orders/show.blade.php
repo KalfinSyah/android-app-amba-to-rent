@@ -68,7 +68,7 @@
                                 <p>{{ $order->tanggal_transaksi?->format('d/m/Y') ?? '-' }}</p>
 
                                 <p class="font-semibold">Metode Pembayaran:</p>
-                                <p>{{ $order->metode_pembayaran ?? '-' }}</p>
+                                <p>{{ $order->transactionMethod->nama_method ?? '-' }}</p>
                             </div>
                         </div>
 

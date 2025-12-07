@@ -4,8 +4,8 @@
 ~~- update view di orders, cars, penalties, dan users~~
 ~~- perbaiki gambar di view index cars~~
 ~~- tambah kode filter, urutan, pagination, dan search di index~~
-- tambah informasi metode pembayaran di show orders
+~~- tambah informasi metode pembayaran di show orders~~
 - modal untuk semua views
-- index penalti salah
+~~- index penalti salah~~
 - tambah status penalti di index cars
-- tambah error message di semua input
+~~- tambah error message di semua input~~

@@ -32,5 +32,23 @@
                 {{ $slot }}
             </main>
         </div>
+        @php
+            $status = null;
+            $message = null;
+
+            if (session('success')) {
+                $status = 'success';
+                $message = session('success');
+            } elseif (session('error')) {
+                $status = 'error';
+                $message = session('error');
+            } elseif (session('status') && session('status') !== true) {
+                $status = 'info';
+                $message = session('status');
+            }
+        @endphp
+        @if($message)
+            <x-modal-info :status="$status" :message="$message" />
+        @endif
     </body>
 </html>

@@ -31,13 +31,16 @@
                             name="jenis_penalty"
                             value="{{ old('jenis_penalty', $penalty->jenis_penalty) }}"
                             placeholder="Contoh: Penyok, Lecet, dll"
-                            class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary"
+                            class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary @error('jenis_penalty') border-red-500 @enderror"
                             required
                         >
-                    </div>
+                            @error('jenis_penalty')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    {{-- PREVIEW GAMBAR SAAT INI --}}
-                    @if ($penalty->foto_penalty)
+                        {{-- PREVIEW GAMBAR SAAT INI --}}
+                        @if ($penalty->foto_penalty)
                         <div class="space-y-2">
                             <p class="text-lg font-bold text-[#4B1F14] mb-1">Gambar Penalty saat ini:</p>
                             <img
@@ -69,7 +72,7 @@
                                 readonly
                                 placeholder="Pilih gambar..."
                                 value="{{ $penalty->foto_penalty ? basename($penalty->foto_penalty) : '' }}"
-                                class="flex-1 px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm text-black"
+                                class="flex-1 px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm text-black @error('foto_penalty') border-red-500 @enderror"
                             >
 
                             {{-- TOMBOL PILIH FILE --}}
@@ -94,33 +97,39 @@
                             type="number"
                             name="biaya_penalty"
                             value="{{ old('biaya_penalty', $penalty->biaya_penalty) }}"
-                            class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary"
+                            class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary @error('biaya_penalty') border-red-500 @enderror"
                             placeholder="Masukkan biaya..."
                             required
                         >
+                            @error('biaya_penalty')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- STATUS PENALTI --}}
+                        <div class="space-y-2">
+                            <label class="text-lg font-semibold text-[#4B1F14]">Status Penalti:</label>
+                            <select
+                                name="status_penalty"
+                                class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary @error('status_penalty') border-red-500 @enderror"
+                                required
+                            >
+                                <option
+                                    value="Belum Dibayar" {{ old('status_penalty', $penalty->status_penalty) === 'Belum Dibayar' ? 'selected' : '' }}>
+                                    Belum Dibayar
+                                </option>
+                                <option
+                                    value="Terbayar" {{ old('status_penalty', $penalty->status_penalty) === 'Terbayar' ? 'selected' : '' }}>
+                                    Terbayar
+                                </option>
+                            </select>
+                            @error('status_penalty')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
-                    {{-- STATUS PENALTI --}}
-                    <div class="space-y-2">
-                        <label class="text-lg font-semibold text-[#4B1F14]">Status Penalti:</label>
-                        <select
-                            name="status_penalty"
-                            class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary"
-                            required
-                        >
-                            <option
-                                value="Belum Dibayar" {{ old('status_penalty', $penalty->status_penalty) === 'Belum Dibayar' ? 'selected' : '' }}>
-                                Belum Dibayar
-                            </option>
-                            <option
-                                value="Terbayar" {{ old('status_penalty', $penalty->status_penalty) === 'Terbayar' ? 'selected' : '' }}>
-                                Terbayar
-                            </option>
-                        </select>
-                    </div>
-                </div>
-
-            </form>
+                </form>
 
             {{-- BUTTONS BAWAH --}}
             <div class="mt-6 flex justify-end gap-4">

@@ -26,8 +26,12 @@
                         <input type="text"
                                name="jenis_penalty"
                                placeholder="Contoh: Penyok, Lecet, dll"
-                               class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary"
+                               value="{{ old('jenis_penalty') }}"
+                               class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary @error('jenis_penalty') border-red-500 @enderror"
                                required>
+                        @error('jenis_penalty')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     {{-- FOTO PENALTI (INPUT + BUTTON TERGABUNG) --}}
@@ -41,14 +45,15 @@
                                    type="file"
                                    name="foto_penalty"
                                    class="hidden"
-                                   accept="image/*">
+                                   accept="image/*"
+                                   required>
 
                             {{-- TEXTBOX PREVIEW PATH --}}
                             <input id="foto_penalty_text"
                                    type="text"
                                    readonly
                                    placeholder="Pilih gambar..."
-                                   class="flex-1 px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm text-black">
+                                   class="flex-1 px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm text-black @error('foto_penalty') border-red-500 @enderror">
 
                             {{-- TOMBOL PILIH FILE --}}
                             <button type="button"
@@ -57,6 +62,9 @@
                                 Upload
                             </button>
                         </div>
+                        @error('foto_penalty')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <h2 class="text-2xl font-bold text-white col-span-3 py-1 text-center bg-primary rounded-[24px]">
@@ -68,8 +76,12 @@
                         <label class="text-lg font-semibold text-[#4B1F14]">Biaya Penalti:</label>
                         <input type="number"
                                name="biaya_penalty"
-                               class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary"
+                               value="{{ old('biaya_penalty') }}"
+                               class="w-full px-4 py-3 rounded-[20px] bg-white border border-[#E0A894] text-sm focus:ring-primary focus:border-primary @error('biaya_penalty') border-red-500 @enderror"
                                placeholder="Masukkan biaya..." required>
+                        @error('biaya_penalty')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                 </div>
