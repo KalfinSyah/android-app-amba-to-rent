@@ -75,50 +75,60 @@
                     </div>
 
                     <dif class="mt-auto mb-6">
-                    {{-- Harga (kiri label, kanan nilai) --}}
-                    <div class="border-t border-[#E0A894] pt-4 m-6 flex items-center justify-between">
-                        <p class="text-xl font-bold">Harga:</p>
-                        <p class="text-2xl font-extrabold">
-                            Rp{{ number_format($order->total_harga, 0, ',', '.') }}
-                        </p>
-                    </div>
-                    {{-- FOOTER BUTTONS --}}
-                    <div class="bg-white px-6 py-4 mx-6 rounded-[25px]">
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            @if($order->status_order === 'Pending')
-                                <div class="mt-auto">
-                                    <a href="{{ route('cars.show', $order->car) }}"
-                                       class="inline-flex justify-center px-6 py-2 rounded-full
-                                      bg-primary-button text-white text-sm font-semibold">
-                                        Terima Pesanan
-                                    </a>
-                                </div>
-                                <div class="mt-auto">
-                                    <a href="{{ route('cars.show', $order->car) }}"
-                                       class="inline-flex justify-center px-6 py-2 rounded-full
-                                      bg-primary-button text-white text-sm font-semibold">
+                        {{-- Harga (kiri label, kanan nilai) --}}
+                        <div class="border-t border-[#E0A894] pt-4 m-6 flex items-center justify-between">
+                            <p class="text-xl font-bold">Harga:</p>
+                            <p class="text-2xl font-extrabold">
+                                Rp{{ number_format($order->total_harga, 0, ',', '.') }}
+                            </p>
+                        </div>
+                        {{-- FOOTER BUTTONS --}}
+                        <div class="bg-white px-6 py-4 mx-6 rounded-[25px]">
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                @if($order->status_order === 'Pending')
+                                    <x-modal-confirm
+                                        title="Tolak Pesanan?"
+                                        message="Status Pesanan akan berubah menjadi Cancelled. Aksi ini tidak dapat dibatalkan. Lanjutkan?"
+                                        :action="route('orders.update', ['order' => $order->id, 'status_order' => 'Declined'])"
+                                        method="PUT"
+                                        button-text="Ya, Lanjutkan">
+
                                         Tolak Pesanan
-                                    </a>
-                                </div>
-                            @endif
-                            @if($order->status_order === 'Ongoing')
-                                <div class="mt-auto">
-                                    <a href="{{ route('cars.show', $order->car) }}"
+                                    </x-modal-confirm>
+
+                                    <x-modal-confirm
+                                        title="Terima Pesanan?"
+                                        message="Status Pesanan akan berubah menjadi Ongoing. Aksi ini tidak dapat dibatalkan. Lanjutkan?"
+                                        :action="route('orders.update', ['order' => $order->id, 'status_order' => 'Ongoing'])"
+                                        method="PUT"
+                                        button-text="Ya, Lanjutkan"
+                                        type="primary">
+
+                                        Terima Pesanan
+                                    </x-modal-confirm>
+                                @endif
+
+                                @if($order->status_order === 'Ongoing')
+                                    <x-modal-confirm
+                                        title="Selesaikan Pesanan?"
+                                        message="Status Pesanan akan berubah menjadi Completed. Aksi ini tidak dapat dibatalkan. Lanjutkan?"
+                                        :action="route('orders.update', ['order' => $order->id, 'status_order' => 'Completed'])"
+                                        method="PUT"
+                                        button-text="Ya, Lanjutkan"
+                                        type="success">
+
+                                        Selesaikan Pesanan
+                                    </x-modal-confirm>
+                                @endif
+                                <div class="mt-auto ml-auto">
+                                    <a href="{{ route('orders.penalties.index', $order->id) }}"
                                        class="inline-flex justify-center px-6 py-2 rounded-full
-                                      bg-primary-button text-white text-sm font-semibold">
-                                        Konfirmasi Pembayaran
+                                      bg-red-600 text-white text-sm font-semibold">
+                                        Penalti: {{ $order->penalties_count }}
                                     </a>
                                 </div>
-                            @endif
-                            <div class="mt-auto ml-auto">
-                                <a href="{{ route('orders.penalties.index', $order->id) }}"
-                                   class="inline-flex justify-center px-6 py-2 rounded-full
-                                      bg-red-600 text-white text-sm font-semibold">
-                                    Penalti: {{ $order->penalties_count }}
-                                </a>
                             </div>
                         </div>
-                    </div>
                     </dif>
                 </div>
 

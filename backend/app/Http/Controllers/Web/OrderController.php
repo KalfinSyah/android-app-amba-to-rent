@@ -89,10 +89,13 @@ class OrderController extends Controller
         ]);
 
         $order = Order::findOrFail($id);
+        $newStatus = $request->status_order;
 
-        if ($request->status_order === 'declined' || $request->status_order === 'completed') {
-            $order->mobil->status_mobil = 1;
-            $order->mobil->save();
+        if (in_array($newStatus, ['Completed', 'Declined'])) {
+            if ($order->mobil) {
+                $order->mobil->status_mobil = 1;
+                $order->mobil->save();
+            }
         }
 
         $order->status_order = $request->status_order;
