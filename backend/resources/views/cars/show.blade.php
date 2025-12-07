@@ -84,17 +84,14 @@
                                         bg-secondary-button text-white text-sm font-semibold">
                                         Edit
                                     </a>
-
-                                    <form action="{{ route('cars.destroy', $car->id) }}" method="POST"
-                                          onsubmit="return confirm('Yakin ingin menghapus mobil ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button
-                                            class="inline-flex justify-center px-6 py-2 rounded-full
-                                             bg-red-600 text-white text-sm font-semibold">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    <x-modal-confirm
+                                        title="Hapus Mobil?"
+                                        message="Data mobil yang dihapus tidak dapat dikembalikan. Yakin ingin melanjutkan?"
+                                        :action="route('cars.destroy', $car->id)"
+                                        method="DELETE"
+                                        button-text="Ya, Hapus">
+                                        Hapus
+                                    </x-modal-confirm>
                                 </div>
                             </div>
                         </div>

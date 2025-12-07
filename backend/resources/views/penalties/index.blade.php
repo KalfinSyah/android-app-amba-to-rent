@@ -124,16 +124,26 @@
                         </div>
 
                         {{-- STRIP COKLAT DENGAN TOMBOL --}}
-                        <div class="bg-primary px-4 py-3 flex items-center gap-3">
+                        <div class="bg-primary px-4 py-3 flex items-center justify-between gap-3">
                             <a href="{{ route('orders.penalties.show', [$order->id, $penalty->id]) }}"
-                               class="px-5 py-1.5 rounded-full bg-white text-gray-900 text-sm font-semibold shadow">
+                               class="inline-flex justify-center px-6 py-2 rounded-full bg-white text-black text-sm font-semibold shadow">
                                 Detail
                             </a>
 
-                            <a href="{{ route('orders.penalties.edit', [$order->id, $penalty->id]) }}"
-                               class="px-5 py-1.5 rounded-full bg-secondary-button text-white text-sm font-semibold shadow">
-                                Edit
-                            </a>
+                            <div class="flex gap-3">
+                                <a href="{{ route('orders.penalties.edit', [$order->id, $penalty->id]) }}"
+                                   class="inline-flex justify-center px-6 py-2 rounded-full bg-secondary-button text-white text-sm font-semibold shadow">
+                                    Edit
+                                </a>
+                                <x-modal-confirm
+                                    title="Hapus Penalti?"
+                                    message="Data penalti yang dihapus tidak dapat dikembalikan. Yakin ingin melanjutkan?"
+                                    :action="route('orders.penalties.destroy', [$order->id, $penalty->id])"
+                                    method="DELETE"
+                                    button-text="Ya, Hapus">
+                                    Hapus
+                                </x-modal-confirm>
+                            </div>
                         </div>
                     </div>
                 @empty

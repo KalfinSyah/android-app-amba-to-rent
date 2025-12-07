@@ -9,3 +9,7 @@
     --color-tahiti: #3ab7bf;
     --color-bermuda: #78dcca;
 }
+
+[x-cloak] {
+    display: none !important;
+}

@@ -5,7 +5,7 @@
 ~~- perbaiki gambar di view index cars~~
 ~~- tambah kode filter, urutan, pagination, dan search di index~~
 ~~- tambah informasi metode pembayaran di show orders~~
-- modal untuk semua views
+~~- modal untuk semua views~~
 ~~- index penalti salah~~
 - tambah status penalti di index cars
 ~~- tambah error message di semua input~~

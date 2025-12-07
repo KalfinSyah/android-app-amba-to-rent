@@ -24,7 +24,7 @@
                                     @case('Completed') bg-green-600 @break
                                     @case('Pending') bg-yellow-600 @break
                                     @case('Ongoing') bg-blue-600 @break
-                                    @case('Cancelled') bg-red-600 @break
+                                    @case('Declined') bg-red-600 @break
                                     @default bg-gray-600
                                 @endswitch
                             ">

@@ -71,7 +71,8 @@
                             <div class="flex flex-col sm:flex-row gap-3">
 
                                 {{-- SELESAIKAN PENALTI --}}
-                                <form action="{{ route('orders.penalties.toggleStatus', [$order->id, $penalty->id]) }}" method="POST" class="inline-block">
+                                <form action="{{ route('orders.penalties.toggleStatus', [$order->id, $penalty->id]) }}"
+                                      method="POST" class="inline-block">
                                     @csrf
                                     @method('PATCH')
                                     <button type="submit"
@@ -87,17 +88,14 @@
                                bg-secondary-button text-white text-sm font-semibold ml-auto">
                                     Edit
                                 </a>
-                                <form action="{{ route('orders.penalties.destroy', [$order->id, $penalty->id]) }}"
-                                      method="POST"
-                                      onsubmit="return confirm('Yakin ingin menghapus penalti ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button
-                                        class="inline-flex justify-center px-6 py-2 rounded-full
-                                             bg-red-600 text-white text-sm font-semibold">
-                                        Hapus
-                                    </button>
-                                </form>
+                                <x-modal-confirm
+                                    title="Hapus Penalti?"
+                                    message="Data penalti yang dihapus tidak dapat dikembalikan. Yakin ingin melanjutkan?"
+                                    :action="route('orders.penalties.destroy', [$order->id, $penalty->id])"
+                                    method="DELETE"
+                                    button-text="Ya, Hapus">
+                                    Hapus
+                                </x-modal-confirm>
                             </div>
                         </div>
                     </div>
