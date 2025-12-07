@@ -114,7 +114,7 @@
                                 <a href="{{ route('orders.penalties.index', $order->id) }}"
                                    class="inline-flex justify-center px-6 py-2 rounded-full
                                       bg-red-600 text-white text-sm font-semibold">
-                                    Penalti
+                                    Penalti: {{ $order->penalties_count }}
                                 </a>
                             </div>
                         </div>

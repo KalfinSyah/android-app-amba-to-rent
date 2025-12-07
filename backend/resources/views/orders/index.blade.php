@@ -8,18 +8,17 @@
 
             <form method="GET" action="{{ route('orders.index') }}">
                 <div class="mb-8 rounded-full bg-primary-container px-6 py-4 shadow flex items-center gap-4">
-                    <span class="font-semibold text-gray-800 mr-2">Urutkan:</span>
-
+                    <span class="font-semibold text-gray-800 mr-2">Urutkan</span>
                     <select
                         name="sort"
-                        class="w-40 rounded-full border-none bg-rose-50 px-4 py-2 text-sm text-black shadow-inner focus:ring-0"
+                        class="w-28 rounded-full border-none bg-white px-4 py-2 text-sm text-black shadow-inner focus:ring-0"
                         onchange="this.form.submit()"
                     >
                         <option value="recent" {{ $sort === 'recent' ? 'selected' : '' }}>Terbaru</option>
                         <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Terlama</option>
                     </select>
 
-                    <span class="font-semibold text-gray-800 mr-2">Filter Status:</span>
+                    <span class="font-semibold text-gray-800 ml-2">Filter</span>
                     <select
                         name="status"
                         class="w-40 rounded-full border-none bg-white px-4 py-2 text-sm text-black shadow-inner focus:ring-0"
@@ -28,6 +27,19 @@
                         <option value="">Semua Status</option>
                         @foreach ($availableStatuses as $value => $label)
                             <option value="{{ $value }}" {{ $status === $value ? 'selected' : '' }}>
+                                {{ $label }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <select
+                        name="penalty"
+                        class="w-60 rounded-full border-none bg-white px-4 py-2 text-sm text-black shadow-inner focus:ring-0"
+                        onchange="this.form.submit()"
+                    >
+                        <option value="">Semua Kondisi Penalti</option>
+                        @foreach ($availablePenalties as $value => $label)
+                            <option value="{{ $value }}" {{ $penalty === $value ? 'selected' : '' }}>
                                 {{ $label }}
                             </option>
                         @endforeach
@@ -125,7 +137,7 @@
                             {{-- TOMBOL PENALTI --}}
                             <a href="{{ route('orders.penalties.index', $order->id) }}"
                                class="px-6 py-1.5 rounded-full bg-red-700 text-white text-sm font-semibold shadow hover:bg-red-800">
-                                Penalti
+                                Penalti: {{ $order->penalties_count }}
                             </a>
                         </div>
                     </div>

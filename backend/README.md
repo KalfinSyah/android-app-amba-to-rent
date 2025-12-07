@@ -7,5 +7,5 @@
 ~~- tambah informasi metode pembayaran di show orders~~
 ~~- modal untuk semua views~~
 ~~- index penalti salah~~
-- tambah status penalti di index cars
+~~- tambah status penalti di index orders~~
 ~~- tambah error message di semua input~~

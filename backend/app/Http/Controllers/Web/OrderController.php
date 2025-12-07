@@ -14,6 +14,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $status = $request->input('status');
+        $penalty = $request->input('penalty');
         $sort = $request->input('sort', 'recent');
         $q = $request->input('q');
 
@@ -21,6 +22,14 @@ class OrderController extends Controller
 
         if (!empty($status)) {
             $query->where('status_order', $status);
+        }
+
+        if (!empty($penalty)) {
+            if ($penalty === 'Terselesaikan') {
+                $query->doesntHave('penalties');
+            } elseif ($penalty === 'Belum Terselesaikan') {
+                $query->has('penalties');
+            }
         }
 
         if ($sort === 'oldest') {
@@ -34,22 +43,30 @@ class OrderController extends Controller
         }
 
         $orders = $query
+            ->withCount('penalties')
             ->paginate(6)
             ->withQueryString();
 
         $availableStatuses = [
-            'Pending' => 'Pending',
-            'Ongoing' => 'Ongoing',
-            'Completed' => 'Completed',
-            'Declined' => 'Declined',
+            'Pending' => 'Status Pending',
+            'Ongoing' => 'Status Ongoing',
+            'Completed' => 'Status Completed',
+            'Declined' => 'Status Declined',
+        ];
+
+        $availablePenalties = [
+            'Terselesaikan' => 'Penalti Terselesaikan',
+            'Belum Terselesaikan' => 'Penalti Belum Terselesaikan',
         ];
 
         return view('orders.index', [
             'orders' => $orders,
             'status' => $status,
+            'penalty' => $penalty,
             'sort' => $sort,
             'q' => $q,
             'availableStatuses' => $availableStatuses,
+            'availablePenalties' => $availablePenalties,
         ]);
     }
 
@@ -58,7 +75,7 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        $order = Order::with('user', 'car', 'transactionMethod')->findOrFail($id);
+        $order = Order::with('user', 'car', 'transactionMethod')->withCount('penalties')->findOrFail($id);
         return view('orders.show', compact('order'));
     }
 
