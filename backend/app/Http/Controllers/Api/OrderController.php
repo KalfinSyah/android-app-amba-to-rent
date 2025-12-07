@@ -56,7 +56,10 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        return response()->json([
+            'message' => 'Data order dengan id ' . $order->id . ' berhasil diambil',
+            'order' => $order
+        ], 200);
     }
     public function showByUserId($userId)
     {

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { AppBar } from "@/components/AppBar";
 import { colors } from "@/theme/colors";
 import { spacing } from "@/theme/spacing";
@@ -87,15 +87,19 @@ export default function OrdersScreen() {
     const [cars, setCars] = useState<Car[]>([]);
 
 
-    useEffect(() => {
-        const loadOrders = async () => {
+    useFocusEffect(
+        useCallback(() => {
+            const loadOrders = async () => {
             const ordersData = await fetchPesanan();
             const carsData = await fetchCars();
             if (ordersData) setOrders(ordersData);
             if (carsData) setCars(carsData);
-        };
-        loadOrders();
-    }, []);
+            };
+
+            loadOrders();
+        }, [])
+    );
+
 
     return (
         <View style={styles.root}>
@@ -111,7 +115,7 @@ export default function OrdersScreen() {
                     const car = cars.find((c) => c.id === item.car_id);
 
                     return (
-                        <TouchableOpacity onPress={() => router.push(`../${item.id}`)}>
+                        <TouchableOpacity onPress={() => router.push(`/pesanan/${item.id}`)}>
                             <View style={styles.orderCard}>
 
                                 <View style={{ flex: 1 }}>
