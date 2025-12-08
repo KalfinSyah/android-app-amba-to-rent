@@ -9,3 +9,5 @@
 ~~- index penalti salah~~
 ~~- tambah status penalti di index orders~~
 ~~- tambah error message di semua input~~
+- perbaiki logika Status Order dan Status Mobil, jika menerima pesanan, mobil harus tersedia dulu
+- tambah Proteksi Hapus Data saat mobil ingin dihapus, jangan hapus mobil yang sedang berjalan (ongoing)

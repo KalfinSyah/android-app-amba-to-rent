@@ -18,13 +18,6 @@ class Order extends Model
     protected $table = 'orders';
 
     /**
-     * Menunjukkan apakah model harus memiliki timestamp.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * Atribut yang dapat diisi secara massal.
      *
      * @var array

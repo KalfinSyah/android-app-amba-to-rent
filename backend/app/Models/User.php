@@ -22,13 +22,6 @@ class User extends Authenticatable
     protected $table = 'users';
 
     /**
-     * Menunjukkan apakah model harus memiliki timestamp.
-     *
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * Atribut yang dapat diisi secara massal.
      *
      * @var array

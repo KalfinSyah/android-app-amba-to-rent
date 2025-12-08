@@ -18,13 +18,6 @@ class Penalty extends Model
     protected $table = 'penalties';
 
     /**
-     * Menunjukkan apakah model harus memiliki timestamp.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * Atribut yang dapat diisi secara massal.
      *
      * @var array
