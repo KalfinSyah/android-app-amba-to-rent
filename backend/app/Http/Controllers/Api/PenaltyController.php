@@ -66,6 +66,15 @@ class PenaltyController extends Controller
     {
         //
     }
+    public function showByOrderId($orderId)
+    {
+        $penalties = Penalty::where('order_id', $orderId)->get();
+
+        return response()->json([
+            'message' => 'Penalties retrieved successfully.',
+            'data' => $penalties
+        ], 200);
+    }
 
     /**
      * Show the form for editing the specified resource.
