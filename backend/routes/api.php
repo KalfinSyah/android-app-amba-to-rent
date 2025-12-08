@@ -33,6 +33,8 @@ Route::middleware('auth:sanctum')->get('/user/id/{user}', [UserController::class
 
 // order
 Route::middleware('auth:sanctum')->post('/order', [OrderController::class, 'store']);
+Route::middleware('auth:sanctum')->get('/order/id/{order}', [OrderController::class, 'show']);
+Route::middleware('auth:sanctum')->get('/order/user/id/{id}', [OrderController::class, 'showByUserId']);
 
 // penalty
 Route::middleware('auth:sanctum')->post('/penalty', [PenaltyController::class, 'store']);
