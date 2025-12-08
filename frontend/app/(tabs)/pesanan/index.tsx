@@ -115,7 +115,7 @@ export default function OrdersScreen() {
                     const car = cars.find((c) => c.id === item.car_id);
 
                     return (
-                        <TouchableOpacity onPress={() => router.push(`/pesanan/${item.id}`)}>
+                        <TouchableOpacity onPress={() => router.push(`../pesanan/${item.id}`)}>
                             <View style={styles.orderCard}>
 
                                 <View style={{ flex: 1 }}>

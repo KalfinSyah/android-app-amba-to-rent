@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { View, StyleSheet, Image, Text, ImageBackground } from "react-native";
 import { router } from "expo-router";
 import { AppBar } from "@/components/AppBar";
 import { GreigePanel } from "@/components/Card";
@@ -7,42 +8,90 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { colors } from "@/theme/colors";
 import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
-import { Text } from "react-native";
 
 export default function HomeScreen() {
     return (
-        <View style={styles.root}>
-        <AppBar title="AmbaToRent" />
+        <View style={styles.root}> 
+            <ImageBackground
+                source={require("../../../assets/images/homepagebg.jpg")}
+                style={styles.bg}
+                resizeMode="cover"
+            >
+                <View style={styles.overlay}>        
+                    <View style={styles.logoBlock}>
+                        <Image
+                        style={styles.logoIcon}
+                        source={require("../../../assets/images/ambatorent-short-light.png")}
+                        resizeMode="contain"
+                        />
+                    </View>
 
-        <View style={styles.content}>
-            {/* Carousel-like hero (2 images) */}
-            <View style={styles.heroRow}>
-            <Image source={{ uri: "https://picsum.photos/800/400" }} style={styles.heroMain} />
-            <Image source={{ uri: "https://picsum.photos/200/400" }} style={styles.heroSide} />
-            </View>
-
-            <GreigePanel>
-            <Text style={styles.ctaTitle}>Sewa Mobil Sekarang!</Text>
-            <PrimaryButton
-                label="Pesan"
-                onPress={() => router.push("/daftar-mobil")}
-                iconLeft={<Text style={{ color: colors.primaryText }}>📅</Text>}
-            />
-            </GreigePanel>
-        </View>
+                    {/* Big multiline headline */}
+                    <Text style={styles.headline}>
+                        Wujudkan Impian Traveling-mu
+                        dengan Mobil Rental terbaik kami!
+                    </Text>
+                    <View style={styles.content}>
+                        <PrimaryButton
+                        label="Pesan"
+                        onPress={() => router.push("/booking")}
+                        />
+                    </View>
+                </View>
+            </ImageBackground>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     root: { flex: 1, backgroundColor: colors.bg },
-    content: { padding: spacing.lg },
+
+    bg: {
+        flex: 1,
+        width: "100%",
+        height: "100%",
+    },
+
+    overlay: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.50)",
+    },
+    
+    content: { 
+        flex: 1,
+        justifyContent: "flex-end",
+        padding: spacing.lg,
+        marginBottom: 40
+    },
+    
+    logoBlock: {
+        alignItems: "center",
+        marginTop: spacing.sm,
+    },
+
+    logoIcon: {
+        width: "60%",
+        maxWidth: 260,
+        aspectRatio: 460 / 240,
+        tintColor: "#FFFFFF",
+    },
+
+    headline: {
+        ...typography.h2,
+        color: "#FFFFFF",
+        lineHeight: 34,
+        marginTop: spacing.lg,  // jarak normal di bawah logo
+        alignSelf: "center",
+        flexShrink: 1,
+        marginLeft: spacing.xl,
+    },
+    
     heroRow: { flexDirection: "row", gap: spacing.sm },
     heroMain: { flex: 1, height: 190, borderRadius: 18 },
     heroSide: { width: 78, height: 190, borderRadius: 18 },
     ctaTitle: {
         ...typography.h2,
         textAlign: "center",
-        marginBottom: spacing.md,
+        marginTop: spacing.md,
     },
 });

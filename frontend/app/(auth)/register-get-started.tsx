@@ -37,7 +37,7 @@ export default function RegisterGetStartedScreen() {
                     <View style={styles.ctaWrap}>
                         <PrimaryButton
                         label="Get Started"
-                        onPress={() => router.push("/register-form")}
+                        onPress={() => router.push("/login")}
                         // biarkan button stretch mengikuti parent, tanpa width: "100%"
                         />
                     </View>
