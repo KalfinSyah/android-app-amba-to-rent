@@ -14,7 +14,7 @@ const fetchUser = async () => {
 
         if (!token) return null;
 
-        const res = await fetch(`http://127.0.0.1:8000/api/user/id/${user_id}`, {
+        const res = await fetch(`http://127.0.0.1:8000/api/users/${user_id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: "application/json"
