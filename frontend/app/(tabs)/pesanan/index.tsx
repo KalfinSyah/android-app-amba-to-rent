@@ -44,7 +44,7 @@ const fetchPesanan = async () => {
 
         if (!token) return null;
 
-        const res = await fetch(`${BASE_URL}/api/order/user/id/${user_id}`, {
+        const res = await fetch(`${BASE_URL}/api/orders/user/${user_id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: "application/json"

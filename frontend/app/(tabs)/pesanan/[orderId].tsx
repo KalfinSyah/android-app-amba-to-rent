@@ -41,8 +41,8 @@ async function fetchPesananById(orderId: string) {
   try {
     const token = await AsyncStorage.getItem("token");
 
-    const res = await fetch(`${BASE_URL}/api/order/id/${orderId}`, {
-      headers: {
+    const res = await fetch(`${BASE_URL}/api/orders/${orderId}`, {
+      headers: {  
         Authorization: `Bearer ${token}`,
         Accept: "application/json",
       },
