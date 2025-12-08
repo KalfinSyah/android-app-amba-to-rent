@@ -18,13 +18,6 @@ class Car extends Model
     protected $table = 'cars';
 
     /**
-     * Menunjukkan apakah model harus memiliki timestamp (created_at & updated_at).
-     *
-     * @var bool
-     */
-    public $timestamps = false; // Database Anda tidak memiliki created_at/updated_at
-
-    /**
      * Atribut yang dapat diisi secara massal (mass assignable).
      *
      * @var array
@@ -63,4 +56,14 @@ class Car extends Model
         // Parameter ketiga adalah primary key di tabel ini ('cars')
         return $this->hasMany(Order::class, 'car_id', 'id');
     }
+//
+//    public function isAvailable(): bool
+//    {
+//        return $this->orders()->where('status_order', 'Ongoing')->doesntExist();
+//    }
+//
+//    public function hasActiveTrip(): bool
+//    {
+//        return $this->orders()->where('status_order', 'Ongoing')->exists();
+//    }
 }

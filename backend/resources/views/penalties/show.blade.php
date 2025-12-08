@@ -40,21 +40,10 @@
 
                         {{-- Info Tanggal --}}
                         <div class="grid grid-cols-[auto,1fr] gap-y-2 gap-x-8 text-sm">
-                            <p class="font-semibold">Tanggal Penalti:</p>
-                            <p>{{ $penalty->tanggal_penalty?->format('d/m/Y') ?? '-' }}</p>
-                        </div>
-
-                        {{-- PEMBAYARAN --}}
-                        <div class="space-y-2 text-sm">
-                            <p class="text-xs font-semibold">Pembayaran:</p>
-
-                            <div class="grid grid-cols-[auto,1fr] gap-y-2 gap-x-8">
-                                <p class="font-semibold">Tanggal Transaksi:</p>
-                                <p>{{ $penalty->tanggal_transaksi?->format('d/m/Y') ?? '-' }}</p>
-
-                                <p class="font-semibold">Metode Pembayaran:</p>
-                                <p>{{ $penalty->metode_pembayaran ?? '-' }}</p>
-                            </div>
+                            <p class="font-semibold">Tanggal Penalti dibuat:</p>
+                            <p>{{ $penalty->created_at?->format('d/m/Y') ?? '-' }}</p>
+                            <p class="font-semibold">Tanggal Penalti diperbarui:</p>
+                            <p>{{ $penalty->updated_at?->format('d/m/Y') ?? '-' }}</p>
                         </div>
 
                     </div>
@@ -102,7 +91,7 @@
                 </div>
 
                 {{-- KARTU GAMBAR PENALTI --}}
-                <div class="bg-primary-container rounded-[24px] overflow-hidden shadow col-span-5 flex flex-col">
+                <div class="bg-none rounded-[24px] overflow-hidden shadow col-span-5 flex flex-col">
 
                     {{-- HEADER --}}
                     <div class="bg-primary text-white px-6 py-3">
@@ -119,20 +108,6 @@
                         @else
                             <p class="text-sm text-gray-600 italic">Tidak ada gambar.</p>
                         @endif
-                    </div>
-
-                    {{-- DELETE BUTTON --}}
-                    <div class="px-6 py-4 mt-auto">
-                        <form action="{{ route('orders.penalties.destroy', [$order->id, $penalty->id]) }}"
-                              method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button
-                                class="inline-flex justify-center px-6 py-2 rounded-full
-                                        bg-red-600 text-white text-sm font-semibold">
-                                Hapus Gambar
-                            </button>
-                        </form>
                     </div>
                 </div>
             </div>

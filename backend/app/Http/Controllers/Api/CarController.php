@@ -17,7 +17,7 @@ class CarController extends Controller
 
         return response()->json([
             'message' => 'Daftar mobil berhasil diambil',
-            'cars'    => $cars
+            'cars' => $cars
         ], 200);
     }
 
@@ -40,52 +40,12 @@ class CarController extends Controller
     /**
      * Display the specified resource.
      */
-    public function showById(Car $car)
+    public function show(Car $car)
     {
-        if (!$car->status_mobil) {
-            return response()->json([
-                'message' => 'Mobil tidak tersedia'
-            ], 404);
-        }
-
         return response()->json([
-            'message' => 'Data mobil ' . $car->nama_mobil . ' berhasil diambil',
-            'car' => $car
-        ]);
-    }
-    public function showByName($nama_mobil)
-    {
-        $car = Car::where('nama_mobil', $nama_mobil)
-            ->where('status_mobil', 1)
-            ->first();
-
-        if ($car) {
-            return response()->json([
-                'message' => 'Data mobil ' . $car->nama_mobil . ' berhasil diambil',
-                'car' => $car
-            ]);
-        }
-
-        return response()->json([
-            'message' => 'Mobil dengan nama ' . $nama_mobil . ' tidak ditemukan atau tidak tersedia'
-        ], 404);
-    }
-    public function showByBrand($merk_mobil)
-    {
-        $cars = Car::where('merk_mobil', $merk_mobil)
-            ->where('status_mobil', 1)
-            ->get();
-
-        if ($cars->isNotEmpty()) {
-            return response()->json([
-                'message' => 'Data mobil dengan merk ' . $merk_mobil . ' berhasil diambil',
-                'cars' => $cars
-            ]);
-        }
-
-        return response()->json([
-            'message' => 'Mobil dengan merk ' . $merk_mobil . ' tidak ditemukan atau tidak tersedia'
-        ], 404);
+            'message' => 'Data Mobil berhasil diambil',
+            'cars' => $car,
+        ], 200);
     }
 
     /**
@@ -118,27 +78,37 @@ class CarController extends Controller
     public function available(Request $request)
     {
         $request->validate([
-            'tanggal_sewa'          => 'required|date',
-            'tanggal_kembali_sewa'  => 'required|date|after_or_equal:tanggal_sewa',
+            'tanggal_sewa' => 'required|date',
+            'tanggal_kembali_sewa' => 'required|date|after_or_equal:tanggal_sewa',
+            'search' => 'nullable|string',
         ]);
 
         $start = $request->tanggal_sewa;
-        $end   = $request->tanggal_kembali_sewa;
+        $end = $request->tanggal_kembali_sewa;
+        $search = $request->input('search');
 
-        $cars = Car::query()
+        $query = Car::query()
             ->where('status_mobil', true)
             ->whereDoesntHave('orders', function ($q) use ($start, $end) {
-                $q->whereIn('status', ['pending', 'accepted', 'ongoing'])
-                    ->where(function ($query) use ($start, $end) {
-                        $query->where('tanggal_sewa', '<=', $end)
-                            ->where('tanggal_kembali_sewa', '>=', $start);
-                    });
-            })
-            ->get();
+                $q->whereIn('status_order', ['Pending', 'Ongoing'])
+                ->where(function ($query) use ($start, $end) {
+                    $query->where('tanggal_sewa', '<=', $end)
+                        ->where('tanggal_kembali_sewa', '>=', $start);
+                });
+            });
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_mobil', 'like', '%' . $search . '%')
+                    ->orWhere('merk_mobil', 'like', '%' . $search . '%');
+            });
+        }
+
+        $cars = $query->get();
 
         return response()->json([
             'message' => 'Daftar mobil tersedia berhasil diambil',
-            'cars'    => $cars,
+            'cars' => $cars,
         ], 200);
     }
 }

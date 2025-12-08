@@ -13,7 +13,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        // 
+        //
     }
 
     /**
@@ -61,15 +61,6 @@ class OrderController extends Controller
             'order' => $order
         ], 200);
     }
-    public function showByUserId($userId)
-    {
-        $orders = Order::where('user_id', $userId)->get();
-
-        return response()->json([
-            'message' => 'Data order untuk user ID ' . $userId . ' berhasil diambil',
-            'orders' => $orders
-        ], 200);
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -93,5 +84,15 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         //
+    }
+
+    public function showByUserId($userId)
+    {
+        $orders = Order::where('user_id', $userId)->get();
+
+        return response()->json([
+            'message' => 'Data order untuk user ID ' . $userId . ' berhasil diambil',
+            'orders' => $orders
+        ], 200);
     }
 }
