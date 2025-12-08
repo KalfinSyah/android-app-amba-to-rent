@@ -1,6 +1,6 @@
 import React from "react";
-import { View, StyleSheet, Image, Text } from "react-native";
-import { Video, ResizeMode } from "expo-av";
+import { FontAwesome } from "@expo/vector-icons";
+import { View, StyleSheet, Image, Text, ImageBackground } from "react-native";
 import { router } from "expo-router";
 import { AppBar } from "@/components/AppBar";
 import { GreigePanel } from "@/components/Card";
@@ -10,57 +10,88 @@ import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
 
 export default function HomeScreen() {
-  return (
-    <View style={styles.root}>
-      { /* 🔥 Background Video dari file lokal */}
-        <Video
-        source={require("../../../assets/videos/homepagefootage.mp4")}
-        style={StyleSheet.absoluteFillObject}
-        shouldPlay
-        isLooping
-        resizeMode={ResizeMode.COVER}
-        isMuted
-        />
+    return (
+        <View style={styles.root}> 
+            <ImageBackground
+                source={require("../../../assets/images/homepagebg.jpg")}
+                style={styles.bg}
+                resizeMode="cover"
+            >
+                <View style={styles.overlay}>        
+                    <View style={styles.logoBlock}>
+                        <Image
+                        style={styles.logoIcon}
+                        source={require("../../../assets/images/ambatorent-short-light.png")}
+                        resizeMode="contain"
+                        />
+                    </View>
 
-      {/* 🔥 Overlay konten agar tampil di atas video */}
-      <View style={styles.overlay}>
-        <AppBar title="AmbaToRent" />
-
-        <View style={styles.content}>
-          {/* <View style={styles.heroRow}>
-            <Image source={{ uri: "https://picsum.photos/800/400" }} style={styles.heroMain} />
-            <Image source={{ uri: "https://picsum.photos/200/400" }} style={styles.heroSide} />
-          </View> */}
-
-          <GreigePanel>
-            <Text style={styles.ctaTitle}>Sewa Mobil Sekarang!</Text>
-            <PrimaryButton
-              label="Pesan"
-              onPress={() => router.push("/daftar-mobil")}
-              iconLeft={<Text style={{ color: colors.primaryText }}>📅</Text>}
-            />
-          </GreigePanel>
+                    {/* Big multiline headline */}
+                    <Text style={styles.headline}>
+                        Wujudkan Impian Traveling-mu
+                        dengan Mobil Rental terbaik kami!
+                    </Text>
+                    <View style={styles.content}>
+                        <PrimaryButton
+                        label="Pesan"
+                        onPress={() => router.push("/booking")}
+                        />
+                    </View>
+                </View>
+            </ImageBackground>
         </View>
-      </View>
-    </View>
-  );
+    );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.bg },
+    root: { flex: 1, backgroundColor: colors.bg },
 
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.25)", // tetep transparan, jadi video kelihatan
-  },
+    bg: {
+        flex: 1,
+        width: "100%",
+        height: "100%",
+    },
 
-  content: { padding: spacing.lg },
-  heroRow: { flexDirection: "row", gap: spacing.sm },
-  heroMain: { flex: 1, height: 190, borderRadius: 18 },
-  heroSide: { width: 78, height: 190, borderRadius: 18 },
-  ctaTitle: {
-    ...typography.h2,
-    textAlign: "center",
-    marginBottom: spacing.md,
-  },
+    overlay: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.50)",
+    },
+    
+    content: { 
+        flex: 1,
+        justifyContent: "flex-end",
+        padding: spacing.lg,
+        marginBottom: 40
+    },
+    
+    logoBlock: {
+        alignItems: "center",
+        marginTop: spacing.sm,
+    },
+
+    logoIcon: {
+        width: "60%",
+        maxWidth: 260,
+        aspectRatio: 460 / 240,
+        tintColor: "#FFFFFF",
+    },
+
+    headline: {
+        ...typography.h2,
+        color: "#FFFFFF",
+        lineHeight: 34,
+        marginTop: spacing.lg,  // jarak normal di bawah logo
+        alignSelf: "center",
+        flexShrink: 1,
+        marginLeft: spacing.xl,
+    },
+    
+    heroRow: { flexDirection: "row", gap: spacing.sm },
+    heroMain: { flex: 1, height: 190, borderRadius: 18 },
+    heroSide: { width: 78, height: 190, borderRadius: 18 },
+    ctaTitle: {
+        ...typography.h2,
+        textAlign: "center",
+        marginTop: spacing.md,
+    },
 });
