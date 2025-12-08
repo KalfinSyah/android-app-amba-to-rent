@@ -2,7 +2,6 @@ import React, { useCallback, useState } from "react";
 import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import { useLocalSearchParams, router, useFocusEffect } from "expo-router";
 import { AppBar } from "@/components/AppBar";
-import { penalties } from "@/data/mock";
 import { colors } from "@/theme/colors";
 import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
@@ -15,19 +14,6 @@ export interface Penalties {
   biaya_penalty: number;
   foto_penalty: string;
   status_penalty: string;
-  created_at: string | null;
-  updated_at: string | null;
-  deleted_at: string | null;
-}
-
-
-function InfoRow({ label, value }: { label: string; value: string }) {
-    return (
-        <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>{label}</Text>
-            <Text style={styles.infoValue}>{value}</Text>
-        </View>
-    );
 }
 
 const BASE_URL = "http://127.0.0.1:8000";
@@ -37,74 +23,139 @@ async function fetchPenaltyByOrderId(orderId: string) {
     const token = await AsyncStorage.getItem("token");
 
     const res = await fetch(`${BASE_URL}/api/penalties/order/${orderId}`, {
-      headers: {  
+      headers: {
         Authorization: `Bearer ${token}`,
         Accept: "application/json",
       },
     });
 
     const data = await res.json();
-    console.log(data.data);
-    return data.data; // correct field
+    return data.data ?? [];
   } catch (err) {
-    console.log("Fetch order by id error:", err);
-    return null;
+    console.log("Fetch penalties error:", err);
+    return [];
   }
 }
 
-
 export default function PenaltyDetailScreen() {
-    const [penalties, setPenalties] = useState<Penalties[]>([]);
-    const { orderId } = useLocalSearchParams<{ orderId: string }>();
-   
-    useFocusEffect(
+  const [penalties, setPenalties] = useState<Penalties[]>([]);
+  const { orderId } = useLocalSearchParams<{ orderId: string }>();
+
+  useFocusEffect(
     useCallback(() => {
-        const load = async () => {
+      const load = async () => {
         const data = await fetchPenaltyByOrderId(orderId);
-            if (data) {
-                setPenalties(data);
-            }
-        };
-        load();
+        setPenalties(data);
+      };
+      load();
     }, [orderId])
-    );
-    return (
-        <View style={styles.root}>
-            <AppBar title="Detail Penalti" onBack={() => router.back()} />
+  );
 
-            <ScrollView contentContainerStyle={{ padding: spacing.lg }}>
-                <Text>{JSON.stringify(penalties, null, 2)}</Text>
-                {/* <Text style={styles.sectionTitle}>Foto Penalti</Text>
-                <Image source={{ uri: p.photo }} style={styles.photo} />
+  return (
+    <View style={styles.root}>
+      <AppBar title="Detail Penalti" onBack={() => router.back()} />
 
-                <Text style={styles.sectionTitle}>Informasi Penalti</Text>
+      <ScrollView contentContainerStyle={styles.container}>
+        {penalties.length === 0 ? (
+          <Text style={styles.emptyText}>Tidak ada data penalti.</Text>
+        ) : (
+          penalties.map((p) => (
+            <View key={p.id} style={styles.card}>
+              {/* FOTO */}
+              <Image source={{ uri: p.foto_penalty }} style={styles.photo} />
 
-                <View style={styles.panel}>
-                    <InfoRow label="Jenis Penalti" value={p.type} />
-                    <InfoRow label="Status Penalti" value={p.status} />
-                </View>
+              {/* JENIS */}
+              <Text style={styles.penaltyType}>{p.jenis_penalty}</Text>
 
-                <View style={styles.panel}>
-                    <InfoRow label="Biaya" value={`Rp. ${p.cost.toLocaleString("id-ID")}`} />
-                </View> */}
-            </ScrollView>
-        </View>
-    );
+              {/* BIAYA */}
+              <Text style={styles.cost}>
+                Rp {p.biaya_penalty.toLocaleString("id-ID")}
+              </Text>
+
+              {/* STATUS */}
+              <Text
+                style={[
+                  styles.statusBadge,
+                  p.status_penalty === "Paid"
+                    ? styles.statusPaid
+                    : styles.statusUnpaid,
+                ]}
+              >
+                {p.status_penalty}
+              </Text>
+            </View>
+          ))
+        )}
+      </ScrollView>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    root: { flex: 1, backgroundColor: colors.bg },
-    sectionTitle: { ...typography.h2, textAlign: "center", marginVertical: spacing.md },
-    photo: { width: "100%", height: 210, borderRadius: 14, marginBottom: spacing.lg },
+  root: {
+    flex: 1,
+    backgroundColor: colors.bg,
+  },
 
-    panel: {
-        backgroundColor: colors.surfaceGreige,
-        borderRadius: 18,
-        padding: spacing.lg,
-        marginBottom: spacing.lg,
-    },
+  container: {
+    padding: spacing.lg,
+    paddingBottom: 80,
+  },
 
-    infoRow: { alignItems: "center" },
-    infoLabel: { ...typography.small },
-    infoValue: { ...typography.h3, marginTop: 2 },
+  emptyText: {
+    textAlign: "center",
+    marginTop: 40,
+    ...typography.h3,
+    color: colors.muted,
+  },
+
+  card: {
+    backgroundColor: colors.surfaceGreige,
+    padding: spacing.lg,
+    borderRadius: 18,
+    marginBottom: spacing.lg,
+    shadowColor: "#000",
+    shadowOpacity: 0.12,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 6,
+    elevation: 5,
+    alignItems: "center",
+  },
+
+  photo: {
+    width: "100%",
+    height: 200,
+    borderRadius: 14,
+    marginBottom: spacing.md,
+  },
+
+  penaltyType: {
+    ...typography.h2,
+    color: colors.primaryText,
+    textAlign: "center",
+  },
+
+  cost: {
+    ...typography.h2,
+    marginTop: spacing.sm,
+    marginBottom: spacing.md,
+    color: colors.primaryText,
+  },
+
+  statusBadge: {
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    borderRadius: 14,
+    ...typography.small,
+    color: "white",
+    textAlign: "center",
+  },
+
+  statusPaid: {
+    backgroundColor: "green",
+  },
+
+  statusUnpaid: {
+    backgroundColor: "red",
+  },
 });
