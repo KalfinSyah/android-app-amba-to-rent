@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Tambahkan rute Anda di sini nanti
-// Route::apiResource('cars', App\Http\Controllers\CarController::class);
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -22,11 +21,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 // cars
-Route::middleware('auth:sanctum')->get('/cars', [CarController::class, 'index']);
-Route::middleware('auth:sanctum')->get('/cars/id/{car}', [CarController::class, 'showById']);
-Route::middleware('auth:sanctum')->get('/cars/name/{nama_mobil}', [CarController::class, 'showByName']);
-Route::middleware('auth:sanctum')->get('/cars/brand/{merk_mobil}', [CarController::class, 'showByBrand']);
-Route::middleware('auth:sanctum')->get('/cars/available', [CarController::class, 'available']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/cars/available', [CarController::class, 'available']);
+    Route::apiResource('cars', CarController::class);
+});
 
 // user
 Route::middleware('auth:sanctum')->get('/user/id/{user}', [UserController::class, 'show']);
