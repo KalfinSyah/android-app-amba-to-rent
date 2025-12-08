@@ -19,6 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cars/available', [CarController::class, 'available']);
     Route::apiResource('cars', CarController::class);
     // order
+    Route::get('/orders/user/{userId}', [OrderController::class, 'showByUserId']);
     Route::apiResource('orders', OrderController::class);
     // penalty
     Route::apiResource('penalties', PenaltyController::class);
