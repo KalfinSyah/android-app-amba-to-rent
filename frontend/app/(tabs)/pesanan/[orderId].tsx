@@ -60,7 +60,7 @@ async function fetchCarById(id: number) {
   try {
     const token = await AsyncStorage.getItem("token");
 
-    const res = await fetch(`${BASE_URL}/api/cars/id/${id}`, {
+    const res = await fetch(`${BASE_URL}/api/cars/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: "application/json",
@@ -68,7 +68,7 @@ async function fetchCarById(id: number) {
     });
 
     const data = await res.json();
-    return data.car; // correct field
+    return data.cars; // correct field
   } catch (err) {
     console.log("Fetch car error:", err);
     return null;
