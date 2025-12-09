@@ -17,14 +17,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     // car
     Route::get('/cars/available', [CarController::class, 'available']);
-    Route::apiResource('cars', CarController::class);
+    Route::apiResource('cars', CarController::class)->names('api.cars');
     // order
     Route::get('/orders/user/{userId}', [OrderController::class, 'showByUserId']);
-    Route::apiResource('orders', OrderController::class);
+    Route::apiResource('orders', OrderController::class)->names('api.orders');
     // penalty
     Route::get('/penalties/order/{orderId}', [PenaltyController::class, 'showByOrderId']);
-    Route::apiResource('penalties', PenaltyController::class);
+    Route::apiResource('penalties', PenaltyController::class)->names('api.penalties');
     // user
-    Route::apiResource('users', UserController::class);
+    Route::apiResource('users', UserController::class)->names('api.users');
 });
 

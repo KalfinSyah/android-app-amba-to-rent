@@ -29,34 +29,7 @@ class PenaltyController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'order_id'      => 'required|exists:orders,id',
-            'jenis_penalty' => 'required|string',
-            'biaya_penalty' => 'required|numeric|min:0',
-            'status_penalty'=> 'required|string',
-            'foto_penalty'  => 'required|image|mimes:jpg,jpeg,png|max:4096', // 4MB
-        ]);
-            
-        // Upload file → disimpan ke public/images/penalty
-        $file = $request->file('foto_penalty');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('images/penalty'), $fileName);
-
-        // Simpan path ke database
-        $path = 'images/penalty/' . $fileName;
-
-        $penalty = Penalty::create([
-            'order_id'      => $request->order_id,
-            'jenis_penalty' => $request->jenis_penalty,
-            'biaya_penalty' => $request->biaya_penalty,
-            'foto_penalty'  => $path,
-            'status_penalty'=> $request->status_penalty,
-        ]);
-
-        return response()->json([
-            'message' => 'Penalty berhasil dibuat!',
-            'data'    => $penalty,
-        ], 201);
+        //
     }
 
     /**
@@ -64,8 +37,12 @@ class PenaltyController extends Controller
      */
     public function show(Penalty $penalty)
     {
-        //
+        return response()->json([
+            'message' => 'Penalty retrieved successfully.',
+            'data' => $penalty
+        ], 200);
     }
+
     public function showByOrderId($orderId)
     {
         $penalties = Penalty::where('order_id', $orderId)->get();
