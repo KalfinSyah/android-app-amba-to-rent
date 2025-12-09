@@ -8,7 +8,24 @@ import { colors } from "@/theme/colors";
 import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
 
-const fetchCars = async (start: string, end: string) => {
+export interface Car {
+    id: number;
+    tahun_mobil: string;
+    merk_mobil: string;
+    nama_mobil: string;
+    jenis_mobil: string;
+    tipe_mesin: string;
+    tipe_transmisi: string;
+    harga_sewa: number;
+    foto_mobil: string;
+    status_mobil: boolean;
+    created_at?: string | null;
+    updated_at?: string | null;
+    deleted_at?: string | null;
+}
+
+
+const fetchCars = async (start: string, end: string): Promise<Car[] | null> => {
     try {
         const token = await AsyncStorage.getItem("token");
         if (!token) return null;
@@ -42,7 +59,8 @@ export default function CarListScreen() {
     const start = params.start as string; // tanggal_sewa
     const end = params.end as string;     // tanggal_kembali_sewa
 
-    const [availableCars, setAvailableCars] = useState([]);
+    const [availableCars, setAvailableCars] = useState<Car[]>([]);
+
 
     useEffect(() => {
         if (start && end) {
