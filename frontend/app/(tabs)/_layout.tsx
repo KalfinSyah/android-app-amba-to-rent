@@ -31,30 +31,46 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="beranda"
         options={{
-          tabBarIcon: ({ color }) => (
-            <FontAwesome name="home" size={24} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
+              name="home"
+              color={color}
+              focused={focused}
+              label="Beranda"
+            />
           ),
         }}
       />
       <Tabs.Screen
         name="pesanan"
         options={{
-          tabBarIcon: ({ color }) => (
-            <FontAwesome name="clock-o" size={24} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
+              name="clock-o"
+              color={color}
+              focused={focused}
+              label="Pesanan"
+            />
           ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarIcon: ({ color }) => (
-            <FontAwesome name="user" size={24} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
+              name="user"
+              color={color}
+              focused={focused}
+              label="Profil"
+            />
           ),
         }}
       />
     </Tabs>
   );
 }
+
 
 const styles = StyleSheet.create({
     tabItem: {
