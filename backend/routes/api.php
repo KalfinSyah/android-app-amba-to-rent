@@ -16,7 +16,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // logout
     Route::post('/logout', [AuthController::class, 'logout']);
     // car
-    Route::get('/cars/available', [CarController::class, 'available']);
+    Route::post('/cars/available', [CarController::class, 'available']);
     Route::apiResource('cars', CarController::class)->names('api.cars');
     // order
     Route::get('/orders/user/{userId}', [OrderController::class, 'showByUserId']);
