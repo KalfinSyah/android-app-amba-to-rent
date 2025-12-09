@@ -83,7 +83,7 @@ export default function CarListScreen() {
                 keyExtractor={(c) => c.id.toString()}
                 contentContainerStyle={{ padding: spacing.lg }}
                 renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => router.push(`/daftar-mobil/${item.id}`)}>
+                    <TouchableOpacity onPress={() => router.push(`/car-list/${item.id}`)}>
                         <CarCard image={item.foto_mobil}>
                             <Text style={styles.carName}>{item.nama_mobil}</Text>
                             <Text style={styles.year}>{item.tahun_mobil}</Text>
