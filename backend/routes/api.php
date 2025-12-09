@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders/user/{userId}', [OrderController::class, 'showByUserId']);
     Route::apiResource('orders', OrderController::class);
     // penalty
+    Route::get('/penalties/order/{orderId}', [PenaltyController::class, 'showByOrderId']);
     Route::apiResource('penalties', PenaltyController::class);
     // user
     Route::apiResource('users', UserController::class);
