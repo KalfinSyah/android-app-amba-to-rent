@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
@@ -8,6 +8,23 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { colors } from "@/theme/colors";
 import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export interface Car {
+    id: number;
+    tahun_mobil: string;
+    merk_mobil: string;
+    nama_mobil: string;
+    jenis_mobil: string;
+    tipe_mesin: string;
+    tipe_transmisi: string;
+    harga_sewa: number;
+    foto_mobil: string;
+    status_mobil: boolean;
+    created_at?: string | null;
+    updated_at?: string | null;
+    deleted_at?: string | null;
+}
 
 function WhitePill({ children, onPress }: any) {
   return (
@@ -22,6 +39,19 @@ export default function RentCarScreen() {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [showPicker, setShowPicker] = useState(false);
   const [activePicker, setActivePicker] = useState<"start" | "end" | null>(null);
+  // const [selectedCar, setSelectedCar] = useState<Car | null>(null);
+
+    // useEffect(() => {
+    //   const loadCar = async () => {
+    //     const saved = await AsyncStorage.getItem("selectedCar");
+    //     if (saved) {
+    //       setSelectedCar(JSON.parse(saved));
+    //       await AsyncStorage.removeItem("selectedCar");
+    //     }
+    //   };
+
+    //   loadCar();
+    // }, []);
 
   // Format -> YYYY-MM-DD
   const formatDate = (date: Date | null) => {
@@ -143,20 +173,17 @@ export default function RentCarScreen() {
           </WhitePill>
         </GreigePanel>
 
-        <PrimaryButton
+        {/* <PrimaryButton
           label="Sewa"
-          onPress={() =>
+          onPress={() => {
             router.push({
-              pathname: "/car-list",
-              params: {
-                start: startDate ? formatDate(startDate) : "",
-                end: endDate ? formatDate(endDate) : "",
-              },
+              pathname: "/booking"
             })
           }
-          disabled={!isDateValid}
+          }
+          disabled={selectedCar === null ? true : false}
           style={{ marginTop: spacing.xl }}
-        />
+        /> */}
       </View>
     </View>
   );

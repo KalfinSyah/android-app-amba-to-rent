@@ -123,13 +123,16 @@ export default function CarDetailScreen() {
                     </View>
 
                     <PrimaryButton
-                        label="Pesan"
-                        onPress={() =>
-                            router.push({
-                                pathname: "/pesanan",
-                                params: { id: car.id.toString() },
-                            })
-                        }
+                        label="Sewa"
+                        onPress={async () => {
+                            try {
+                                await AsyncStorage.setItem("selectedCar", JSON.stringify(car));
+                                // router.push("/");
+                                console.log("Car saved for booking:", car);
+                            } catch (error) {
+                                console.log("Error saving car:", error);
+                            }
+                        }}
                         iconLeft={<Text style={{ color: colors.primaryText }}>📅</Text>}
                         style={{ marginTop: spacing.lg }}
                     />
