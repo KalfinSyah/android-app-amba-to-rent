@@ -11,19 +11,24 @@ import { typography } from "@/theme/typography";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface Car {
-    id: number;
-    tahun_mobil: string;
-    merk_mobil: string;
-    nama_mobil: string;
-    jenis_mobil: string;
-    tipe_mesin: string;
-    tipe_transmisi: string;
-    harga_sewa: number;
-    foto_mobil: string;
-    status_mobil: boolean;
-    created_at?: string | null;
-    updated_at?: string | null;
-    deleted_at?: string | null;
+  id: number;
+  tahun_mobil: string;
+  merk_mobil: string;
+  nama_mobil: string;
+  jenis_mobil: string;
+  tipe_mesin: string;
+  tipe_transmisi: string;
+  harga_sewa: number;
+  foto_mobil: string;
+  status_mobil: boolean;
+  created_at?: string | null;
+  updated_at?: string | null;
+  deleted_at?: string | null;
+}
+
+interface PaymentMethod {
+  id: number;
+  nama_method: string;
 }
 
 function WhitePill({ children, onPress }: any) {
@@ -39,19 +44,50 @@ export default function RentCarScreen() {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [showPicker, setShowPicker] = useState(false);
   const [activePicker, setActivePicker] = useState<"start" | "end" | null>(null);
-  // const [selectedCar, setSelectedCar] = useState<Car | null>(null);
 
-    // useEffect(() => {
-    //   const loadCar = async () => {
-    //     const saved = await AsyncStorage.getItem("selectedCar");
-    //     if (saved) {
-    //       setSelectedCar(JSON.parse(saved));
-    //       await AsyncStorage.removeItem("selectedCar");
-    //     }
-    //   };
+  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
 
-    //   loadCar();
-    // }, []);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod | null>(null);
+  const [showPaymentDropdown, setShowPaymentDropdown] = useState(false);
+
+  // 1) Load mobil yang dipilih dari AsyncStorage ketika kembali dari car-detail
+  useEffect(() => {
+    const loadCar = async () => {
+      try {
+        const saved = await AsyncStorage.getItem("selectedCar");
+        if (saved) {
+          setSelectedCar(JSON.parse(saved));
+          await AsyncStorage.removeItem("selectedCar");
+        }
+      } catch (e) {
+        console.log("Error loading selectedCar:", e);
+      }
+    };
+
+    loadCar();
+  }, []);
+
+  // 2) Ambil metode pembayaran dari backend
+  useEffect(() => {
+    const fetchPaymentMethods = async () => {
+      try {
+        const res = await fetch("http://localhost:8001/api/transaction-methods", {
+          headers: { Accept: "application/json" },
+        });
+
+        const json = await res.json();
+        // Sesuaikan dengan bentuk response controller-mu
+        const list: PaymentMethod[] = json.data ?? json;
+        setPaymentMethods(list);
+        if (list.length > 0) setSelectedPayment(list[0]);
+      } catch (e) {
+        console.log("Error fetching payment methods:", e);
+      }
+    };
+
+    fetchPaymentMethods();
+  }, []);
 
   // Format -> YYYY-MM-DD
   const formatDate = (date: Date | null) => {
@@ -73,15 +109,61 @@ export default function RentCarScreen() {
     if (activePicker === "end") setEndDate(selectedDate);
   };
 
-  const isDatePicked = startDate && endDate;
-  const isDateOrderCorrect = startDate && endDate && startDate <= endDate;
+  const isDatePicked = !!startDate && !!endDate;
+  const isDateOrderCorrect = !!startDate && !!endDate && startDate <= endDate;
   const isDateValid = isDatePicked && isDateOrderCorrect;
+
+  // Hitung durasi hari
+  const rentalDays =
+    startDate && endDate
+      ? Math.max(
+          1,
+          Math.round(
+            (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+          ) + 1
+        )
+      : 0;
+
+  const totalPrice =
+    selectedCar && rentalDays > 0 ? selectedCar.harga_sewa * rentalDays : 0;
+
+  const canSubmit =
+    isDateValid && selectedCar !== null && selectedPayment !== null;
+
+  const handleSelectPayment = (method: PaymentMethod) => {
+    setSelectedPayment(method);
+    setShowPaymentDropdown(false);
+  };
+
+  const togglePaymentDropdown = () => {
+    setShowPaymentDropdown((prev) => !prev);
+  };
+
+  const goToConfirmation = () => {
+    if (!canSubmit || !startDate || !endDate || !selectedCar || !selectedPayment) {
+      return;
+    }
+
+    router.push({
+      pathname: "/book-confirm",
+      params: {
+        start: formatDate(startDate),
+        end: formatDate(endDate),
+        days: rentalDays.toString(),
+        carName: `${selectedCar.tahun_mobil} ${selectedCar.merk_mobil} ${selectedCar.nama_mobil}`,
+        dailyPrice: selectedCar.harga_sewa.toString(),
+        totalPrice: totalPrice.toString(),
+        paymentMethod: selectedPayment.nama_method,
+      },
+    });
+  };
 
   return (
     <View style={styles.root}>
       <AppBar title="Sewa Mobil" onBack={() => router.back()} />
 
       <View style={styles.content}>
+        {/* PILIH TANGGAL */}
         <GreigePanel>
           <Text style={styles.panelTitle}>Pilih Tanggal</Text>
 
@@ -89,7 +171,7 @@ export default function RentCarScreen() {
             <>
               <input
                 type="date"
-                style={styles.webInput}
+                style={styles.webInput as any}
                 value={formatDate(startDate)}
                 onChange={(e) => setStartDate(new Date(e.target.value))}
               />
@@ -98,7 +180,7 @@ export default function RentCarScreen() {
 
               <input
                 type="date"
-                style={styles.webInput}
+                style={styles.webInput as any}
                 value={formatDate(endDate)}
                 onChange={(e) => setEndDate(new Date(e.target.value))}
               />
@@ -143,11 +225,23 @@ export default function RentCarScreen() {
           />
         )}
 
+        {/* PILIH MOBIL */}
         <GreigePanel>
           <Text style={styles.panelTitle}>Pilih Mobil</Text>
 
+          {selectedCar && (
+            <View style={styles.selectedCarBox}>
+              <Text style={styles.selectedCarName}>
+                {selectedCar.tahun_mobil} {selectedCar.merk_mobil} {selectedCar.nama_mobil}
+              </Text>
+              <Text style={styles.selectedCarPrice}>
+                IDR {selectedCar.harga_sewa.toLocaleString("id-ID")} / hari
+              </Text>
+            </View>
+          )}
+
           <PrimaryButton
-            label="Lihat Mobil"
+            label={selectedCar ? "Ganti Mobil" : "Lihat Mobil"}
             onPress={() =>
               router.push({
                 pathname: "/car-list",
@@ -162,28 +256,51 @@ export default function RentCarScreen() {
           />
         </GreigePanel>
 
+        {/* PILIH PEMBAYARAN */}
         <GreigePanel>
           <Text style={styles.panelTitle}>Pilih Pembayaran</Text>
 
-          <WhitePill onPress={() => {}}>
+          <WhitePill onPress={togglePaymentDropdown}>
             <View style={styles.rowBetween}>
-              <Text style={styles.pillText}>Bayar di Toko</Text>
-              <Text style={{ fontSize: 18 }}>⌄</Text>
+              <Text style={styles.pillText}>
+                {selectedPayment ? selectedPayment.nama_method : "Pilih Pembayaran"}
+              </Text>
+              <Text style={styles.chevron}>{showPaymentDropdown ? "▲" : "▼"}</Text>
             </View>
           </WhitePill>
+
+          {showPaymentDropdown && (
+            <View style={styles.dropdown}>
+              {paymentMethods.map((m) => (
+                <TouchableOpacity
+                  key={m.id}
+                  activeOpacity={0.8}
+                  onPress={() => handleSelectPayment(m)}
+                >
+                  <View
+                    style={[
+                      styles.dropdownItem,
+                      selectedPayment?.id === m.id && styles.dropdownItemActive,
+                    ]}
+                  >
+                    <Text style={styles.dropdownText}>{m.nama_method}</Text>
+                    {selectedPayment?.id === m.id && (
+                      <Text style={styles.dropdownTick}>✓</Text>
+                    )}
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
         </GreigePanel>
 
-        {/* <PrimaryButton
+        {/* TOMBOL SEWA */}
+        <PrimaryButton
           label="Sewa"
-          onPress={() => {
-            router.push({
-              pathname: "/booking"
-            })
-          }
-          }
-          disabled={selectedCar === null ? true : false}
+          onPress={goToConfirmation}
+          disabled={!canSubmit}
           style={{ marginTop: spacing.xl }}
-        /> */}
+        />
       </View>
     </View>
   );
@@ -192,6 +309,7 @@ export default function RentCarScreen() {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
   content: { padding: spacing.lg },
+
   panelTitle: {
     ...typography.h1,
     textAlign: "center",
@@ -216,6 +334,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
+    alignItems: "center",
   },
 
   webInput: {
@@ -226,5 +345,47 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     marginBottom: spacing.sm,
     fontSize: 16,
+  },
+
+  selectedCarBox: {
+    paddingVertical: spacing.sm,
+    marginBottom: spacing.sm,
+    alignItems: "center",
+  },
+  selectedCarName: {
+    ...typography.body,
+    fontWeight: "700",
+  },
+  selectedCarPrice: {
+    ...typography.small,
+    marginTop: 4,
+  },
+
+  chevron: {
+    fontSize: 16,
+  },
+
+  dropdown: {
+    marginTop: 4,
+    borderRadius: 16,
+    overflow: "hidden",
+    backgroundColor: colors.whitePill,
+  },
+  dropdownItem: {
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  dropdownItemActive: {
+    backgroundColor: colors.surfaceGreige,
+  },
+  dropdownText: {
+    ...typography.body,
+  },
+  dropdownTick: {
+    ...typography.body,
+    fontWeight: "700",
   },
 });

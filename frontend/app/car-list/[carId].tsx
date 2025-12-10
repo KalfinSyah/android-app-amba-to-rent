@@ -127,7 +127,7 @@ export default function CarDetailScreen() {
                         onPress={async () => {
                             try {
                                 await AsyncStorage.setItem("selectedCar", JSON.stringify(car));
-                                // router.push("/");
+                                router.push("/booking");
                                 console.log("Car saved for booking:", car);
                             } catch (error) {
                                 console.log("Error saving car:", error);
