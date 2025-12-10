@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
     },
 
     title: {
+        marginTop: spacing.lg,
         ...typography.screenTitle,
         textAlign: "center",
         color: colors.text,

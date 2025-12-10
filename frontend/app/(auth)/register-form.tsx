@@ -64,7 +64,7 @@ export default function RegisterFormScreen() {
                 {/* Big centered title like Figma */}
                 <Text style={styles.title}>Register</Text>
 
-                <View style={{ height: spacing.xl }} />
+                <View style={{ height: spacing.xxl }} />
 
                 <TextField
                     label="Nama"
@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    marginTop: spacing.lg,
     ...typography.screenTitle,   // ~40px bold
     textAlign: "center",
     color: colors.text,

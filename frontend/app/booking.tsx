@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   },
 
   webInput: {
-    width: "100%",
+    width: "94%",
     padding: 12,
     borderRadius: 999,
     borderWidth: 1,
