@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { AppBar } from "@/components/AppBar";
@@ -6,7 +6,41 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { colors } from "@/theme/colors";
 import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
-import { cars } from "@/data/mock";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export interface Car {
+    id: number;
+    tahun_mobil: string;
+    merk_mobil: string;
+    nama_mobil: string;
+    jenis_mobil: string;
+    tipe_mesin: string;
+    tipe_transmisi: string;
+    harga_sewa: number;
+    foto_mobil: string;
+    status_mobil: boolean;
+}
+
+const fetchCar = async (id: string): Promise<Car | null> => {
+    try {
+        const token = await AsyncStorage.getItem("token");
+        if (!token) return null;
+
+        const res = await fetch(`http://localhost:8000/api/cars/${id}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Accept": "application/json",
+            },
+        });
+
+        const data = await res.json();
+        return data.cars;
+    } catch (err) {
+        console.log("Fetch cars error:", err);
+        return null;
+    }
+};
 
 function Chip({ label, value }: { label: string; value: string }) {
     return (
@@ -18,69 +52,89 @@ function Chip({ label, value }: { label: string; value: string }) {
 }
 
 export default function CarDetailScreen() {
-    const { carId } = useLocalSearchParams<{ carId: string }>();
-    const car = cars.find((c) => c.id === carId) ?? cars[0];
+    const { carId } = useLocalSearchParams<{ carId: string }>(); // FIXED
+    const [car, setCar] = useState<Car | null>(null);
+
+    useEffect(() => {
+        if (carId) {
+            fetchCar(carId).then((fetchedCar) => {
+                if (fetchedCar) setCar(fetchedCar);
+            });
+        }
+    }, [carId]);
+
+    if (!car) {
+        return (
+            <View style={styles.root}>
+                <AppBar title="" onBack={() => router.back()} />
+                <Text style={{ padding: 20 }}>Loading...</Text>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.root}>
-        {/* back icon shows over image in Figma, but your AppBar is pill. We'll keep pill + back */}
-        <AppBar title="" onBack={() => router.back()} rightIcon="bell-o" />
+            <AppBar title="" onBack={() => router.back()} rightIcon="bell-o" />
 
-        <ScrollView>
-            <Image source={{ uri: car.image }} style={styles.hero} />
+            <ScrollView>
+                <Image source={{ uri: car.foto_mobil }} style={styles.hero} />
 
-            {/* White sheet */}
-            <View style={styles.sheet}>
-            <Text style={styles.titleCenter}>
-                {car.year} {car.brand} {car.name}
-            </Text>
+                <View style={styles.sheet}>
+                    <Text style={styles.titleCenter}>
+                        {car.tahun_mobil} {car.merk_mobil} {car.nama_mobil}
+                    </Text>
 
-            <View style={styles.divider} />
+                    <View style={styles.divider} />
 
-            <Text style={styles.sectionTitle}>Informasi Mobil</Text>
+                    <Text style={styles.sectionTitle}>Informasi Mobil</Text>
 
-            <View style={styles.chipGridRow}>
-                <Chip label="Merk" value={car.brand} />
-                <Chip label="Tahun" value={String(car.year)} />
-            </View>
+                    <View style={styles.chipGridRow}>
+                        <Chip label="Merk" value={car.merk_mobil} />
+                        <Chip label="Tahun" value={car.tahun_mobil} />
+                    </View>
 
-            <View style={styles.chipWide}>
-                <Text style={styles.chipLabel}>Nama</Text>
-                <Text style={styles.chipValue}>{car.name}</Text>
-            </View>
+                    <View style={styles.chipWide}>
+                        <Text style={styles.chipLabel}>Nama</Text>
+                        <Text style={styles.chipValue}>{car.nama_mobil}</Text>
+                    </View>
 
-            <View style={styles.chipGridRow}>
-                <Chip label="Jenis" value={car.type} />
-                <Chip label="Tipe Mesin" value={car.fuel} />
-                <Chip label="Transisi" value={car.transmission} />
-            </View>
+                    <View style={styles.chipGridRow}>
+                        <Chip label="Jenis" value={car.jenis_mobil} />
+                        <Chip label="Tipe Mesin" value={car.tipe_mesin} />
+                        <Chip label="Transmisi" value={car.tipe_transmisi} />
+                    </View>
 
-            <View style={styles.divider} />
+                    <View style={styles.divider} />
 
-            <Text style={styles.sectionTitle}>Informasi Sewa</Text>
+                    <Text style={styles.sectionTitle}>Informasi Sewa</Text>
 
-            <View style={styles.chipWide}>
-                <Text style={styles.chipLabel}>Status</Text>
-                <Text style={styles.chipValue}>
-                {car.available ? "Tersedia" : "Tidak tersedia"}
-                </Text>
-            </View>
+                    <View style={styles.chipWide}>
+                        <Text style={styles.chipLabel}>Status</Text>
+                        <Text style={styles.chipValue}>
+                            {car.status_mobil ? "Tersedia" : "Tidak tersedia"}
+                        </Text>
+                    </View>
 
-            <View style={styles.chipWide}>
-                <Text style={styles.chipLabel}>Harga</Text>
-                <Text style={styles.chipValue}>
-                IDR{car.pricePerDay.toLocaleString("id-ID")} utk 4 hari
-                </Text>
-            </View>
+                    <View style={styles.chipWide}>
+                        <Text style={styles.chipLabel}>Harga Sewa</Text>
+                        <Text style={styles.chipValue}>
+                            IDR {car.harga_sewa.toLocaleString("id-ID")} / hari
+                        </Text>
+                    </View>
 
-            <PrimaryButton
-                label="Pesan"
-                onPress={() => router.push("/pesanan")}
-                iconLeft={<Text style={{ color: colors.primaryText }}>📅</Text>}
-                style={{ marginTop: spacing.lg }}
-            />
-            </View>
-        </ScrollView>
+                    <PrimaryButton
+                        label="Pesan"
+                        onPress={() =>
+                            router.push({
+                                pathname: "/pesanan",
+                                params: { id: car.id.toString() },
+                            })
+                        }
+                        iconLeft={<Text style={{ color: colors.primaryText }}>📅</Text>}
+                        style={{ marginTop: spacing.lg }}
+                    />
+                </View>
+            </ScrollView>
         </View>
     );
 }
