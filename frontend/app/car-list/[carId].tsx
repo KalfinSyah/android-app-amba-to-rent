@@ -52,7 +52,9 @@ function Chip({ label, value }: { label: string; value: string }) {
 }
 
 export default function CarDetailScreen() {
-    const { carId } = useLocalSearchParams<{ carId: string }>(); // FIXED
+    const { carId, start, end } = useLocalSearchParams<{ carId: string;
+    start?: string;
+    end?: string; }>(); // FIXED
     const [car, setCar] = useState<Car | null>(null);
 
     useEffect(() => {
@@ -123,17 +125,31 @@ export default function CarDetailScreen() {
                     </View>
 
                     <PrimaryButton
-                        label="Sewa"
+                        label="Pilih Mobil"
                         onPress={async () => {
                             try {
+                                // opsional: simpan ke storage
                                 await AsyncStorage.setItem("selectedCar", JSON.stringify(car));
-                                router.push("/booking");
-                                console.log("Car saved for booking:", car);
+
+                                // nama mobil yang enak dibaca
+                                const carName = `${car!.tahun_mobil} ${car!.merk_mobil} ${car!.nama_mobil}`;
+
+                                router.push({
+                                pathname: "/order-confirm/[newOrderId]",
+                                params: {
+                                        // untuk sekarang boleh pakai 'preview' dulu,
+                                        // nanti setelah ada API create order, isi dengan id order baru
+                                        newOrderId: "preview",
+                                        start: start ?? "",
+                                        end: end ?? "",
+                                        carName,
+                                        dailyPrice: car!.harga_sewa.toString(),
+                                    },
+                                });
                             } catch (error) {
                                 console.log("Error saving car:", error);
                             }
                         }}
-                        iconLeft={<Text style={{ color: colors.primaryText }}>📅</Text>}
                         style={{ marginTop: spacing.lg }}
                     />
                 </View>

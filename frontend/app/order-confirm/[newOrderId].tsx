@@ -1,5 +1,11 @@
-import React, { useMemo } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { AppBar } from "@/components/AppBar";
 import { GreigePanel } from "@/components/Card";
@@ -9,6 +15,7 @@ import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
 
 type BookingSummaryParams = {
+  newOrderId?: string;
   start?: string;
   end?: string;
   carName?: string;
@@ -16,27 +23,73 @@ type BookingSummaryParams = {
   paymentMethod?: string;
 };
 
+interface PaymentMethod {
+  id: number;
+  nama_method: string;
+}
+
 export default function BookingSummaryScreen() {
-  // Ambil param kalau nanti kamu sudah kirim dari halaman booking
   const params = useLocalSearchParams<BookingSummaryParams>();
 
-  // Data dummy untuk sementara
+  // Dummy fallback (kalau param belum di-pass)
   const fallbackStart = "2025-01-10";
   const fallbackEnd = "2025-01-13";
   const fallbackCarName = "2022 Toyota Avanza G";
-  const fallbackDailyPrice = 350000; // IDR
-  const fallbackPaymentMethod = "Transfer Bank (BCA)";
+  const fallbackDailyPrice = 350_000; // IDR
 
-  const startDateStr = (params.start as string) || fallbackStart;
-  const endDateStr = (params.end as string) || fallbackEnd;
-  const carName =
-    (params.carName as string) || fallbackCarName;
-  const dailyPrice =
-    params.dailyPrice ? Number(params.dailyPrice) : fallbackDailyPrice;
-  const paymentMethod =
-    (params.paymentMethod as string) || fallbackPaymentMethod;
+  const startDateStr = params.start || fallbackStart;
+  const endDateStr = params.end || fallbackEnd;
+  const carName = params.carName || fallbackCarName;
+  const dailyPrice = params.dailyPrice
+    ? Number(params.dailyPrice)
+    : fallbackDailyPrice;
 
-  // Hitung durasi hari (inclusive)
+  // =========================
+  //   METODE PEMBAYARAN
+  // =========================
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+  const [selectedPayment, setSelectedPayment] =
+    useState<PaymentMethod | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [loadingPayments, setLoadingPayments] = useState(true);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPaymentMethods = async () => {
+      try {
+        setLoadingPayments(true);
+        setPaymentError(null);
+
+        // Sesuaikan base URL & endpoint dengan backend kamu
+        const res = await fetch(
+          "http://localhost:8001/api/transaction-methods",
+          {
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        );
+
+        const json = await res.json();
+        // Tergantung response controller kamu:
+        // kalau pakai Resource biasanya di json.data
+        const list: PaymentMethod[] = json.data ?? json;
+        setPaymentMethods(list);
+        if (list.length > 0) setSelectedPayment(list[0]);
+      } catch (e) {
+        console.log("Error fetching payment methods:", e);
+        setPaymentError("Gagal memuat metode pembayaran.");
+      } finally {
+        setLoadingPayments(false);
+      }
+    };
+
+    fetchPaymentMethods();
+  }, []);
+
+  // =========================
+  //   HITUNG DURASI & TOTAL
+  // =========================
   const { rentalDays, totalPrice } = useMemo(() => {
     const start = new Date(startDateStr);
     const end = new Date(endDateStr);
@@ -46,35 +99,59 @@ export default function BookingSummaryScreen() {
     }
 
     const diffMs = end.getTime() - start.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1; // +1 untuk inclusive
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1; // +1 inclusive
+
     return {
       rentalDays: diffDays,
       totalPrice: diffDays * dailyPrice,
     };
   }, [startDateStr, endDateStr, dailyPrice]);
 
+  const canConfirm = rentalDays > 0 && !!selectedPayment;
+
+  const handleConfirm = () => {
+    if (!canConfirm) return;
+
+    console.log("Booking confirmed with:", {
+      startDateStr,
+      endDateStr,
+      rentalDays,
+      carName,
+      dailyPrice,
+      totalPrice,
+      paymentMethod: selectedPayment?.nama_method,
+    });
+
+    // TODO:
+    // - Panggil API /api/orders (POST) di backend
+    // - Setelah sukses, arahkan ke halaman sukses atau daftar pesanan
+    // Contoh sementara:
+    router.replace("/pesanan");
+  };
+
   return (
     <View style={styles.root}>
-      <AppBar title="Ringkasan Sewa" onBack={() => router.back()} />
+      <AppBar
+        title="Konfirmasi Booking"
+        onBack={() => router.back()}
+      />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Panel 1: Periode Sewa */}
         <GreigePanel>
           <Text style={styles.sectionTitle}>Periode Sewa</Text>
 
-          <View style={styles.rowBetween}>
-            <View style={styles.col}>
-              <Text style={styles.label}>Tanggal Mulai</Text>
-              <Text style={styles.value}>{startDateStr}</Text>
-            </View>
-
-            <View style={styles.col}>
-              <Text style={styles.label}>Tanggal Selesai</Text>
-              <Text style={styles.value}>{endDateStr}</Text>
-            </View>
+          <View style={styles.itemRow}>
+            <Text style={styles.label}>Tanggal Mulai</Text>
+            <Text style={styles.value}>{startDateStr}</Text>
           </View>
 
-          <View style={[styles.rowBetween, { marginTop: spacing.md }]}>
+          <View style={styles.itemRow}>
+            <Text style={styles.label}>Tanggal Selesai</Text>
+            <Text style={styles.value}>{endDateStr}</Text>
+          </View>
+
+          <View style={styles.itemRow}>
             <Text style={styles.label}>Durasi</Text>
             <Text style={styles.value}>
               {rentalDays > 0 ? `${rentalDays} hari` : "-"}
@@ -99,14 +176,61 @@ export default function BookingSummaryScreen() {
           </View>
         </GreigePanel>
 
-        {/* Panel 3: Metode Pembayaran */}
+        {/* Panel 3: Metode Pembayaran (dropdown) */}
         <GreigePanel>
           <Text style={styles.sectionTitle}>Metode Pembayaran</Text>
 
-          <View style={styles.itemRow}>
-            <Text style={styles.label}>Metode</Text>
-            <Text style={styles.value}>{paymentMethod}</Text>
-          </View>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => setDropdownOpen((prev) => !prev)}
+          >
+            <View style={styles.whitePill}>
+              <View style={styles.rowBetween}>
+                <Text style={styles.pillText}>
+                  {selectedPayment
+                    ? selectedPayment.nama_method
+                    : loadingPayments
+                    ? "Memuat metode..."
+                    : "Pilih Metode Pembayaran"}
+                </Text>
+                <Text style={styles.chevron}>
+                  {dropdownOpen ? "▲" : "▼"}
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          {dropdownOpen && (
+            <View style={styles.dropdown}>
+              {paymentMethods.map((m) => (
+                <TouchableOpacity
+                  key={m.id}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    setSelectedPayment(m);
+                    setDropdownOpen(false);
+                  }}
+                >
+                  <View
+                    style={[
+                      styles.dropdownItem,
+                      selectedPayment?.id === m.id &&
+                        styles.dropdownItemActive,
+                    ]}
+                  >
+                    <Text style={styles.dropdownText}>{m.nama_method}</Text>
+                    {selectedPayment?.id === m.id && (
+                      <Text style={styles.dropdownTick}>✓</Text>
+                    )}
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+
+          {paymentError && (
+            <Text style={styles.errorText}>{paymentError}</Text>
+          )}
         </GreigePanel>
 
         {/* Panel 4: Ringkasan Biaya */}
@@ -117,7 +241,9 @@ export default function BookingSummaryScreen() {
             <Text style={styles.label}>Biaya Sewa</Text>
             <Text style={styles.value}>
               {rentalDays > 0
-                ? `IDR ${dailyPrice.toLocaleString("id-ID")} x ${rentalDays} hari`
+                ? `IDR ${dailyPrice.toLocaleString(
+                    "id-ID"
+                  )} x ${rentalDays} hari`
                 : "-"}
             </Text>
           </View>
@@ -131,13 +257,9 @@ export default function BookingSummaryScreen() {
         </GreigePanel>
 
         <PrimaryButton
-          label="Konfirmasi Sewa"
-          onPress={() => {
-            // nanti di sini bisa diarahkan ke:
-            // - API booking
-            // - halaman sukses
-            console.log("Booking confirmed (dummy).");
-          }}
+          label="Konfirmasi Booking"
+          onPress={handleConfirm}
+          disabled={!canConfirm}
           style={{ marginTop: spacing.lg, marginBottom: spacing.lg }}
         />
       </ScrollView>
@@ -162,27 +284,15 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
 
-  rowBetween: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: spacing.lg,
-  },
-
-  col: {
-    flex: 1,
-  },
-
   itemRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: spacing.sm,
   },
-
   label: {
     ...typography.small,
     color: colors.text,
   },
-
   value: {
     ...typography.body,
     fontWeight: "700",
@@ -196,12 +306,63 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.divider,
   },
-
   totalLabel: {
     ...typography.h2,
   },
   totalValue: {
     ...typography.h2,
     color: colors.primaryText ?? colors.text,
+  },
+
+  // Dropdown styles (mirip booking.tsx)
+  whitePill: {
+    backgroundColor: colors.whitePill,
+    borderRadius: 999,
+    minHeight: 44,
+    width: "100%",
+    justifyContent: "center",
+    paddingHorizontal: spacing.lg,
+    marginBottom: spacing.sm,
+  },
+  rowBetween: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    alignItems: "center",
+  },
+  pillText: {
+    ...typography.body,
+    fontWeight: "700",
+  },
+  chevron: {
+    fontSize: 16,
+  },
+  dropdown: {
+    marginTop: 4,
+    borderRadius: 16,
+    overflow: "hidden",
+    backgroundColor: colors.whitePill,
+  },
+  dropdownItem: {
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  dropdownItemActive: {
+    backgroundColor: colors.surfaceGreige,
+  },
+  dropdownText: {
+    ...typography.body,
+  },
+  dropdownTick: {
+    ...typography.body,
+    fontWeight: "700",
+  },
+  errorText: {
+    ...typography.small,
+    color: "red",
+    marginTop: spacing.sm,
   },
 });
