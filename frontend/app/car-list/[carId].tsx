@@ -40,9 +40,11 @@ function Chip({ label, value }: { label: string; value: string }) {
 }
 
 export default function CarDetailScreen() {
-    const { carId, start, end } = useLocalSearchParams<{ carId: string;
-    start?: string;
-    end?: string; }>(); // FIXED
+    const { carId, start, end } = useLocalSearchParams<{ 
+        carId: string;
+        start?: string;
+        end?: string; 
+    }>();
     const [car, setCar] = useState<Car | null>(null);
 
     useEffect(() => {
@@ -118,18 +120,12 @@ export default function CarDetailScreen() {
                             try {
                                 await AsyncStorage.setItem("selectedCar", JSON.stringify(car));
 
-                                const carName = `${car!.tahun_mobil} ${car!.merk_mobil} ${car!.nama_mobil}`;
-
                                 router.push({
-                                pathname: "/order-confirm/[newOrderId]",
-                                params: {
-                                    newOrderId: String(car.id),        // untuk URL segment
-                                    carId: String(car.id),             // untuk API backend
-                                    carName,                           // nama mobil
-                                    dailyPrice: String(car.harga_sewa),
-                                    start: start as string,            // dari params car-list
-                                    end: end as string,                // dari params car-list
-                                },
+                                    pathname: "../order-confirm",
+                                    params: {
+                                        start: start,         
+                                        end: end,                
+                                    },
                                 });
 
                             } catch (error) {
