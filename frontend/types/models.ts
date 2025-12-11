@@ -39,3 +39,10 @@ export interface Penalty {
   status_penalty: string;
 }
 
+export interface TransactionMethod {
+  id: number;
+  nama_method: string;
+  created_at: string | null;
+  updated_at: string | null;
+  deleted_at: string | null;
+}
