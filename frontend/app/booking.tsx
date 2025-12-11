@@ -45,28 +45,28 @@ export default function RentCarScreen() {
   const [showPicker, setShowPicker] = useState(false);
   const [activePicker, setActivePicker] = useState<"start" | "end" | null>(null);
 
-  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
+  // const [selectedCar, setSelectedCar] = useState<Car | null>(null);
 
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [selectedPayment, setSelectedPayment] = useState<PaymentMethod | null>(null);
   const [showPaymentDropdown, setShowPaymentDropdown] = useState(false);
 
   // 1) Load mobil yang dipilih dari AsyncStorage ketika kembali dari car-detail
-  useEffect(() => {
-    const loadCar = async () => {
-      try {
-        const saved = await AsyncStorage.getItem("selectedCar");
-        if (saved) {
-          setSelectedCar(JSON.parse(saved));
-          await AsyncStorage.removeItem("selectedCar");
-        }
-      } catch (e) {
-        console.log("Error loading selectedCar:", e);
-      }
-    };
+//   useEffect(() => {
+//     const loadCar = async () => {
+//       try {
+//         const saved = await AsyncStorage.getItem("selectedCar");
+//         if (saved) {
+//           setSelectedCar(JSON.parse(saved));
+//           await AsyncStorage.removeItem("selectedCar");
+//         }
+//       } catch (e) {
+//         console.log("Error loading selectedCar:", e);
+//       }
+//     };
 
-    loadCar();
-  }, []);
+//     loadCar();
+//   }, []);
 
   // 2) Ambil metode pembayaran dari backend
   useEffect(() => {
@@ -124,11 +124,12 @@ export default function RentCarScreen() {
         )
       : 0;
 
-  const totalPrice =
-    selectedCar && rentalDays > 0 ? selectedCar.harga_sewa * rentalDays : 0;
+//   const totalPrice =
+//     selectedCar && rentalDays > 0 ? selectedCar.harga_sewa * rentalDays : 0;
 
   const canSubmit =
-    isDateValid && selectedCar !== null && selectedPayment !== null;
+    isDateValid !== null;
+    // isDateValid && selectedCar !== null && selectedPayment !== null;
 
   const handleSelectPayment = (method: PaymentMethod) => {
     setSelectedPayment(method);
@@ -139,24 +140,24 @@ export default function RentCarScreen() {
     setShowPaymentDropdown((prev) => !prev);
   };
 
-  const goToConfirmation = () => {
-    if (!canSubmit || !startDate || !endDate || !selectedCar || !selectedPayment) {
-      return;
-    }
+//   const goToConfirmation = () => {
+//     if (!canSubmit || !startDate || !endDate || !selectedCar || !selectedPayment) {
+//       return;
+//     }
 
-    router.push({
-      pathname: "/book-confirm",
-      params: {
-        start: formatDate(startDate),
-        end: formatDate(endDate),
-        days: rentalDays.toString(),
-        carName: `${selectedCar.tahun_mobil} ${selectedCar.merk_mobil} ${selectedCar.nama_mobil}`,
-        dailyPrice: selectedCar.harga_sewa.toString(),
-        totalPrice: totalPrice.toString(),
-        paymentMethod: selectedPayment.nama_method,
-      },
-    });
-  };
+//     router.push({
+//       pathname: "/book-confirm",
+//       params: {
+//         start: formatDate(startDate),
+//         end: formatDate(endDate),
+//         days: rentalDays.toString(),
+//         carName: `${selectedCar.tahun_mobil} ${selectedCar.merk_mobil} ${selectedCar.nama_mobil}`,
+//         dailyPrice: selectedCar.harga_sewa.toString(),
+//         totalPrice: totalPrice.toString(),
+//         paymentMethod: selectedPayment.nama_method,
+//       },
+//     });
+//   };
 
   return (
     <View style={styles.root}>
@@ -226,7 +227,7 @@ export default function RentCarScreen() {
         )}
 
         {/* PILIH MOBIL */}
-        <GreigePanel>
+        {/* <GreigePanel>
           <Text style={styles.panelTitle}>Pilih Mobil</Text>
 
           {selectedCar && (
@@ -254,10 +255,10 @@ export default function RentCarScreen() {
             iconLeft={<Text style={{ color: colors.primaryText }}>🚗</Text>}
             disabled={!isDateValid}
           />
-        </GreigePanel>
+        </GreigePanel> */}
 
         {/* PILIH PEMBAYARAN */}
-        <GreigePanel>
+        {/* <GreigePanel>
           <Text style={styles.panelTitle}>Pilih Pembayaran</Text>
 
           <WhitePill onPress={togglePaymentDropdown}>
@@ -292,12 +293,20 @@ export default function RentCarScreen() {
               ))}
             </View>
           )}
-        </GreigePanel>
+        </GreigePanel> */}
 
         {/* TOMBOL SEWA */}
         <PrimaryButton
-          label="Sewa"
-          onPress={goToConfirmation}
+          label="Pilih Mobil"
+          onPress={() =>
+              router.push({
+                pathname: "/car-list",
+                params: {
+                  start: startDate ? formatDate(startDate) : "",
+                  end: endDate ? formatDate(endDate) : "",
+                },
+              })
+            }
           disabled={!canSubmit}
           style={{ marginTop: spacing.xl }}
         />
