@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 
@@ -16,6 +17,8 @@ import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
 import { Car, TransactionMethod } from "@/types/models";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AwesomeAlert from "react-native-awesome-alerts";
+
 
 const BASE_URL = "http://127.0.0.1:8000";
 
@@ -26,8 +29,65 @@ function calculateDays(start: string, end: string): number {
   const diff = endDate.getTime() - startDate.getTime();
   const days = diff / (1000 * 60 * 60 * 24);
 
-  return Math.ceil(days);
+  return Math.ceil(days) + 1;
 }
+
+function formatNow() {
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+async function postOrder(
+  carId: number,
+  userId: number,
+  methodId: number,
+  tanggalSewa: string,
+  tanggalKembaliSewa: string,
+  durasiSewa: number,
+  totalHarga: number
+) {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    const now = formatNow(); // format YYYY-MM-DD
+
+    const res = await fetch(`${BASE_URL}/api/orders`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        car_id: carId,
+        user_id: userId,
+        method_id: methodId,
+        tanggal_order: now,        // NOW
+        durasi_sewa: durasiSewa,
+        tanggal_sewa: tanggalSewa,
+        tanggal_kembali_sewa: tanggalKembaliSewa,
+        tanggal_transaksi: now,    // NOW
+        status_order: "Ongoing",   // ALWAYS
+        total_harga: totalHarga,
+      }),
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.log("error :", err);
+    return null;
+  }
+}
+
 
 async function fetchPaymentMethods() {
   try {
@@ -54,6 +114,7 @@ export default function BookingSummaryScreen() {
   const [token, setToken] = useState<string | null>(null);
   const [paymentMethods, setPaymentMethods] = useState<TransactionMethod[]>([]);
   const [selectedMethod, setSelectedMethod] = useState<number | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
   const { start, end } = useLocalSearchParams<{
     start?: string;
     end?: string;
@@ -168,14 +229,53 @@ export default function BookingSummaryScreen() {
         </GreigePanel>
 
         <PrimaryButton
-          label="Buat Pesanan"
-          onPress={() => {
-            console.log("Selected Method:", selectedMethod);
+          label="Konfirmasi & Buat Pesanan"
+          onPress={async () => {
+            if (!car || !userId || !selectedMethod) return;
+
+            const total = car.harga_sewa * durasiSewa;
+
+            const result = await postOrder(
+              car.id,
+              parseInt(userId),
+              selectedMethod,
+              start as string,
+              end as string,
+              durasiSewa,
+              total
+            );
+
+            if (result) {
+              setShowSuccess(true);
+            } else {
+              Alert.alert("Error", "Terjadi kesalahan membuat pesanan.");
+            }
           }}
+
           disabled={!selectedMethod}
           style={{ marginTop: spacing.lg, marginBottom: spacing.lg }}
         />
       </ScrollView>
+
+      <AwesomeAlert
+        show={showSuccess}
+        showProgress={false}
+        title="🎉 Pesanan Berhasil!"
+        message="Pesanan kamu sudah dibuat. Silakan cek halaman pesanan."
+        closeOnTouchOutside={false}
+        closeOnHardwareBackPress={false}
+        showConfirmButton={true}
+        confirmText="Lanjut"
+        confirmButtonColor="#4CAF50"
+        titleStyle={{ fontSize: 22, fontWeight: "700", textAlign: "center" }}
+        messageStyle={{ fontSize: 16, textAlign: "center" }}
+        confirmButtonStyle={{ paddingHorizontal: 20 }}
+        onConfirmPressed={() => {
+          setShowSuccess(false);
+          router.replace("/pesanan");
+        }}
+      />
+
     </View>
   );
 }
