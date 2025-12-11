@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\TransactionMethod;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -93,6 +94,16 @@ class OrderController extends Controller
         return response()->json([
             'message' => 'Data order untuk user ID ' . $userId . ' berhasil diambil',
             'orders' => $orders
+        ], 200);
+    }
+
+    public function getMethods()
+    {
+        $methods = TransactionMethod::all();
+
+        return response()->json([
+            'message' => 'Data metode transaksi berhasil diambil',
+            'orders' => $methods
         ], 200);
     }
 }

@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('cars', CarController::class)->names('api.cars');
     // order
     Route::get('/orders/user/{userId}', [OrderController::class, 'showByUserId']);
+    Route::get('/orders/methods', [OrderController::class, 'getMethods']);
     Route::apiResource('orders', OrderController::class)->names('api.orders');
     // penalty
     Route::get('/penalties/order/{orderId}', [PenaltyController::class, 'showByOrderId']);
@@ -27,4 +28,3 @@ Route::middleware('auth:sanctum')->group(function () {
     // user
     Route::apiResource('users', UserController::class)->names('api.users');
 });
-
