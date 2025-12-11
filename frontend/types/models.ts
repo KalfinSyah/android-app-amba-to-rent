@@ -1,15 +1,19 @@
-export type Car = {
-  id: string;
-  name: string;
-  brand: string;
-  year: number;
-  type: "SUV" | "Sedan" | "Hatchback";
-  transmission: "Matic" | "Manual";
-  fuel: "Bensin" | "Diesel";
-  pricePerDay: number;
-  image?: string;
-  available: boolean;
-};
+export interface Car {
+  id: number;
+  tahun_mobil: string;
+  merk_mobil: string;
+  nama_mobil: string;
+  jenis_mobil: string;
+  tipe_mesin: string;
+  tipe_transmisi: string;
+  harga_sewa: number;
+  foto_mobil: string;
+  status_mobil: boolean;
+  created_at?: string | null;
+  updated_at?: string | null;
+  deleted_at?: string | null;
+}
+
 
 export type Order = {
   id: string;
