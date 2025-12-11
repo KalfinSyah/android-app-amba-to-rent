@@ -7,33 +7,7 @@ import { colors } from "@/theme/colors";
 import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-interface Car {
-  id: number;
-  tahun_mobil: string;
-  merk_mobil: string;
-  nama_mobil: string;
-  jenis_mobil: string;
-  tipe_mesin: string;
-  tipe_transmisi: string;
-  harga_sewa: number;
-  foto_mobil: string;
-  status_mobil: boolean;
-}
-
-interface Order {
-  id: number;
-  car_id: number;
-  user_id: number;
-  method_id: number;
-  tanggal_order: string;
-  durasi_sewa: number;
-  tanggal_sewa: string;
-  tanggal_kembali_sewa: string;
-  tanggal_transaksi: string;
-  status_order: string;
-  total_harga: number;
-}
+import { Car, Order } from "@/types/models";
 
 const BASE_URL = "http://127.0.0.1:8000";
 
