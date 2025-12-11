@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { AppBar } from "@/components/AppBar";
 import { GreigePanel } from "@/components/Card";
 import { PrimaryButton } from "@/components/PrimaryButton";
@@ -15,12 +17,13 @@ import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
 
 type BookingSummaryParams = {
-  newOrderId?: string;
   start?: string;
   end?: string;
+  carId?: string;
   carName?: string;
   dailyPrice?: string;
-  paymentMethod?: string;
+  paymentMethod?: string; // fallback lama
+  newOrderId?: string; // nama segment route
 };
 
 interface PaymentMethod {
@@ -28,68 +31,30 @@ interface PaymentMethod {
   nama_method: string;
 }
 
+// SESUAIKAN dengan port backend-mu (8000 / 8001)
+const BASE_URL = "http://localhost:8001";
+
 export default function BookingSummaryScreen() {
   const params = useLocalSearchParams<BookingSummaryParams>();
 
-  // Dummy fallback (kalau param belum di-pass)
+  // ----- DATA DARI PARAM / FALLBACK DUMMY -----
   const fallbackStart = "2025-01-10";
   const fallbackEnd = "2025-01-13";
   const fallbackCarName = "2022 Toyota Avanza G";
-  const fallbackDailyPrice = 350_000; // IDR
+  const fallbackDailyPrice = 350_000;
 
-  const startDateStr = params.start || fallbackStart;
-  const endDateStr = params.end || fallbackEnd;
-  const carName = params.carName || fallbackCarName;
+  const startDateStr = (params.start as string) || fallbackStart;
+  const endDateStr = (params.end as string) || fallbackEnd;
+  const carName = (params.carName as string) || fallbackCarName;
   const dailyPrice = params.dailyPrice
     ? Number(params.dailyPrice)
     : fallbackDailyPrice;
 
-  // =========================
-  //   METODE PEMBAYARAN
-  // =========================
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
-  const [selectedPayment, setSelectedPayment] =
-    useState<PaymentMethod | null>(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [loadingPayments, setLoadingPayments] = useState(true);
-  const [paymentError, setPaymentError] = useState<string | null>(null);
+  // carId diutamakan, kalau belum ada pakai newOrderId hanya sebagai fallback
+  const carIdRaw = (params.carId as string) || (params.newOrderId as string) || "";
+  const carId = carIdRaw ? Number(carIdRaw) : null;
 
-  useEffect(() => {
-    const fetchPaymentMethods = async () => {
-      try {
-        setLoadingPayments(true);
-        setPaymentError(null);
-
-        // Sesuaikan base URL & endpoint dengan backend kamu
-        const res = await fetch(
-          "http://localhost:8001/api/transaction-methods",
-          {
-            headers: {
-              Accept: "application/json",
-            },
-          }
-        );
-
-        const json = await res.json();
-        // Tergantung response controller kamu:
-        // kalau pakai Resource biasanya di json.data
-        const list: PaymentMethod[] = json.data ?? json;
-        setPaymentMethods(list);
-        if (list.length > 0) setSelectedPayment(list[0]);
-      } catch (e) {
-        console.log("Error fetching payment methods:", e);
-        setPaymentError("Gagal memuat metode pembayaran.");
-      } finally {
-        setLoadingPayments(false);
-      }
-    };
-
-    fetchPaymentMethods();
-  }, []);
-
-  // =========================
-  //   HITUNG DURASI & TOTAL
-  // =========================
+  // ----- HITUNG DURASI & TOTAL HARGA -----
   const { rentalDays, totalPrice } = useMemo(() => {
     const start = new Date(startDateStr);
     const end = new Date(endDateStr);
@@ -107,34 +72,148 @@ export default function BookingSummaryScreen() {
     };
   }, [startDateStr, endDateStr, dailyPrice]);
 
-  const canConfirm = rentalDays > 0 && !!selectedPayment;
+  // ----- STATE METODE PEMBAYARAN -----
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod | null>(
+    null
+  );
+  const [showPaymentDropdown, setShowPaymentDropdown] = useState(false);
+  const [loadingPayments, setLoadingPayments] = useState(true);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const handleConfirm = () => {
-    if (!canConfirm) return;
+  // ----- STATE BUAT ORDER -----
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
-    console.log("Booking confirmed with:", {
-      startDateStr,
-      endDateStr,
-      rentalDays,
-      carName,
-      dailyPrice,
-      totalPrice,
-      paymentMethod: selectedPayment?.nama_method,
-    });
+  // Ambil metode pembayaran dari backend
+    useEffect(() => {
+        const fetchPaymentMethods = async () => {
+        try {
+            setLoadingPayments(true);
+            setErrorMessage(null);
 
-    // TODO:
-    // - Panggil API /api/orders (POST) di backend
-    // - Setelah sukses, arahkan ke halaman sukses atau daftar pesanan
-    // Contoh sementara:
-    router.replace("/pesanan");
+            const res = await fetch(`${BASE_URL}/api/orders`, {
+            headers: {
+                Accept: "application/json",
+            },
+            });
+
+            const json = await res.json();
+            // Sesuaikan tergantung response: json.data / json.methods / json
+            const list: PaymentMethod[] = json.data ?? json.methods ?? json;
+
+            setPaymentMethods(list);
+            if (list.length > 0) {
+            setSelectedPayment(list[0]); // default pilih pertama
+            }
+        } catch (e) {
+            console.log("Error fetching payment methods:", e);
+            setErrorMessage("Gagal memuat metode pembayaran.");
+        } finally {
+            setLoadingPayments(false);
+        }
+        };
+
+        fetchPaymentMethods();
+    }, []);
+
+    const toggleDropdown = () => {
+        if (paymentMethods.length === 0) return;
+        setDropdownOpen((prev) => !prev);
+    };
+
+    const handleSelectPayment = (method: PaymentMethod) => {
+        setSelectedPayment(method);
+        setDropdownOpen(false);
+    };
+
+    const canConfirm = rentalDays > 0 && !!selectedPayment && !loadingPayments;
+
+    const handleConfirm = () => {
+        if (!canConfirm) return;
+
+        // Di sini nanti tinggal disambungkan ke API POST /orders
+        // Untuk sementara, cukup log & balik ke tab Pesanan
+        console.log("Konfirmasi dengan metode:", selectedPayment);
+        router.replace("/(tabs)/pesanan");
+    };
+
+  // ----- BUAT PESANAN KE BACKEND -----
+  const handleConfirmOrder = async () => {
+    if (!carId || rentalDays <= 0 || !selectedPayment) {
+      setErrorMessage("Data booking belum lengkap.");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      setErrorMessage(null);
+
+      const token = await AsyncStorage.getItem("token");
+      const userId = await AsyncStorage.getItem("user_id");
+
+      if (!token || !userId) {
+        setErrorMessage("Sesi login sudah habis. Silakan login ulang.");
+        return;
+      }
+
+      const body = {
+        car_id: carId,
+        user_id: Number(userId),
+        method_id: selectedPayment.id,
+        tanggal_order: new Date().toISOString(),
+        tanggal_sewa: startDateStr,
+        tanggal_kembali_sewa: endDateStr,
+        durasi_sewa: rentalDays,
+        total_harga: totalPrice,
+        jenis_sewa: 1, // misalnya 1 = sewa harian
+        // status_order bisa di-set default di backend (mis. "pending")
+      };
+
+      const res = await fetch(`${BASE_URL}/api/orders`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => null);
+        console.log("Create order error:", errBody);
+        setErrorMessage("Gagal membuat pesanan. Periksa data dan koneksi.");
+        return;
+      }
+
+      const json = await res.json();
+      const createdOrderId =
+        json?.order?.id ?? json?.data?.id ?? json?.id ?? null;
+
+      // Setelah sukses, arahkan ke tab Pesanan
+      if (createdOrderId) {
+        // kalau mau langsung ke detail:
+        // router.replace(`/(tabs)/pesanan/${createdOrderId}`);
+        router.replace("/(tabs)/pesanan");
+      } else {
+        router.replace("/(tabs)/pesanan");
+      }
+    } catch (e) {
+      console.log("Unexpected error when creating order:", e);
+      setErrorMessage("Terjadi kesalahan saat membuat pesanan.");
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  const canSubmit =
+    rentalDays > 0 && !!carId && !!selectedPayment && !loadingPayments;
 
   return (
     <View style={styles.root}>
-      <AppBar
-        title="Konfirmasi Booking"
-        onBack={() => router.back()}
-      />
+      <AppBar title="Konfirmasi Pesanan" onBack={() => router.back()} />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Panel 1: Periode Sewa */}
@@ -176,60 +255,64 @@ export default function BookingSummaryScreen() {
           </View>
         </GreigePanel>
 
-        {/* Panel 3: Metode Pembayaran (dropdown) */}
+        {/* Panel 3: Metode Pembayaran */}
         <GreigePanel>
           <Text style={styles.sectionTitle}>Metode Pembayaran</Text>
 
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => setDropdownOpen((prev) => !prev)}
-          >
-            <View style={styles.whitePill}>
-              <View style={styles.rowBetween}>
-                <Text style={styles.pillText}>
-                  {selectedPayment
-                    ? selectedPayment.nama_method
-                    : loadingPayments
-                    ? "Memuat metode..."
-                    : "Pilih Metode Pembayaran"}
-                </Text>
-                <Text style={styles.chevron}>
-                  {dropdownOpen ? "▲" : "▼"}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-
-          {dropdownOpen && (
-            <View style={styles.dropdown}>
-              {paymentMethods.map((m) => (
-                <TouchableOpacity
-                  key={m.id}
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    setSelectedPayment(m);
-                    setDropdownOpen(false);
-                  }}
-                >
-                  <View
-                    style={[
-                      styles.dropdownItem,
-                      selectedPayment?.id === m.id &&
-                        styles.dropdownItemActive,
-                    ]}
-                  >
-                    <Text style={styles.dropdownText}>{m.nama_method}</Text>
-                    {selectedPayment?.id === m.id && (
-                      <Text style={styles.dropdownTick}>✓</Text>
-                    )}
+          {loadingPayments ? (
+            <Text style={styles.label}>Memuat metode pembayaran...</Text>
+          ) : paymentMethods.length === 0 ? (
+            <Text style={styles.label}>
+              Metode pembayaran belum tersedia. Hubungi admin.
+            </Text>
+          ) : (
+            <>
+              {/* Tombol utama dropdown */}
+              <TouchableOpacity activeOpacity={0.8} onPress={toggleDropdown}>
+                <View style={styles.whitePill}>
+                  <View style={styles.rowBetween}>
+                    <Text style={styles.pillText}>
+                      {selectedPayment
+                        ? selectedPayment.nama_method
+                        : "Pilih Metode Pembayaran"}
+                    </Text>
+                    <Text style={styles.chevron}>
+                      {dropdownOpen ? "▲" : "▼"}
+                    </Text>
                   </View>
-                </TouchableOpacity>
-              ))}
-            </View>
+                </View>
+              </TouchableOpacity>
+
+              {/* Isi dropdown */}
+              {dropdownOpen && (
+                <View style={styles.dropdown}>
+                  {paymentMethods.map((m) => (
+                    <TouchableOpacity
+                      key={m.id}
+                      activeOpacity={0.8}
+                      onPress={() => handleSelectPayment(m)}
+                    >
+                      <View
+                        style={[
+                          styles.dropdownItem,
+                          selectedPayment?.id === m.id &&
+                            styles.dropdownItemActive,
+                        ]}
+                      >
+                        <Text style={styles.dropdownText}>{m.nama_method}</Text>
+                        {selectedPayment?.id === m.id && (
+                          <Text style={styles.dropdownTick}>✓</Text>
+                        )}
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            </>
           )}
 
-          {paymentError && (
-            <Text style={styles.errorText}>{paymentError}</Text>
+          {errorMessage && (
+            <Text style={styles.errorText}>{errorMessage}</Text>
           )}
         </GreigePanel>
 
@@ -256,10 +339,14 @@ export default function BookingSummaryScreen() {
           </View>
         </GreigePanel>
 
+        {errorMessage && (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        )}
+
         <PrimaryButton
-          label="Konfirmasi Booking"
-          onPress={handleConfirm}
-          disabled={!canConfirm}
+          label={submitting ? "Memproses..." : "Konfirmasi & Buat Pesanan"}
+          onPress={handleConfirmOrder}
+          disabled={!canSubmit || submitting}
           style={{ marginTop: spacing.lg, marginBottom: spacing.lg }}
         />
       </ScrollView>
@@ -277,17 +364,24 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xl,
     gap: spacing.md,
   },
-
   sectionTitle: {
     ...typography.h2,
     textAlign: "center",
     marginBottom: spacing.md,
   },
-
+  rowBetween: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: spacing.lg,
+  },
+  col: {
+    flex: 1,
+  },
   itemRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: spacing.sm,
+    alignItems: "center",
   },
   label: {
     ...typography.small,
@@ -297,7 +391,6 @@ const styles = StyleSheet.create({
     ...typography.body,
     fontWeight: "700",
   },
-
   totalRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -314,7 +407,7 @@ const styles = StyleSheet.create({
     color: colors.primaryText ?? colors.text,
   },
 
-  // Dropdown styles (mirip booking.tsx)
+  // Dropdown & select styles
   whitePill: {
     backgroundColor: colors.whitePill,
     borderRadius: 999,
@@ -323,12 +416,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: spacing.lg,
     marginBottom: spacing.sm,
-  },
-  rowBetween: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    alignItems: "center",
   },
   pillText: {
     ...typography.body,
@@ -364,5 +451,6 @@ const styles = StyleSheet.create({
     ...typography.small,
     color: "red",
     marginTop: spacing.sm,
+    textAlign: "center",
   },
 });
