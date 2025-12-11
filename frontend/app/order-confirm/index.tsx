@@ -52,14 +52,13 @@ export default function BookingSummaryScreen() {
   const [car, setCar] = useState<Car | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
-
   const [paymentMethods, setPaymentMethods] = useState<TransactionMethod[]>([]);
   const [selectedMethod, setSelectedMethod] = useState<number | null>(null);
-
   const { start, end } = useLocalSearchParams<{
     start?: string;
     end?: string;
   }>();
+  const durasiSewa = calculateDays(start as string, end as string);
 
   useEffect(() => {
     const loadData = async () => {
@@ -143,7 +142,7 @@ export default function BookingSummaryScreen() {
                 <Text style={styles.checkmark}>✓</Text>
               )}
             </TouchableOpacity>
-            
+
           ))}
         </GreigePanel>
 
@@ -155,7 +154,7 @@ export default function BookingSummaryScreen() {
             <Text style={styles.label}>Biaya Sewa</Text>
             <Text style={styles.value}>
               IDR {car?.harga_sewa.toLocaleString("id-ID")} x{" "}
-              {calculateDays(start as string, end as string)} Hari
+              {durasiSewa} Hari
             </Text>
           </View>
 
@@ -163,12 +162,7 @@ export default function BookingSummaryScreen() {
             <Text style={styles.totalLabel}>Total</Text>
             <Text style={styles.totalLabel}>
               IDR{" "}
-              {car
-                ? (
-                    car.harga_sewa *
-                    calculateDays(start as string, end as string)
-                  ).toLocaleString("id-ID")
-                : "0"}
+              {car ? (car.harga_sewa * durasiSewa).toLocaleString("id-ID") : "0"}
             </Text>
           </View>
         </GreigePanel>
