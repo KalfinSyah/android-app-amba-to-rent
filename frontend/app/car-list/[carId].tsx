@@ -128,26 +128,24 @@ export default function CarDetailScreen() {
                         label="Pilih Mobil"
                         onPress={async () => {
                             try {
-                                // opsional: simpan ke storage
                                 await AsyncStorage.setItem("selectedCar", JSON.stringify(car));
 
-                                // nama mobil yang enak dibaca
                                 const carName = `${car!.tahun_mobil} ${car!.merk_mobil} ${car!.nama_mobil}`;
 
                                 router.push({
                                 pathname: "/order-confirm/[newOrderId]",
                                 params: {
-                                        // untuk sekarang boleh pakai 'preview' dulu,
-                                        // nanti setelah ada API create order, isi dengan id order baru
-                                        newOrderId: "preview",
-                                        start: start ?? "",
-                                        end: end ?? "",
-                                        carName,
-                                        dailyPrice: car!.harga_sewa.toString(),
-                                    },
+                                    newOrderId: String(car.id),        // untuk URL segment
+                                    carId: String(car.id),             // untuk API backend
+                                    carName,                           // nama mobil
+                                    dailyPrice: String(car.harga_sewa),
+                                    start: start as string,            // dari params car-list
+                                    end: end as string,                // dari params car-list
+                                },
                                 });
+
                             } catch (error) {
-                                console.log("Error saving car:", error);
+                                console.log("Error selecting car:", error);
                             }
                         }}
                         style={{ marginTop: spacing.lg }}
