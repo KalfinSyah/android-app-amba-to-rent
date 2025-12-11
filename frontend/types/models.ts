@@ -15,22 +15,27 @@ export interface Car {
 }
 
 
-export type Order = {
-  id: string;
-  carId: string;
-  carName: string;
-  orderDate: string;
-  startDate: string;
-  endDate: string;
-  status: "Pending" | "Confirmed" | "Finished";
-  totalPrice: number;
-};
+export interface Order {
+  id: number;
+  car_id: number;
+  user_id: number;
+  method_id: number;
+  tanggal_order: string;
+  durasi_sewa: number;
+  tanggal_sewa: string;
+  tanggal_kembali_sewa: string;
+  tanggal_transaksi: string;
+  status_order: string;
+  total_harga: number;
+}
 
-export type Penalty = {
-  id: string;
-  orderId: string;
-  type: string;
-  cost: number;
-  status: "Terbayar" | "Belum Terbayar";
-  photo?: string;
-};
+
+export interface Penalty {
+  id: number;
+  order_id: number;
+  jenis_penalty: string;
+  biaya_penalty: number;
+  foto_penalty: string;
+  status_penalty: string;
+}
+

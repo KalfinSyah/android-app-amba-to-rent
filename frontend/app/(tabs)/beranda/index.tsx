@@ -1,9 +1,6 @@
 import React from "react";
-import { FontAwesome } from "@expo/vector-icons";
 import { View, StyleSheet, Image, Text, ImageBackground } from "react-native";
 import { router } from "expo-router";
-import { AppBar } from "@/components/AppBar";
-import { GreigePanel } from "@/components/Card";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { colors } from "@/theme/colors";
 import { spacing } from "@/theme/spacing";
