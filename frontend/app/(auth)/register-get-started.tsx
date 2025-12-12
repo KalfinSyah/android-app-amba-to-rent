@@ -36,7 +36,7 @@ export default function RegisterGetStartedScreen() {
                     {/* Bottom CTA */}
                     <View style={styles.ctaWrap}>
                         <PrimaryButton
-                        label="Get Started"
+                        label="G e t   S t a r t e d"
                         onPress={() => router.push("/login")}
                         // biarkan button stretch mengikuti parent, tanpa width: "100%"
                         />

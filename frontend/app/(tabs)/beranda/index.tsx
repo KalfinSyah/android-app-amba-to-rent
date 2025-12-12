@@ -30,7 +30,7 @@ export default function HomeScreen() {
                     </Text>
                     <View style={styles.content}>
                         <PrimaryButton
-                        label="Pesan"
+                        label="P e s a n"
                         onPress={() => router.push("/booking")}
                         />
                     </View>
