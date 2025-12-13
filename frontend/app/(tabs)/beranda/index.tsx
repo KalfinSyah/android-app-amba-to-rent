@@ -25,8 +25,7 @@ export default function HomeScreen() {
 
                     {/* Big multiline headline */}
                     <Text style={styles.headline}>
-                        Wujudkan Impian Traveling-mu
-                        dengan Mobil Rental terbaik kami!
+                        Perjalanan Nyaman Dimulai dari Mobil yang Tepat.
                     </Text>
                     <View style={styles.content}>
                         <PrimaryButton
