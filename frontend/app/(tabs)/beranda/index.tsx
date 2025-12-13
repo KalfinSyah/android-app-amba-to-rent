@@ -29,7 +29,7 @@ export default function HomeScreen() {
                     </Text>
                     <View style={styles.content}>
                         <PrimaryButton
-                        label="P e s a n"
+                        label="Pesan Sekarang"
                         onPress={() => router.push("/booking")}
                         />
                     </View>
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     },
 
     headline: {
-        ...typography.h2,
+        ...typography.h1,
         color: "#FFFFFF",
         lineHeight: 34,
         marginTop: spacing.lg,  // jarak normal di bawah logo

@@ -46,4 +46,8 @@ export const typography = {
         fontSize: 10,
         lineHeight: 16,
     },
+    datePill : {
+        fontFamily: fontFamilies.headingRegular,
+        fontSize: 16,
+    }
 };

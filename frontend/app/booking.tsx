@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   },
 
   pillText: { ...typography.body, fontWeight: "700" },
-  sd: { textAlign: "center", marginVertical: spacing.sm },
+  sd: { textAlign: "center", ...typography.small, marginVertical: spacing.md },
 
   rowBetween: {
     flexDirection: "row",
@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     marginBottom: spacing.sm,
-    fontSize: 16,
+    // fontSize: 16,
+    ...typography.datePill,
   },
 });
