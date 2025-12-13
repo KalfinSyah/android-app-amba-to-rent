@@ -8,7 +8,7 @@ import { typography } from "@/theme/typography";
 
 export default function HomeScreen() {
     return (
-        <View style={styles.root}> 
+        <View style={styles.root}>
             <ImageBackground
                 source={require("../../../assets/images/homepagebg.jpg")}
                 style={styles.bg}
