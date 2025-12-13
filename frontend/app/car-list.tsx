@@ -8,6 +8,7 @@ import { colors } from "@/theme/colors";
 import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
 import { Car } from "@/types/models";
+import { ActivityIndicator } from "react-native";
 
 const fetchCars = async (start: string, end: string): Promise<Car[] | null> => {
     try {
@@ -53,6 +54,19 @@ export default function CarListScreen() {
             });
         }
     }, [start, end]);
+
+    if (!availableCars) {
+        return (
+            <View style={styles.root}>
+                <AppBar title="" onBack={() => router.back()} />
+
+                <View style={styles.loadingWrap}>
+                    <ActivityIndicator size="large" color={colors.text} />
+                    <Text style={styles.loadingText}>Memuat daftar mobil...</Text>
+                </View>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.root}>
@@ -101,5 +115,19 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         marginTop: spacing.md,
     },
+
     priceText: { ...typography.small, color: colors.primaryText, fontWeight: "700" },
+
+    loadingWrap: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        padding: spacing.lg,
+    },
+    loadingText: {
+        ...typography.body,
+        marginTop: spacing.md,
+        color: colors.muted,
+    },
+
 });

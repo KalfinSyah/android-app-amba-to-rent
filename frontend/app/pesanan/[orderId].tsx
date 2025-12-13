@@ -8,6 +8,7 @@ import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Car, Order } from "@/types/models";
+import { ActivityIndicator } from "react-native";
 
 const BASE_URL = "http://127.0.0.1:8000";
 
@@ -82,9 +83,14 @@ export default function OrderDetailScreen() {
 
   if (!order) {
     return (
-      <View style={styles.root}>
-        <AppBar title="Loading..." onBack={() => router.replace("/pesanan")} />
-      </View>
+        <View style={styles.root}>
+            <AppBar title="" onBack={() => router.back()} />
+
+            <View style={styles.loadingWrap}>
+                <ActivityIndicator size="large" color={colors.text} />
+                <Text style={styles.loadingText}>Memuat detail pesanan...</Text>
+            </View>
+        </View>
     );
   }
 
@@ -154,50 +160,62 @@ export default function OrderDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.bg },
+    root: { flex: 1, backgroundColor: colors.bg },
 
-  sectionTitle: {
-    ...typography.h2,
-    textAlign: "center",
-    marginBottom: spacing.md,
-  },
+    sectionTitle: {
+            ...typography.h2,
+            textAlign: "center",
+            marginBottom: spacing.md,
+    },
 
-  stackedCard: {
-    borderRadius: 18,
-    overflow: "hidden",
-    marginBottom: spacing.lg,
-    backgroundColor: colors.surfaceGreige,
-  },
-  cardImage: { width: "100%", height: 220 },
-  cardInfo: { padding: spacing.lg },
-  carName: { ...typography.h2 },
-  carYear: { ...typography.body, marginTop: 2, marginBottom: spacing.sm },
-  specs: { ...typography.small, color: colors.text },
+    stackedCard: {
+            borderRadius: 18,
+            overflow: "hidden",
+            marginBottom: spacing.lg,
+            backgroundColor: colors.surfaceGreige,
+    },
+    cardImage: { width: "100%", height: 220 },
+    cardInfo: { padding: spacing.lg },
+    carName: { ...typography.h2 },
+    carYear: { ...typography.body, marginTop: 2, marginBottom: spacing.sm },
+    specs: { ...typography.small, color: colors.text },
 
-  row: {
-    flexDirection: "row",
-    gap: spacing.sm,
-    alignItems: "center",
-    marginBottom: spacing.md,
-  },
+    row: {
+            flexDirection: "row",
+            gap: spacing.sm,
+            alignItems: "center",
+            marginBottom: spacing.md,
+    },
 
-  infoChip: {
-    flex: 1,
-    backgroundColor: colors.surfaceGreige,
-    borderRadius: 16,
-    paddingVertical: spacing.md,
-    alignItems: "center",
-  },
-  infoWide: {
-    backgroundColor: colors.surfaceGreige,
-    borderRadius: 16,
-    paddingVertical: spacing.md,
-    alignItems: "center",
-    marginBottom: spacing.md,
-  },
+    infoChip: {
+            flex: 1,
+            backgroundColor: colors.surfaceGreige,
+            borderRadius: 16,
+            paddingVertical: spacing.md,
+            alignItems: "center",
+    },
+    infoWide: {
+            backgroundColor: colors.surfaceGreige,
+            borderRadius: 16,
+            paddingVertical: spacing.md,
+            alignItems: "center",
+            marginBottom: spacing.md,
+    },
 
-  infoLabel: { ...typography.small, color: colors.text },
-  infoValue: { ...typography.h3 },
-  statusValue: { ...typography.h2 },
-  dash: { ...typography.h2 },
+    infoLabel: { ...typography.small, color: colors.text },
+    infoValue: { ...typography.h3 },
+    statusValue: { ...typography.h2 },
+    dash: { ...typography.h2 },
+
+    loadingWrap: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        padding: spacing.lg,
+        },
+    loadingText: {
+        ...typography.body,
+        marginTop: spacing.md,
+        color: colors.muted,
+        },
 });

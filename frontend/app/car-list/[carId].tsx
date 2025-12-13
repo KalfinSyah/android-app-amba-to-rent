@@ -8,6 +8,7 @@ import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Car } from "@/types/models";
+import { ActivityIndicator } from "react-native";
 
 const fetchCar = async (id: string): Promise<Car | null> => {
     try {
@@ -59,7 +60,11 @@ export default function CarDetailScreen() {
         return (
             <View style={styles.root}>
                 <AppBar title="" onBack={() => router.back()} />
-                <Text style={{ padding: 20 }}>Loading...</Text>
+
+                <View style={styles.loadingWrap}>
+                    <ActivityIndicator size="large" color={colors.text} />
+                    <Text style={styles.loadingText}>Memuat detail mobil...</Text>
+                </View>
             </View>
         );
     }
@@ -196,4 +201,17 @@ const styles = StyleSheet.create({
 
     chipLabel: { ...typography.small, color: colors.text },
     chipValue: { ...typography.h3 },
+
+    loadingWrap: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        padding: spacing.lg,
+    },
+    loadingText: {
+        ...typography.body,
+        marginTop: spacing.md,
+        color: colors.muted,
+    },
+
 });
