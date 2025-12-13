@@ -45,21 +45,34 @@ export default function CarListScreen() {
     const end = params.end as string;     // tanggal_kembali_sewa
 
     const [availableCars, setAvailableCars] = useState<Car[]>([]);
-
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (start && end) {
-            fetchCars(start, end).then((cars) => {
-                if (cars) setAvailableCars(cars);
-            });
-        }
+        let mounted = true;
+
+        const run = async () => {
+            if (!start || !end) return;
+
+            setLoading(true);
+            const cars = await fetchCars(start, end);
+
+            if (!mounted) return;
+            setAvailableCars(cars ?? []);
+            setLoading(false);
+        };
+
+        run();
+
+        return () => {
+            mounted = false;
+        };
     }, [start, end]);
 
-    if (!availableCars) {
+
+    if (loading) {
         return (
             <View style={styles.root}>
-                <AppBar title="" onBack={() => router.back()} />
-
+                <AppBar title="Daftar Mobil" onBack={() => router.back()} />
                 <View style={styles.loadingWrap}>
                     <ActivityIndicator size="large" color={colors.text} />
                     <Text style={styles.loadingText}>Memuat daftar mobil...</Text>
@@ -125,7 +138,7 @@ const styles = StyleSheet.create({
         padding: spacing.lg,
     },
     loadingText: {
-        ...typography.body,
+        ...typography.loading,
         marginTop: spacing.md,
         color: colors.muted,
     },

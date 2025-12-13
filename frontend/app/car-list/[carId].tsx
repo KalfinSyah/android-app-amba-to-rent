@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
         padding: spacing.lg,
     },
     loadingText: {
-        ...typography.body,
+        ...typography.loading,
         marginTop: spacing.md,
         color: colors.muted,
     },

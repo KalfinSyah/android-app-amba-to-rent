@@ -37,7 +37,12 @@ export const typography = {
         lineHeight: 22,
     },
     body: {
-        fontFamily: fontFamilies.body,
+        fontFamily: fontFamilies.headingRegular,
+        fontSize: 14,
+        lineHeight: 20,
+    },
+    loading: {
+        fontFamily: fontFamilies.headingRegular,
         fontSize: 14,
         lineHeight: 20,
     },

@@ -60,39 +60,70 @@ function InfoChip({ label, value }: { label: string; value: string }) {
 }
 
 export default function OrderDetailScreen() {
-  const { orderId } = useLocalSearchParams<{ orderId: string }>();
+    const { orderId } = useLocalSearchParams<{ orderId: string }>();
 
-  const [order, setOrder] = useState<Order | null>(null);
-  const [car, setCar] = useState<Car | null>(null);
+    const [order, setOrder] = useState<Order | null>(null);
+    const [car, setCar] = useState<Car | null>(null);
+
+    const toDateOnly = (value?: string | null) => {
+        if (!value) return "-";
+        // kalau ISO: "2025-12-06T06:42:38.000000Z" => "2025-12-06"
+        // kalau sudah "2025-12-06" => tetap
+        // kalau "2025-12-06 06:42:38" => "2025-12-06"
+        return value.split("T")[0].split(" ")[0];
+};
+
+    const formatTanggalID = (value?: string | null) => {
+        if (!value || typeof value !== "string") return "-";
+
+        // Normalisasi untuk format "YYYY-MM-DD HH:mm:ss" => "YYYY-MM-DDTHH:mm:ss"
+        const normalized = value.includes("T") ? value : value.replace(" ", "T");
+
+        const d = new Date(normalized);
+
+        // Kalau invalid, jangan pernah throw
+        if (Number.isNaN(d.getTime())) return toDateOnly(value);
+
+        try {
+            return new Intl.DateTimeFormat("id-ID", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            }).format(d);
+        } catch {
+            // Guard ekstra: kalau Intl error di environment tertentu
+            return toDateOnly(value);
+        }
+    };
 
     useFocusEffect(
-    useCallback(() => {
-        const load = async () => {
-        const orderData = await fetchPesananById(orderId);
-        if (orderData) {
-            setOrder(orderData);
-            const carData = await fetchCarById(orderData.car_id);
-            if (carData) setCar(carData);
-        }
-        };
+        useCallback(() => {
+            const load = async () => {
+                const orderData = await fetchPesananById(orderId);
+                if (orderData) {
+                    setOrder(orderData);
+                    const carData = await fetchCarById(orderData.car_id);
+                    if (carData) setCar(carData);
+                }
+            };
 
-        load();
-    }, [orderId])
+            load();
+        }, [orderId])
     );
 
 
-  if (!order) {
-    return (
-        <View style={styles.root}>
-            <AppBar title="" onBack={() => router.back()} />
+    if (!order) {
+        return (
+            <View style={styles.root}>
+                <AppBar title="" onBack={() => router.back()} />
 
-            <View style={styles.loadingWrap}>
-                <ActivityIndicator size="large" color={colors.text} />
-                <Text style={styles.loadingText}>Memuat detail pesanan...</Text>
+                <View style={styles.loadingWrap}>
+                    <ActivityIndicator size="large" color={colors.text} />
+                    <Text style={styles.loadingText}>Memuat detail pesanan...</Text>
+                </View>
             </View>
-        </View>
-    );
-  }
+        );
+    }
 
   return (
     <View style={styles.root}>
@@ -134,7 +165,7 @@ export default function OrderDetailScreen() {
         <Text style={styles.sectionTitle}>Informasi Pesanan</Text>
 
         <View style={styles.row}>
-          <InfoChip label="Tanggal Order" value={order.tanggal_order} />
+          <InfoChip label="Tanggal Order" value={formatTanggalID(order.tanggal_order)} />
           <InfoChip
             label="Total Harga"
             value={`Rp ${order.total_harga.toLocaleString("id-ID")}`}
@@ -143,15 +174,15 @@ export default function OrderDetailScreen() {
 
         <View style={styles.infoWide}>
           <Text style={styles.infoLabel}>Status</Text>
-          <Text style={styles.statusValue}>{order.status_order}</Text>
+          <Text style={styles.statusValue}>{formatTanggalID(order.status_order)}</Text>
         </View>
 
         <View style={styles.row}>
-          <InfoChip label="Tanggal Sewa" value={order.tanggal_sewa} />
+          <InfoChip label="Tanggal Sewa" value={formatTanggalID(order.tanggal_sewa)} />
           <Text style={styles.dash}>-</Text>
           <InfoChip
             label="Tanggal Kembali"
-            value={order.tanggal_kembali_sewa}
+            value={formatTanggalID(order.tanggal_kembali_sewa)}
           />
         </View>
       </ScrollView>
