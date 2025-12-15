@@ -7,19 +7,8 @@ import { colors } from "@/theme/colors";
 import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-export interface Car {
-    id: number;
-    tahun_mobil: string;
-    merk_mobil: string;
-    nama_mobil: string;
-    jenis_mobil: string;
-    tipe_mesin: string;
-    tipe_transmisi: string;
-    harga_sewa: number;
-    foto_mobil: string;
-    status_mobil: boolean;
-}
+import { Car } from "@/types/models";
+import { ActivityIndicator } from "react-native";
 
 const fetchCar = async (id: string): Promise<Car | null> => {
     try {
@@ -52,9 +41,11 @@ function Chip({ label, value }: { label: string; value: string }) {
 }
 
 export default function CarDetailScreen() {
-    const { carId, start, end } = useLocalSearchParams<{ carId: string;
-    start?: string;
-    end?: string; }>(); // FIXED
+    const { carId, start, end } = useLocalSearchParams<{ 
+        carId: string;
+        start?: string;
+        end?: string; 
+    }>();
     const [car, setCar] = useState<Car | null>(null);
 
     useEffect(() => {
@@ -69,7 +60,11 @@ export default function CarDetailScreen() {
         return (
             <View style={styles.root}>
                 <AppBar title="" onBack={() => router.back()} />
-                <Text style={{ padding: 20 }}>Loading...</Text>
+
+                <View style={styles.loadingWrap}>
+                    <ActivityIndicator size="large" color={colors.text} />
+                    <Text style={styles.loadingText}>Memuat detail mobil...</Text>
+                </View>
             </View>
         );
     }
@@ -130,18 +125,12 @@ export default function CarDetailScreen() {
                             try {
                                 await AsyncStorage.setItem("selectedCar", JSON.stringify(car));
 
-                                const carName = `${car!.tahun_mobil} ${car!.merk_mobil} ${car!.nama_mobil}`;
-
                                 router.push({
-                                pathname: "/order-confirm/[newOrderId]",
-                                params: {
-                                    newOrderId: String(car.id),        // untuk URL segment
-                                    carId: String(car.id),             // untuk API backend
-                                    carName,                           // nama mobil
-                                    dailyPrice: String(car.harga_sewa),
-                                    start: start as string,            // dari params car-list
-                                    end: end as string,                // dari params car-list
-                                },
+                                    pathname: "../order-confirm",
+                                    params: {
+                                        start: start,         
+                                        end: end,                
+                                    },
                                 });
 
                             } catch (error) {
@@ -212,4 +201,17 @@ const styles = StyleSheet.create({
 
     chipLabel: { ...typography.small, color: colors.text },
     chipValue: { ...typography.h3 },
+
+    loadingWrap: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        padding: spacing.lg,
+    },
+    loadingText: {
+        ...typography.loading,
+        marginTop: spacing.md,
+        color: colors.muted,
+    },
+
 });

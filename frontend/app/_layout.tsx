@@ -7,28 +7,19 @@ import { FontAwesome } from "@expo/vector-icons";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-    const [fontsLoaded, fontError] = useFonts({
-        // load font bawaan FontAwesome dari @expo/vector-icons
-        RobotoRegular: Roboto_400Regular,
-        RobotoBold: Roboto_700Bold,
+    const [loaded] = useFonts({
+        "Playfair-Bold": require("../assets/fonts/PlayfairDisplay-Bold.ttf"),
+        "Playfair-SemiBold": require("../assets/fonts/PlayfairDisplay-SemiBold.ttf"),
+        "Playfair-Regular": require("../assets/fonts/PlayfairDisplay-Regular.ttf"),
+        "Varela-Regular": require("../assets/fonts/VarelaRound-Regular.ttf"),
+        "SpaceMono-Regular": require("../assets/fonts/SpaceMono-Regular.ttf"),
     });
 
     useEffect(() => {
-        if (fontsLoaded || fontError) {
-            SplashScreen.hideAsync();
-        }
-    }, [fontsLoaded, fontError]);
+        if (loaded) SplashScreen.hideAsync();
+    }, [loaded]);
 
-    if (!fontsLoaded && !fontError) {
-        // sementara jangan render apa-apa dulu
-        return null;
-    }
+    if (!loaded) return null;
 
-    return (
-        <Stack
-            screenOptions={{
-                headerShown: false,
-            }}
-        />
-    );
+    return <Stack screenOptions={{ headerShown: false }} />;
 }

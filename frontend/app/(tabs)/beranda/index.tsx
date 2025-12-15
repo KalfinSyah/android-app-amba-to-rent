@@ -1,9 +1,6 @@
 import React from "react";
-import { FontAwesome } from "@expo/vector-icons";
 import { View, StyleSheet, Image, Text, ImageBackground } from "react-native";
 import { router } from "expo-router";
-import { AppBar } from "@/components/AppBar";
-import { GreigePanel } from "@/components/Card";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { colors } from "@/theme/colors";
 import { spacing } from "@/theme/spacing";
@@ -11,7 +8,7 @@ import { typography } from "@/theme/typography";
 
 export default function HomeScreen() {
     return (
-        <View style={styles.root}> 
+        <View style={styles.root}>
             <ImageBackground
                 source={require("../../../assets/images/homepagebg.jpg")}
                 style={styles.bg}
@@ -28,12 +25,11 @@ export default function HomeScreen() {
 
                     {/* Big multiline headline */}
                     <Text style={styles.headline}>
-                        Wujudkan Impian Traveling-mu
-                        dengan Mobil Rental terbaik kami!
+                        Perjalanan Nyaman Dimulai dari Mobil yang Tepat.
                     </Text>
                     <View style={styles.content}>
                         <PrimaryButton
-                        label="Pesan"
+                        label="Pesan Sekarang"
                         onPress={() => router.push("/booking")}
                         />
                     </View>
@@ -77,7 +73,7 @@ const styles = StyleSheet.create({
     },
 
     headline: {
-        ...typography.h2,
+        ...typography.h1,
         color: "#FFFFFF",
         lineHeight: 34,
         marginTop: spacing.lg,  // jarak normal di bawah logo

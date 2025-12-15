@@ -6,15 +6,7 @@ import { colors } from "@/theme/colors";
 import { spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-export interface Penalties {
-  id: number;
-  order_id: number;
-  jenis_penalty: string;
-  biaya_penalty: number;
-  foto_penalty: string;
-  status_penalty: string;
-}
+import { Penalty } from "@/types/models";
 
 const BASE_URL = "http://127.0.0.1:8000";
 
@@ -38,7 +30,7 @@ async function fetchPenaltyByOrderId(orderId: string) {
 }
 
 export default function PenaltyDetailScreen() {
-  const [penalties, setPenalties] = useState<Penalties[]>([]);
+  const [penalties, setPenalties] = useState<Penalty[]>([]);
   const { orderId } = useLocalSearchParams<{ orderId: string }>();
 
   useFocusEffect(
