@@ -91,16 +91,25 @@ class CarController extends Controller
             ->where('status_mobil', true)
             ->whereDoesntHave('orders', function ($q) use ($start, $end) {
                 $q->whereIn('status_order', ['Pending', 'Ongoing'])
-                ->where(function ($query) use ($start, $end) {
-                    $query->where('tanggal_sewa', '<=', $end)
-                        ->where('tanggal_kembali_sewa', '>=', $start);
-                });
+                    ->where(function ($query) use ($start, $end) {
+                        $query->where('tanggal_sewa', '<=', $end)
+                            ->where('tanggal_kembali_sewa', '>=', $start);
+                    });
             });
 
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('nama_mobil', 'like', '%' . $search . '%')
-                    ->orWhere('merk_mobil', 'like', '%' . $search . '%');
+            $columns = [
+                'nama_mobil',
+                'merk_mobil',
+                'tipe_mesin',
+                'tipe_transmisi',
+                'jenis_mobil',
+            ];
+
+            $query->where(function ($q) use ($search, $columns) {
+                foreach ($columns as $col) {
+                    $q->orWhere($col, 'like', "%{$search}%");
+                }
             });
         }
 
