@@ -4,7 +4,7 @@
 Proyek ini merupakan sistem **sewa mobil online** yang terdiri dari:
 1. **Aplikasi Android (React Native)** untuk pelanggan,
 2. **Backend API (Laravel + MySQL)** sebagai layanan utama (autentikasi, katalog, pemesanan, pembayaran, penalti), dan
-3. **Panel Admin Web** untuk staf operasional dalam mengelola data dan transaksi.
+3. **Panel Admin Web (Laravel)** untuk staf operasional dalam mengelola data dan transaksi.
 
 Aplikasi dirancang untuk membantu pelanggan melakukan proses sewa mobil secara lebih cepat dan terstruktur, sementara admin dapat memonitor serta mengelola data mobil, pesanan, pembayaran, dan penalti.
 
@@ -47,7 +47,7 @@ Aplikasi dirancang untuk membantu pelanggan melakukan proses sewa mobil secara l
 - **Backend**: Laravel (REST API)
 - **Database**: MySQL
 - **Admin Web**: Web-based Admin Panel (terhubung ke API)
-- **Integrasi Pihak Ketiga**: Payment Gateway, (opsional) Google Maps API
+- **Integrasi Pihak Ketiga**: (Dummy) Payment Gateway, 
 
 ---
 
