@@ -44,9 +44,10 @@ class OrderController extends Controller
             'tanggal_kembali_sewa' => 'required|date|after_or_equal:tanggal_sewa',
 
             'tanggal_transaksi' => 'required|date',
-            'status_order' => 'required|string',
             'total_harga' => 'required|numeric|min:0',
         ]);
+
+        $validated['status_order'] = 'Pending'; // Set status_order secara default
 
         $carId = (int) $validated['car_id'];
         $start = $validated['tanggal_sewa'];

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('tanggal_sewa');
             $table->date('tanggal_kembali_sewa');
             $table->dateTime('tanggal_transaksi')->nullable();
-            $table->string('status_order', 50)->nullable();
+            $table->string('status_order', 50);
             $table->decimal('total_harga', 15, 2);
             $table->timestamps();
         });

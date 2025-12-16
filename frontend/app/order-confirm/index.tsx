@@ -75,7 +75,6 @@ async function postOrder(
         tanggal_sewa: tanggalSewa,
         tanggal_kembali_sewa: tanggalKembaliSewa,
         tanggal_transaksi: now,    // NOW
-        status_order: "Ongoing",   // ALWAYS
         total_harga: totalHarga,
       }),
     });
