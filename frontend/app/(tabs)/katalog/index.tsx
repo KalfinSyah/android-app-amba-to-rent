@@ -189,7 +189,7 @@ export default function KatalogScreen() {
               router.push({
                 pathname: "/katalog/[catalogueId]",
                 params: {
-                  catalogueId: item.id.toString(),
+                  carId: item.id.toString(),
                   // Karena katalog tidak pakai booking, kita tidak kirim start/end.
                   // Halaman detail Anda sudah handle start/end opsional.
                 },

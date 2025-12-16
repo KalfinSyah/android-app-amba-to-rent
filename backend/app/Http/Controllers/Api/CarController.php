@@ -78,12 +78,12 @@ class CarController extends Controller
     public function available(Request $request)
     {
         $request->validate([
-            // 'tanggal_sewa' => 'required|date',
-            // 'tanggal_kembali_sewa' => 'required|date|after_or_equal:tanggal_sewa',
-            // 'search' => 'nullable|string',
-            'tanggal_sewa' => ['required', 'date', 'after_or_equal:today'],
-            'tanggal_kembali_sewa' => ['required', 'date', 'after_or_equal:tanggal_sewa'],
-            'search' => ['nullable', 'string'],
+            'tanggal_sewa' => 'required|date',
+            'tanggal_kembali_sewa' => 'required|date|after_or_equal:tanggal_sewa',
+            'search' => 'nullable|string',
+            // 'tanggal_sewa' => ['required', 'date', 'after_or_equal:today'],
+            // 'tanggal_kembali_sewa' => ['required', 'date', 'after_or_equal:tanggal_sewa'],
+            // 'search' => ['nullable', 'string'],
         ]);
 
         $start = $request->tanggal_sewa;
