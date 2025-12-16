@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Car;
+use Illuminate\Support\Facades\DB;
 use App\Models\TransactionMethod;
 use Illuminate\Http\Request;
 
@@ -30,26 +32,61 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the request
         $validated = $request->validate([
             'car_id' => 'required|integer|exists:cars,id',
             'user_id' => 'required|integer|exists:users,id',
             'method_id' => 'required|integer|exists:transaction_methods,id',
+
             'tanggal_order' => 'required|date',
             'durasi_sewa' => 'required|integer|min:1',
+
             'tanggal_sewa' => 'required|date',
-            'tanggal_kembali_sewa' => 'required|date',
+            'tanggal_kembali_sewa' => 'required|date|after_or_equal:tanggal_sewa',
+
             'tanggal_transaksi' => 'required|date',
             'status_order' => 'required|string',
             'total_harga' => 'required|numeric|min:0',
         ]);
 
-        $order = Order::create($validated);
+        $carId = (int) $validated['car_id'];
+        $start = $validated['tanggal_sewa'];
+        $end   = $validated['tanggal_kembali_sewa'];
 
-        return response()->json([
-            'message' => 'Order berhasil dibuat',
-            'order' => $order
-        ], 201);
+        return DB::transaction(function () use ($validated, $carId, $start, $end) {
+
+            // Lock baris mobil agar request paralel untuk mobil yang sama terserialisasi
+            $car = Car::where('id', $carId)->lockForUpdate()->first();
+
+            // Opsional: jika status_mobil false, langsung tolak
+            if (!$car || !$car->status_mobil) {
+                return response()->json([
+                    'message' => 'Mobil tidak tersedia untuk dipesan.',
+                    'error' => 'CAR_NOT_AVAILABLE',
+                ], 409);
+            }
+
+            // Cek overlap dengan order aktif (samakan dengan available())
+            $isOverlapping = Order::where('car_id', $carId)
+                ->whereIn('status_order', ['Pending', 'Ongoing']) // sesuaikan jika perlu
+                ->where('tanggal_sewa', '<=', $end)
+                ->where('tanggal_kembali_sewa', '>=', $start)
+                ->exists();
+
+            if ($isOverlapping) {
+                return response()->json([
+                    'message' => 'Mobil tidak tersedia pada rentang tanggal yang dipilih. Silakan pilih tanggal atau mobil lain.',
+                    'error' => 'CAR_NOT_AVAILABLE',
+                ], 409);
+            }
+
+            // Jika aman, baru buat order
+            $order = Order::create($validated);
+
+            return response()->json([
+                'message' => 'Order berhasil dibuat',
+                'order' => $order,
+            ], 201);
+        });
     }
 
     /**
