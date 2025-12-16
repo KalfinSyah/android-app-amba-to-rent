@@ -43,6 +43,19 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
+                name="katalog/index"
+                options={{
+                    tabBarIcon: ({ color, focused }) => (
+                        <TabIcon
+                        name="car"
+                        color={color}
+                        focused={focused}
+                        label="Katalog"
+                        />
+                    ),
+                }}
+            />
+            <Tabs.Screen
                 name="pesanan/index"
                 options={{
                     tabBarIcon: ({ color, focused }) => (
